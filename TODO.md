@@ -21,7 +21,7 @@ reviewed and judged "not now", not "never".
 ## Slides
 
 - **Plot library for function graphs.** Hand-authored SVG (pattern documented
-  in the presentation skill's Diagrams section, verified with a sin/cos +
+  in the presentation skill's Diagrams & charts section, verified with a sin/cos +
   normal-distribution sample deck) covers curves and shaded regions with zero
   deps. If decks need function graphs often enough that hand-authoring
   becomes the bottleneck, bundle a plot library (e.g. function-plot) behind a
