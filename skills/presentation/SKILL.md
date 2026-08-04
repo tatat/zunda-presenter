@@ -63,7 +63,7 @@ Sizing: ~1 slide per idea, 3–6 lines per slide. A 5-slide deck ≈ 20–25 lin
 ```json
 {
   "title": "deck title",
-  "voice": { "zundamon": { "speed": 1.05 } },
+  "voice": { "zundamon": { "speed": 1.2 } },
   "slides": [
     { "id": "s1", "html": "<div class='center'><h1>タイトル</h1><p class='note'>一言</p></div>" },
     { "id": "s2", "chars": false, "html": "<h2>全体像</h2><div class='mermaid'>flowchart LR\n  a[入力] --> b[処理] --> c[出力]</div>" }
@@ -109,7 +109,7 @@ All params join the audio cache hash — tweaks re-synthesize only affected line
 1. **Rewrite the text** — 「、」 inserts a pause, 「！」「？」 change intonation, 「〜」 lengthens vowels. Misread words: respell in kana.
 2. **`.zunda-presenter/dictionary.json`** — `"term": "カタカナ読み"` per English/technical term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). Always register terms you use.
 3. **Per-line params** — `style` (emotion voice; sparingly: 驚き=herohero/namidame, 内緒話=sasayaki), `speed` (~0.85–1.3), `pitch` (±0.15 is a lot), `intonation` (0=flat, 2=exaggerated), `volume`, `postPause`.
-4. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override.
+4. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override. Recommended: zundamon `speed: 1.2` — his default pace is slow and drags the dialogue; ~1.2 sounds natural.
 
 ## Playback control API
 
