@@ -35,15 +35,19 @@ cp "${CLAUDE_PLUGIN_ROOT}/deck/dictionary.json" .zunda-presenter/
 ```
 (`dictionary.json` at the `.zunda-presenter/` root is shared by all decks in the project.)
 
-## 4. presenter server (port 3939)
+## 4. presenter server
 
-Check: `curl -s -m 2 http://localhost:3939/api/state`
+Servers are per-project: each one serves a single decks root and writes a discovery file `<decks root>/server.json` (`{"port": N, "pid": N}`) on startup, removed on clean shutdown. Never kill or reuse a server that belongs to a different project.
 
-If not responding, start it pointed at this project's decks (absolute path; needs `dangerouslyDisableSandbox` to bind the port):
-```
-cd ${CLAUDE_PLUGIN_ROOT} && mkdir -p runtime && PRESENTER_DECKS_DIR="<abs project path>/.zunda-presenter" nohup npm start >| runtime/server.log 2>&1 &
-```
-If a server is already running but for a *different* project, kill it (`pkill -f "node server/index.mjs"`) and restart with the right `PRESENTER_DECKS_DIR`. Port override: `PORT=<n>` (then use that port everywhere).
+1. **Find this project's server**: if `<project>/.zunda-presenter/server.json` exists, read its `port` and check `curl -s -m 2 http://localhost:<port>/api/info`. If it responds and `decksRoot` equals `<abs project path>/.zunda-presenter`, the server is already running — use this port everywhere below and skip to step 5. Otherwise the file is stale; ignore it.
+2. **Pick a free port**: start at 3939; while the port answers `curl -s -m 2 http://localhost:<port>/api/info` (another project's server) or is otherwise in use (`lsof -nP -iTCP:<port> -sTCP:LISTEN`), try the next one (3940, 3941, …).
+3. **Start** pointed at this project's decks (absolute path; needs `dangerouslyDisableSandbox` to bind the port):
+   ```
+   cd ${CLAUDE_PLUGIN_ROOT} && mkdir -p runtime && PORT=<port> PRESENTER_DECKS_DIR="<abs project path>/.zunda-presenter" nohup npm start >| runtime/server-<port>.log 2>&1 &
+   ```
+   Confirm with `curl -s -m 2 http://localhost:<port>/api/info` (the server writes `server.json` itself).
+
+Use the chosen port in every URL from here on.
 
 ## 5. Synthesize deck audio
 
@@ -54,7 +58,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 ## 6. Open the browser
 
-`open http://localhost:3939` — with one deck it auto-opens it; with several it shows a picker. A specific deck is at `/d/<deck-name>`. The page needs one click to unlock audio (browser autoplay policy) — tell the user to click.
+`open http://localhost:<port>` — with one deck it auto-opens it; with several it shows a picker. A specific deck is at `/d/<deck-name>`. The page needs one click to unlock audio (browser autoplay policy) — tell the user to click.
 
 ## Optional: video export prerequisites
 

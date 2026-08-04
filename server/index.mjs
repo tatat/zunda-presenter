@@ -1,7 +1,7 @@
 import express from "express";
 import { WebSocketServer } from "ws";
 import { createServer } from "node:http";
-import { watch, mkdirSync, readdirSync, existsSync } from "node:fs";
+import { watch, mkdirSync, readdirSync, existsSync, writeFileSync, unlinkSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -23,6 +23,12 @@ app.use("/vendor/mermaid", express.static(path.join(ROOT, "node_modules", "merma
 // the install path (~/.claude/plugins/...) don't trip send's dotfiles check (#1)
 app.get("/d/:deck", (req, res) => {
   res.sendFile("index.html", { root: path.join(ROOT, "public") });
+});
+
+// Identity endpoint: lets clients verify which decks root this server serves
+// (agents match it against a project's server.json — see below)
+app.get("/api/info", (req, res) => {
+  res.json({ decksRoot: DECKS_ROOT, port: PORT, pid: process.pid });
 });
 
 app.get("/api/decks", (req, res) => {
@@ -91,6 +97,21 @@ watch(DECKS_ROOT, { recursive: true }, (event, filename) => {
   reloadTimers.set(deck, setTimeout(() => broadcast({ type: "script-updated", deck }), 200));
 });
 
+// Discovery file: written into the decks root so agents can find this
+// project's server by path instead of scanning ports. May go stale after a
+// hard kill — readers must verify via /api/info that decksRoot matches.
+const DISCOVERY_FILE = path.join(DECKS_ROOT, "server.json");
+const removeDiscoveryFile = () => {
+  try {
+    unlinkSync(DISCOVERY_FILE);
+  } catch {}
+};
+process.on("exit", removeDiscoveryFile);
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.on(signal, () => process.exit(0));
+}
+
 server.listen(PORT, () => {
+  writeFileSync(DISCOVERY_FILE, JSON.stringify({ port: PORT, pid: process.pid }) + "\n");
   console.log(`presenter: http://localhost:${PORT} (decks: ${DECKS_ROOT})`);
 });

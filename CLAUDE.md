@@ -4,7 +4,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 
 ## Architecture
 
-- `server/index.mjs` — express + ws on port 3939 (`PORT` to override). Serves `public/` and all decks under the decks root (`PRESENTER_DECKS_DIR`, default `<repo>/.zunda-presenter`), one dir per deck at `/d/<name>`, watches every `script.json` and pushes reloads, exposes `GET /api/state` and `POST /api/control` (incl. `open` to switch a tab's deck). `scripts/synthesize.mjs` targets one deck via `PRESENTER_DECK_DIR`.
+- `server/index.mjs` — express + ws, one server per project on port 3939 (`PORT` to override; setup picks the next free port when taken). Serves `public/` and all decks under the decks root (`PRESENTER_DECKS_DIR`, default `<repo>/.zunda-presenter`), one dir per deck at `/d/<name>`, watches every `script.json` and pushes reloads, exposes `GET /api/state`, `GET /api/info` (identity: decks root + port), and `POST /api/control` (incl. `open` to switch a tab's deck). Writes `<decks root>/server.json` (`{port, pid}`) on startup for discovery, removed on shutdown. `scripts/synthesize.mjs` targets one deck via `PRESENTER_DECK_DIR`.
 - `public/` — presentation UI: 16:9 video-style stage, character sprites (expression × mouth PNGs in `public/assets/`), outlined subtitles, auto-advance playback with pause/seek, Mermaid rendering.
 - `deck/` — bundled sample deck (`script.json`, `dictionary.json`; audio is generated, not committed).
 - `scripts/synthesize.mjs` — VOICEVOX synthesis (`npm run synth`, honors `PRESENTER_DECK_DIR`). Engine expected at `127.0.0.1:50021`.
