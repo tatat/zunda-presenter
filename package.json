@@ -6,7 +6,8 @@
     "start": "node server/index.mjs",
     "synth": "node scripts/synthesize.mjs",
     "readings": "node scripts/synthesize.mjs --readings",
-    "export": "node scripts/export-video.mjs"
+    "export": "node scripts/export-video.mjs",
+    "test": "node --test"
   },
   "dependencies": {
     "express": "^5.2.1",
