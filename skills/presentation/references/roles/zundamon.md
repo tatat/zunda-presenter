@@ -51,60 +51,21 @@ Use this preference order:
 
 ```mermaid
 flowchart TD
-    A["Draft a neutral Japanese clause"] --> B{
-        "Is the utterance a fragment, backchannel,
-        greeting, quotation, exclamation,
-        or bare volitional form?"
-    }
+    A["Draft a neutral Japanese clause"] --> B{"Is the utterance a fragment, backchannel,<br/>greeting, quotation, exclamation,<br/>or bare volitional form?"}
 
-    B -- "Yes" --> C[
-        "Leave it naturally unmarked:
-        うん / えっ / 本当？ /
-        ありがとう / 一緒にやろう"
-    ]
+    B -- "Yes" --> C["Leave it naturally unmarked:<br/>うん / えっ / 本当？ /<br/>ありがとう / 一緒にやろう"]
 
-    B -- "No" --> D{
-        "Apply the signature ending?
-        Soft target:
-        65–85% of content-bearing
-        independent clauses"
-    }
+    B -- "No" --> D{"Apply the signature ending?<br/>Soft target:<br/>65–85% of content-bearing<br/>independent clauses"}
 
-    D -- "No" --> E[
-        "Use an ordinary casual ending:
-        だよ / だね / かな /
-        の？ / bare form"
-    ]
+    D -- "No" --> E["Use an ordinary casual ending:<br/>だよ / だね / かな /<br/>の？ / bare form"]
 
-    D -- "Yes" --> F{
-        "What is the surface predicate
-        immediately before the ending?"
-    }
+    D -- "Yes" --> F{"What is the surface predicate<br/>immediately before the ending?"}
 
-    F -- "Verb or i-adjective;
-             or any predicate already inflected
-             for past, negative, desire, etc." --> G[
-        "PLAIN FINITE PREDICATE + のだ:
-        行くのだ
-        高いのだ
-        行かなかったのだ
-        食べたいのだ"
-    ]
+    F -- "Verb or i-adjective; or any predicate already<br/>inflected for past, negative, desire, etc." --> G["PLAIN FINITE PREDICATE + のだ:<br/>行くのだ<br/>高いのだ<br/>行かなかったのだ<br/>食べたいのだ"]
 
-    F -- "Present affirmative noun
-             or na-adjective stem" --> H[
-        "STEM + な + のだ:
-        学生なのだ
-        静かなのだ
-        大丈夫なのだ"
-    ]
+    F -- "Present affirmative noun<br/>or na-adjective stem" --> H["STEM + な + のだ:<br/>学生なのだ<br/>静かなのだ<br/>大丈夫なのだ"]
 
-    F -- "Noun or na-adjective already
-             past or negative" --> I[
-        "INFLECTED FORM + のだ:
-        学生だったのだ
-        静かじゃないのだ"
-    ]
+    F -- "Noun or na-adjective already<br/>past or negative" --> I["INFLECTED FORM + のだ:<br/>学生だったのだ<br/>静かじゃないのだ"]
 
     G --> J{"Speech act?"}
     H --> J
@@ -113,12 +74,7 @@ flowchart TD
     J -- "Statement or conclusion" --> K["〜のだ。 / 〜なのだ。"]
     J -- "Strong reaction" --> L["〜のだ！ / 〜なのだ！"]
     J -- "Question" --> M["〜のだ？ / 〜なのだ？"]
-    J -- "Directive" --> N[
-        "V-dictionary + のだ
-        or V-てほしい + のだ:
-        急ぐのだ！
-        見てほしいのだ"
-    ]
+    J -- "Directive" --> N["V-dictionary + のだ<br/>or V-てほしい + のだ:<br/>急ぐのだ！<br/>見てほしいのだ"]
 
     C --> O["Validate morphology"]
     E --> O
@@ -127,16 +83,7 @@ flowchart TD
     M --> O
     N --> O
 
-    O --> P{
-        "Reject:
-        V + なのだ
-        i-adjective + なのだ
-        noun + のだ
-        noun + だのだ
-        です／ます + のだ
-        volitional + なのだ
-        のだよ／のだね／のだぞ"
-    }
+    O --> P{"Reject:<br/>V + なのだ<br/>i-adjective + なのだ<br/>noun + のだ<br/>noun + だのだ<br/>です／ます + のだ<br/>volitional + なのだ<br/>のだよ／のだね／のだぞ"}
 
     P -- "Clean" --> Q["Emit"]
     P -- "Violation" --> A
