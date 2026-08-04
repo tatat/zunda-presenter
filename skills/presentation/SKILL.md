@@ -7,7 +7,9 @@ description: Turn a plan, design, or topic into a Zundamon × Shikoku Metan dial
 
 Explain content as a ゆっくり解説-style dialogue between ずんだもん and 四国めたん, rendered as an auto-playing HTML presentation with synthesized voices.
 
-Prerequisites: server (port 3939) and VOICEVOX (port 50021) running, and `<project>/.zunda-presenter/` seeded — if any are missing, run the `setup` skill first.
+Prerequisites: this project's server and VOICEVOX (port 50021) running, and `<project>/.zunda-presenter/` seeded — if any are missing, run the `setup` skill first.
+
+**Server port**: read it from `<project>/.zunda-presenter/server.json` (written by the running server; verify with `GET /api/info` that `decksRoot` matches this project). Examples below use `3939` — substitute your port.
 
 **Paths**: each presentation is its own deck directory `<project>/.zunda-presenter/<deck-name>/` (kebab-case slug for the topic, e.g. `auth-refactor-plan`) containing `script.json` and `audio/`. `dictionary.json` at the `.zunda-presenter/` root is shared by all decks. The player URL is `http://localhost:3939/d/<deck-name>`. Plugin code is at `${CLAUDE_PLUGIN_ROOT}`. Synthesis command (used throughout):
 

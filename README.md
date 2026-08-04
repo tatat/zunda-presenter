@@ -17,14 +17,14 @@ Requirements: macOS, Node.js, Homebrew (for `sevenzip`). The first `/zunda-prese
 
 - `/zunda-presenter:setup` — installs/starts everything (VOICEVOX engine, npm deps, server) and opens the browser.
 - Ask the agent to "present" a plan or topic — it writes a deck into your project's `.zunda-presenter/<deck-name>/` and switches your tab to it.
-- Each deck has its own URL: `http://localhost:3939/d/<deck-name>` (`/` lists all decks).
+- Each deck has its own URL: `http://localhost:3939/d/<deck-name>` (`/` lists all decks). Each project gets its own server; when 3939 is taken, setup picks the next free port (recorded in `<project>/.zunda-presenter/server.json`).
 - Player controls: click / Space = pause·resume, ←/→ = seek by line, C = toggle characters, click the seekbar to jump. Pause anytime and ask questions in chat; answers get spliced into the deck.
 
 ## Structure
 
 - `.claude-plugin/` — plugin + marketplace manifests
 - `skills/` — `setup` and `presentation` skills (symlinked into `.claude/skills/` for development in this repo)
-- `server/` — express + ws (port 3939, override with `PORT`): static serving, live reload of decks, playback state/control API
+- `server/` — express + ws (port 3939 by default, `PORT` to override; one server per project, discoverable via `<project>/.zunda-presenter/server.json`): static serving, live reload of decks, playback state/control API
 - `public/` — player UI (slides, sprites, subtitles, seekbar)
 - `deck/` — bundled sample deck; per-project decks live at `<project>/.zunda-presenter/<deck-name>/` (shared `dictionary.json` at the root), selected via `PRESENTER_DECKS_DIR` / `PRESENTER_DECK_DIR` env vars
 - `scripts/synthesize.mjs` — VOICEVOX synthesis with content-hash caching (`npm run synth`)
