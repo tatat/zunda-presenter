@@ -55,3 +55,13 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 ## 6. Open the browser
 
 `open http://localhost:3939` — with one deck it auto-opens it; with several it shows a picker. A specific deck is at `/d/<deck-name>`. The page needs one click to unlock audio (browser autoplay policy) — tell the user to click.
+
+## Optional: video export prerequisites
+
+Only when the user wants to export a deck as MP4 (`npm run export` — see the presentation skill). Skip during normal setup; install on first use:
+
+- `ffmpeg` on PATH — check `ffmpeg -version`; install via `brew install ffmpeg`.
+- Playwright + headless Chromium (~95MB, cached in `~/Library/Caches/ms-playwright/`, shared across projects):
+  ```
+  cd ${CLAUDE_PLUGIN_ROOT} && npm i -D playwright && npx playwright install chromium
+  ```

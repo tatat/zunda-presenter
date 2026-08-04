@@ -192,6 +192,13 @@ body.no-chars #slide { padding: 4% 6% 14%; }
 #subtitle-box.zundamon #subtitle { color: #3f7d22; }
 #subtitle-box.metan #subtitle { color: #d64f8e; }
 
+/* ---- render mode (video export): deterministic frames, no player chrome ---- */
+body.render *, body.render *::before, body.render *::after {
+  transition: none !important;
+  animation: none !important;
+}
+body.render #status, body.render #progress { display: none; }
+
 /* ---- seekbar (YouTube style) ---- */
 #progress {
   position: absolute;

@@ -4,11 +4,15 @@
   "type": "module",
   "scripts": {
     "start": "node server/index.mjs",
-    "synth": "node scripts/synthesize.mjs"
+    "synth": "node scripts/synthesize.mjs",
+    "export": "node scripts/export-video.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",
     "mermaid": "^11.16.0",
     "ws": "^8.21.2"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
   }
 }

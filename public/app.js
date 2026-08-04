@@ -9,6 +9,11 @@ let DECK = null;
   if (m) DECK = decodeURIComponent(m[1]);
 }
 
+// #render: deterministic frame-by-frame mode driven by scripts/export-video.mjs.
+// No WebSocket, no timers, no transitions — frames are requested via window.__render.
+const RENDER = location.hash === "#render";
+if (RENDER) document.body.classList.add("render");
+
 const state = {
   script: null,
   idx: 0,
@@ -129,6 +134,14 @@ function renderSlide(line) {
   if (!slide || slide.id === renderedSlideId) return;
   renderedSlideId = slide.id;
   const el = $("#slide");
+  if (RENDER) {
+    // Swap synchronously and hand back the Mermaid promise so __render.frame
+    // can await a fully painted slide. Fades become hard cuts — a v1
+    // simplification of the export (see scripts/export-video.mjs)
+    setCharsVisible(slide.chars !== false);
+    el.innerHTML = slide.html;
+    return window.renderMermaid?.();
+  }
   el.classList.add("fading");
   setTimeout(() => {
     // Swap content and layout mode together, while the slide is invisible
@@ -140,7 +153,7 @@ function renderSlide(line) {
 }
 
 function renderLine(line) {
-  renderSlide(line);
+  const slideReady = renderSlide(line);
   $("#subtitle-box").className = line.speaker;
   $("#subtitle").textContent = line.text;
 
@@ -154,6 +167,7 @@ function renderLine(line) {
   }
   updateProgress();
   updateStatus();
+  return slideReady;
 }
 
 const EXPRESSIONS = ["normal", "happy", "surprised", "troubled", "smug"];
@@ -354,6 +368,11 @@ for (const who of ["zundamon", "metan"])
     for (const s of ["close", "open"]) new Image().src = `/assets/${who}_${expr}_${s}.png`;
 
 async function boot() {
+  if (RENDER) {
+    // The export driver hides the overlay, then calls __render.load() itself
+    $("#overlay").classList.add("hidden");
+    return;
+  }
   connectWS();
   if (!DECK) {
     const { decks } = await (await fetch("/api/decks")).json();
@@ -374,3 +393,30 @@ async function boot() {
 }
 
 boot();
+
+/* ---------- render mode API (video export) ---------- */
+
+if (RENDER) {
+  window.__render = {
+    async load() {
+      await loadScript();
+      // Force the first frame() to re-render the slide so Mermaid is awaited
+      renderedSlideId = null;
+      return state.script;
+    },
+    // Show line `index` with the speaker's mouth open or closed, resolving
+    // only once the frame is fully painted (slide HTML, Mermaid, fonts, sprites)
+    async frame(index, mouth) {
+      state.idx = Math.max(0, Math.min(index, state.script.lines.length - 1));
+      const line = currentLine();
+      await renderLine(line);
+      const el = $(`#char-${line.speaker}`);
+      el.classList.add("talking");
+      el.classList.toggle("mouth", !!mouth);
+      await document.fonts.ready;
+      await Promise.all(
+        [...document.querySelectorAll("#stage img")].map((img) => img.decode().catch(() => {}))
+      );
+    },
+  };
+}
