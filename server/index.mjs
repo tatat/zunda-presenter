@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { watch, mkdirSync, readdirSync, existsSync, writeFileSync, unlinkSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { createQA } from "./qa.mjs";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 // Decks root holds one directory per deck (<root>/<deck>/script.json) plus a
@@ -64,6 +65,30 @@ app.post("/api/control", (req, res) => {
   res.json({ ok: true, clients: wss.clients.size });
 });
 
+// Viewer questions from the player's question box. Answered asynchronously by
+// a headless claude run (see qa.mjs); progress is pushed over WS as {type: "qa"}
+const qa = createQA({
+  root: ROOT,
+  decksRoot: DECKS_ROOT,
+  broadcast,
+  getDeckState: (deck) => states.get(deck),
+});
+
+app.post("/api/question", (req, res) => {
+  const { deck, question } = req.body ?? {};
+  if (typeof deck !== "string" || /[/\\]|^\./.test(deck)) {
+    return res.status(400).json({ error: "invalid deck" });
+  }
+  if (!existsSync(path.join(DECKS_ROOT, deck, "script.json"))) {
+    return res.status(404).json({ error: "unknown deck" });
+  }
+  const q = typeof question === "string" ? question.trim() : "";
+  if (!q) return res.status(400).json({ error: "question is required" });
+  broadcast({ type: "control", action: "pause", deck });
+  qa.ask(deck, q.slice(0, 2000));
+  res.status(202).json({ ok: true });
+});
+
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
@@ -88,10 +113,10 @@ wss.on("connection", (ws) => {
   });
 });
 
-// Push script.json changes to browsers (recursive: catches <deck>/script.json)
+// Push script/qa changes to browsers (recursive: catches <deck>/script.json)
 const reloadTimers = new Map();
 watch(DECKS_ROOT, { recursive: true }, (event, filename) => {
-  if (!filename || path.basename(filename) !== "script.json") return;
+  if (!filename || !["script.json", "qa.json"].includes(path.basename(filename))) return;
   const deck = filename.split(path.sep)[0];
   clearTimeout(reloadTimers.get(deck));
   reloadTimers.set(deck, setTimeout(() => broadcast({ type: "script-updated", deck }), 200));

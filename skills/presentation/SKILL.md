@@ -20,9 +20,10 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 ## Workflow
 
 1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save.
-2. Add katakana readings for every English/technical term you used to `.zunda-presenter/dictionary.json`.
-3. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely.
-4. Point the user's tab at the deck and play:
+2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
+3. Add katakana readings for every English/technical term you used to `.zunda-presenter/dictionary.json`.
+4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely.
+5. Point the user's tab at the deck and play:
    ```
    curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"open","deck":"<deck-name>"}'
    curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"play","deck":"<deck-name>"}'
@@ -115,7 +116,7 @@ All params join the audio cache hash — tweaks re-synthesize only affected line
 
 ## Playback control API
 
-- State: `GET localhost:3939/api/state?deck=<deck-name>` → `{ deck, index, lineId, lineText, paused, finished, total, connected }`. Without `?deck` it returns the most recently active deck. `connected: 0` means no browser tab is open.
+- State: `GET localhost:3939/api/state?deck=<deck-name>` → `{ deck, index, lineId, lineText, paused, finished, track, total, connected }`. Without `?deck` it returns the most recently active deck. `connected: 0` means no browser tab is open. `track` is `"main"` or a question id — when it isn't `"main"`, the viewer is inside a Q&A timeline and `lineId` refers to a `qa.json` line.
 - Control: `POST /api/control` with `{"action":"play","deck":"..."}` / `{"action":"pause",...}` / `{"action":"goto","deck":"...","lineId":"l5"}` (or `"index":4`). Always pass `deck` so only the right tab reacts.
 - `{"action":"open","deck":"..."}` — switch connected tabs to another deck (in-page; audio unlock survives).
 - `{"action":"chars","visible":false}` toggles characters at runtime, but prefer declaring it per slide via `slides[].chars`.
@@ -143,6 +144,15 @@ When the user pauses and asks a question in chat:
 3. Run the synth command, then `{"action":"play"}`.
 
 Corrections: edit `lines[].text` / slide html in place (keep ids) → synth → `{"action":"goto","lineId":"<first edited>"}` → `{"action":"play"}`.
+
+## Web Q&A (questions typed into the player)
+
+The player has a question box (？質問, top right). Those questions are answered **without you**: the server spawns a headless `claude -p` (as Metan; read-only tools, cwd = the project) that sees `script.json` + `context.md` + the repo, appends the answer to `<deck>/qa.json` (`{"questions": [{id, question, ts, lines}]}`; `script.json` is never touched), synthesizes, and plays it. Each question is its own timeline in the player: a switcher next to the deck title lists メイン + 質問N, the answer plays in its own timeline (slides still anchored to what was in view when asked); switching back to メイン restores the viewer's saved position. The main timeline and video export stay pure. When revisiting a deck, feel free to promote good Q&A exchanges by moving their lines from `qa.json` into `script.json` (rewrite to fit the flow), delete stale ones, or delete `qa.json` entirely to reset. Requires the `claude` CLI on PATH; model via `PRESENTER_QA_MODEL` (default `sonnet`).
+
+Your two responsibilities:
+
+- **Feed it**: write a good `context.md` (workflow step 2) — it is the only bridge from this conversation's context to the Q&A agent.
+- **Pick up what it couldn't answer**: every question is appended to `<deck>/questions.log` (JSONL; `answerable: false` = deferred to you). When resuming work on a project, check the log; answer open questions with the user or in the deck, fold the missing information into `context.md`, and delete the handled entries.
 
 ## Self-check (before telling the user it's ready)
 

@@ -42,7 +42,8 @@ try {
   process.exit(1);
 }
 
-const script = JSON.parse(readFileSync(SCRIPT_PATH, "utf8"));
+const scriptRaw = readFileSync(SCRIPT_PATH, "utf8");
+const script = JSON.parse(scriptRaw);
 mkdirSync(AUDIO_DIR, { recursive: true });
 
 /* Pronunciation dictionary: subtitles keep the original text, but the text sent
@@ -185,56 +186,82 @@ async function graftSynthesis(query, styleId, text) {
 let synthesized = 0;
 let cached = 0;
 
-for (const line of script.lines) {
-  const p = voiceParams(script, line);
-  if (p.styleId == null) {
-    console.error(`unknown speaker/style: ${JSON.stringify(line)}`);
-    process.exit(1);
-  }
-  const text = spokenText(line.text);
-  // v2: head-rescue changed synthesis output; bump invalidates pre-rescue caches
-  const hash = createHash("sha1")
-    .update(`v2|${p.styleId}|${p.speed}|${p.pitch}|${p.intonation}|${p.volume}|${p.postPause}|${text}`)
-    .digest("hex")
-    .slice(0, 12);
-  const rel = `audio/${hash}.wav`;
-  const abs = path.join(AUDIO_DIR, `${hash}.wav`);
-
-  if (!existsSync(abs)) {
-    const q = new URLSearchParams({ text, speaker: String(p.styleId) });
-    const queryRes = await fetch(`${ENGINE}/audio_query?${q}`, { method: "POST" });
-    if (!queryRes.ok) {
-      console.error(`audio_query failed (${queryRes.status}): ${text}`);
+/* Synthesize a list of lines in place (fills each line's audio field).
+   Voice defaults always come from script.json, also for qa.json lines. */
+async function synthesizeLines(lines) {
+  for (const line of lines) {
+    const p = voiceParams(script, line);
+    if (p.styleId == null) {
+      console.error(`unknown speaker/style: ${JSON.stringify(line)}`);
       process.exit(1);
     }
-    const query = await queryRes.json();
-    query.speedScale = p.speed;
-    query.pitchScale = p.pitch;
-    query.intonationScale = p.intonation;
-    query.volumeScale = p.volume;
-    if (p.postPause != null) query.postPhonemeLength = p.postPause;
+    const text = spokenText(line.text);
+    // v2: head-rescue changed synthesis output; bump invalidates pre-rescue caches
+    const hash = createHash("sha1")
+      .update(`v2|${p.styleId}|${p.speed}|${p.pitch}|${p.intonation}|${p.volume}|${p.postPause}|${text}`)
+      .digest("hex")
+      .slice(0, 12);
+    const rel = `audio/${hash}.wav`;
+    const abs = path.join(AUDIO_DIR, `${hash}.wav`);
 
-    let wav = await synthesize(query, p.styleId, text);
-    console.log(`synth: [${line.speaker}] ${text.slice(0, 30)}`);
-    const aps = query.accent_phrases;
-    if (aps.length >= 2 && aps[0].pause_mora && aps[0].moras.length <= HEAD_MAX_MORAS) {
-      const ratio = headRatio(query, wav);
-      if (ratio < HEAD_RATIO_THRESHOLD) {
-        const grafted = await graftSynthesis(query, p.styleId, text);
-        const graftedRatio = headRatio(query, grafted);
-        if (graftedRatio > ratio) {
-          wav = grafted;
-          console.log(`  head rescue: ${ratio.toFixed(2)} -> ${graftedRatio.toFixed(2)}`);
+    if (!existsSync(abs)) {
+      const q = new URLSearchParams({ text, speaker: String(p.styleId) });
+      const queryRes = await fetch(`${ENGINE}/audio_query?${q}`, { method: "POST" });
+      if (!queryRes.ok) {
+        console.error(`audio_query failed (${queryRes.status}): ${text}`);
+        process.exit(1);
+      }
+      const query = await queryRes.json();
+      query.speedScale = p.speed;
+      query.pitchScale = p.pitch;
+      query.intonationScale = p.intonation;
+      query.volumeScale = p.volume;
+      if (p.postPause != null) query.postPhonemeLength = p.postPause;
+
+      let wav = await synthesize(query, p.styleId, text);
+      console.log(`synth: [${line.speaker}] ${text.slice(0, 30)}`);
+      const aps = query.accent_phrases;
+      if (aps.length >= 2 && aps[0].pause_mora && aps[0].moras.length <= HEAD_MAX_MORAS) {
+        const ratio = headRatio(query, wav);
+        if (ratio < HEAD_RATIO_THRESHOLD) {
+          const grafted = await graftSynthesis(query, p.styleId, text);
+          const graftedRatio = headRatio(query, grafted);
+          if (graftedRatio > ratio) {
+            wav = grafted;
+            console.log(`  head rescue: ${ratio.toFixed(2)} -> ${graftedRatio.toFixed(2)}`);
+          }
         }
       }
+      writeFileSync(abs, wav);
+      synthesized += 1;
+    } else {
+      cached += 1;
     }
-    writeFileSync(abs, wav);
-    synthesized += 1;
-  } else {
-    cached += 1;
+    line.audio = rel;
   }
-  line.audio = rel;
 }
 
-writeFileSync(SCRIPT_PATH, JSON.stringify(script, null, 2) + "\n");
-console.log(`done: ${synthesized} synthesized, ${cached} cached, ${script.lines.length} total`);
+/* Skip content-identical writes: the server watches these files and pushes a
+   reload to open tabs on every write */
+function writeIfChanged(p, raw, obj) {
+  const out = JSON.stringify(obj, null, 2) + "\n";
+  if (out !== raw) writeFileSync(p, out);
+}
+
+await synthesizeLines(script.lines);
+writeIfChanged(SCRIPT_PATH, scriptRaw, script);
+
+// Web Q&A answers live in <deck>/qa.json as per-question line groups
+const QA_PATH = path.join(DECK_DIR, "qa.json");
+let qaCount = 0;
+if (existsSync(QA_PATH)) {
+  const qaRaw = readFileSync(QA_PATH, "utf8");
+  const qa = JSON.parse(qaRaw);
+  for (const q of qa.questions ?? []) {
+    await synthesizeLines(q.lines ?? []);
+    qaCount += q.lines?.length ?? 0;
+  }
+  writeIfChanged(QA_PATH, qaRaw, qa);
+}
+
+console.log(`done: ${synthesized} synthesized, ${cached} cached, ${script.lines.length + qaCount} total${qaCount ? ` (incl. ${qaCount} qa)` : ""}`);

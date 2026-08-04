@@ -19,6 +19,7 @@ Requirements: macOS, Node.js, Homebrew (for `sevenzip`). The first `/zunda-prese
 - Ask the agent to "present" a plan or topic — it writes a deck into your project's `.zunda-presenter/<deck-name>/` and switches your tab to it.
 - Each deck has its own URL: `http://localhost:3939/d/<deck-name>` (`/` lists all decks). Each project gets its own server; when 3939 is taken, setup picks the next free port (recorded in `<project>/.zunda-presenter/server.json`).
 - Player controls: click / Space = pause·resume, ←/→ = seek by line, C = toggle characters, click the seekbar to jump. Pause anytime and ask questions in chat; answers get spliced into the deck.
+- Or ask right in the player: the **？質問** button opens a question box, and a headless agent (`claude -p`, read-only access to your project) answers in Metan's voice — synthesized and played on the spot, with each question becoming its own replayable timeline next to the main one (the main script stays untouched). Questions it can't verify are logged to `<deck>/questions.log` for the chat agent to pick up.
 
 ## Structure
 
