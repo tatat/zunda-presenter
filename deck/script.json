@@ -1,5 +1,10 @@
 {
   "title": "デモ：この仕組みの紹介",
+  "voice": {
+    "zundamon": {
+      "speed": 1.2
+    }
+  },
   "slides": [
     {
       "id": "intro",
@@ -29,28 +34,28 @@
       "speaker": "zundamon",
       "slide": "intro",
       "text": "ずんだもんなのだ！今日はこのプレゼンの仕組みを紹介するのだ！",
-      "audio": "audio/857317eba71f.wav"
+      "audio": "audio/dcacf10ed10e.wav"
     },
     {
       "id": "d2",
       "speaker": "metan",
       "slide": "intro",
       "text": "四国めたんよ。coding agent の plan を、私たちが解説していくわ。",
-      "audio": "audio/06fc7767b78f.wav"
+      "audio": "audio/5422d7c362de.wav"
     },
     {
       "id": "w1",
       "speaker": "zundamon",
       "slide": "why",
       "text": "そもそも、なんでこの仕組みを作ったのだ？",
-      "audio": "audio/a6d9fed3ed39.wav"
+      "audio": "audio/deee7b8c02f8.wav"
     },
     {
       "id": "w2",
       "speaker": "metan",
       "slide": "why",
       "text": "agent の書く plan って、長ーい文章になりがちでしょ？",
-      "audio": "audio/854c95e359d5.wav"
+      "audio": "audio/f1eb93a19e97.wav"
     },
     {
       "id": "w3",
@@ -59,7 +64,7 @@
       "text": "そして人間は……文字が、読めないのよ。",
       "postPause": 0.6,
       "expression": "smug",
-      "audio": "audio/5e9061472b88.wav"
+      "audio": "audio/7116e92c7c38.wav"
     },
     {
       "id": "w4",
@@ -67,8 +72,10 @@
       "slide": "why",
       "text": "ひどい言われようなのだ！？でも、否定できないのだ……",
       "expression": "surprised",
-      "faces": { "metan": "smug" },
-      "audio": "audio/53a65c55201e.wav"
+      "faces": {
+        "metan": "smug"
+      },
+      "audio": "audio/d1801165a62d.wav"
     },
     {
       "id": "w5",
@@ -76,57 +83,59 @@
       "slide": "why",
       "text": "だから、私たちが読んであげるのよ。",
       "expression": "happy",
-      "faces": { "zundamon": "troubled" },
-      "audio": "audio/c0df7bbfc8bc.wav"
+      "faces": {
+        "zundamon": "troubled"
+      },
+      "audio": "audio/d9b018167c05.wav"
     },
     {
       "id": "d3",
       "speaker": "zundamon",
       "slide": "how",
       "text": "この画面、どういう仕組みで動いているのだ？",
-      "audio": "audio/1e4907b4aae9.wav"
+      "audio": "audio/5e765469de62.wav"
     },
     {
       "id": "d4",
       "speaker": "metan",
       "slide": "how",
       "text": "agent が台本を書いて、VOICEVOX がセリフを音声にしてるの。",
-      "audio": "audio/1cf0a71a4c95.wav"
+      "audio": "audio/73acf48e20a1.wav"
     },
     {
       "id": "d5",
       "speaker": "zundamon",
       "slide": "how",
       "text": "へえ！じゃあ台本を書き換えたら、すぐ反映されるのだ？",
-      "audio": "audio/42a0234ad315.wav"
+      "audio": "audio/34e2ad79f94f.wav"
     },
     {
       "id": "d6",
       "speaker": "metan",
       "slide": "how",
       "text": "ええ、保存した瞬間に画面に反映されるわ。訂正も簡単なのよ。",
-      "audio": "audio/b24d97200945.wav"
+      "audio": "audio/50d9b4f08518.wav"
     },
     {
       "id": "a1",
       "speaker": "zundamon",
       "slide": "arch",
       "text": "全体の流れを、図で見せてほしいのだ！",
-      "audio": "audio/b941989c9de6.wav"
+      "audio": "audio/ea3ae605db2e.wav"
     },
     {
       "id": "a2",
       "speaker": "metan",
       "slide": "arch",
       "text": "これが全体図よ。台本が音声になって、ブラウザに届くの。",
-      "audio": "audio/dd802febadf8.wav"
+      "audio": "audio/c03e0b40e4e5.wav"
     },
     {
       "id": "a3",
       "speaker": "metan",
       "slide": "arch",
       "text": "画面いっぱいに見せたいスライドでは、私たちは引っ込むの。",
-      "audio": "audio/53a7e2beb595.wav"
+      "audio": "audio/cf3c61475c43.wav"
     },
     {
       "id": "a4",
@@ -134,28 +143,28 @@
       "slide": "arch",
       "text": "おおー、スライドが広く使えて便利なのだ！",
       "expression": "happy",
-      "audio": "audio/ca07b7d78334.wav"
+      "audio": "audio/97a45a4e3c1f.wav"
     },
     {
       "id": "d7",
       "speaker": "zundamon",
       "slide": "controls",
       "text": "途中で止めたいときは、どうすればいいのだ？",
-      "audio": "audio/14b4fe04825e.wav"
+      "audio": "audio/8231b3dd9461.wav"
     },
     {
       "id": "d8",
       "speaker": "metan",
       "slide": "controls",
       "text": "スペースキーで一時停止、矢印キーで前後に移動できるわ。",
-      "audio": "audio/abe65e02fba3.wav"
+      "audio": "audio/0f357dc4f309.wav"
     },
     {
       "id": "d8b",
       "speaker": "metan",
       "slide": "controls",
       "text": "止めてチャットで質問すれば、agent が答えてくれるのよ。",
-      "audio": "audio/5990a6cf8ba5.wav"
+      "audio": "audio/ae6c85261178.wav"
     },
     {
       "id": "d9",
@@ -163,7 +172,7 @@
       "slide": "controls",
       "text": "それじゃ、よろしくなのだ〜！",
       "expression": "happy",
-      "audio": "audio/d81314c4546d.wav"
+      "audio": "audio/bca0bc7a1894.wav"
     }
   ]
 }
