@@ -119,6 +119,19 @@ All params join the audio cache hash — tweaks re-synthesize only affected line
 - `{"action":"chars","visible":false}` toggles characters at runtime, but prefer declaring it per slide via `slides[].chars`.
 - User-side controls: click or Space = pause/resume, ←/→ = seek by line, C = toggle characters, click seekbar = jump. `http://localhost:3939/` lists all decks.
 
+## Video export
+
+Export a deck as an MP4 (1920×1080, 30fps) when the user asks for a video:
+
+```
+cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run export
+```
+
+- Writes `<deck dir>/export.mp4`. One-time prerequisites: `ffmpeg` on PATH (`brew install ffmpeg`) and playwright in the plugin root (`npm i -D playwright && npx playwright install chromium`).
+- Synthesize first (`npm run synth`) — lines without audio get silence with the player's text-length timing.
+- Rendering is offline and deterministic (timeline computed from wav durations, frames screenshotted headlessly), so it's much faster than realtime and needs neither the server nor a browser tab. Slide changes are hard cuts (no fade).
+- Overrides: `PRESENTER_VIDEO_OUT` (output path), `PRESENTER_VIDEO_HEIGHT` (default 1080).
+
 ## Questions & corrections during playback
 
 When the user pauses and asks a question in chat:

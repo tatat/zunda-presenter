@@ -6,6 +6,8 @@ tools/*.7z*
 tools/*.log
 assets/raw/
 deck/audio/
+deck/export.mp4
+.export-tmp/
 *.log
 .DS_Store
 .zunda-presenter/
