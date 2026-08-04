@@ -1,0 +1,215 @@
+* { box-sizing: border-box; }
+
+:root {
+  --stage-bg: #1c2230;
+  --text: #e8ecf4;
+  --muted: #8a93a6;
+  --zundamon: #8fce4a;
+  --metan: #f2a0c4;
+  --accent: #6db3f2;
+  --seek: #f2453d;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  color: var(--text);
+  font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+  overflow: hidden;
+}
+
+/* ---- start overlay ---- */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  cursor: pointer;
+}
+#overlay.hidden { display: none; }
+#overlay-box { text-align: center; }
+#overlay-title { font-size: 2rem; font-weight: 700; }
+#overlay-sub { color: var(--muted); margin-top: 0.6rem; }
+#overlay-hints { color: var(--muted); font-size: 0.8rem; margin-top: 2rem; }
+.deck-link {
+  font-size: 1.2rem;
+  padding: 0.5rem 2rem;
+  margin-top: 0.8rem;
+  border: 1px solid #2c3444;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.deck-link:hover { background: #232b3b; }
+
+/* ---- video frame ---- */
+main {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#stage {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  background: var(--stage-bg);
+  overflow: hidden;
+  container-type: size;
+}
+
+/* ---- slide (full-bleed content) ---- */
+#slide {
+  /* Side/bottom padding keeps text clear of the character sprites and subtitle;
+     content centers vertically within that safe area */
+  position: absolute;
+  inset: 0;
+  /* Vertical space = frame minus the subtitle band (~14%) and the pill band (~4%);
+     content centers within it */
+  padding: 4% 19% 14%;
+  font-size: 1.9cqw;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  opacity: 1;
+  transition: opacity 0.25s;
+}
+#slide.fading { opacity: 0; }
+
+#slide h1 { font-size: 2.6em; margin: 0 0 0.5em; line-height: 1.25; }
+#slide h2 {
+  font-size: 1.8em;
+  margin: 0 0 0.8em;
+  padding-bottom: 0.3em;
+  border-bottom: 0.15em solid var(--accent);
+}
+/* Body content is inset a bit further than the h2 underline */
+#slide ul, #slide ol { font-size: 1.25em; line-height: 1.7; padding-left: 1.3em; margin: 0.4em 5%; }
+#slide li { margin-bottom: 0.25em; }
+#slide p { font-size: 1.25em; line-height: 1.8; margin-inline: 5%; }
+#slide pre {
+  /* Shrink to content and center; margin:auto also centers vertically
+     inside the flex column of fullscreen mode */
+  background: #12161f;
+  border-radius: 0.6em;
+  padding: 1.2em 1.8em;
+  font-family: Menlo, "SF Mono", monospace;
+  font-size: 0.85em;
+  line-height: 1.45;
+  overflow: hidden;
+  width: fit-content;
+  max-width: 100%;
+  margin: auto;
+}
+#slide code { font-family: Menlo, "SF Mono", monospace; color: #9fd4ff; }
+#slide strong { color: #ffd479; }
+#slide .center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+#slide .columns { display: flex; gap: 2em; }
+#slide .columns > * { flex: 1; }
+#slide .note { color: var(--muted); font-size: 0.95em; }
+#slide .mermaid {
+  /* Full width so the SVG can scale up; vertical margin:auto centers it */
+  width: 100%;
+  margin: auto;
+  visibility: hidden; /* hide raw mermaid source until rendered */
+}
+#slide .mermaid[data-processed="true"] { visibility: visible; }
+#slide .mermaid svg {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+  max-width: none !important;
+  max-height: 56cqh;
+}
+
+/* ---- fullscreen slide mode (characters hidden) ---- */
+.char { transition: opacity 0.25s; }
+body.no-chars .char { opacity: 0; pointer-events: none; }
+/* Same vertical bands as normal mode; only the side safe-area differs */
+body.no-chars #slide { padding: 4% 6% 14%; }
+
+/* ---- title / status overlays ---- */
+#deck-title, #status {
+  position: absolute;
+  top: 2.5%;
+  font-size: 1.05cqw;
+  padding: 0.3em 0.9em;
+  border-radius: 99px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #cfd6e4;
+  z-index: 5;
+}
+#deck-title { left: 2%; }
+#status { right: 2%; }
+#status.paused { color: #f2c66d; }
+
+/* ---- characters (bottom corners, video style) ---- */
+.char {
+  /* Oversized and shifted down so the frame cuts the sprite around thigh level */
+  position: absolute;
+  bottom: -26%;
+  height: 88%;
+  z-index: 10;
+}
+#char-zundamon { left: -6%; }
+#char-zundamon img { transform: scaleX(-1); }
+#char-metan { right: -6%; }
+.char img { display: block; height: 100%; width: auto; }
+.char img.open { display: none; }
+.char.mouth img.close { display: none; }
+.char.mouth img.open { display: block; }
+
+/* ---- subtitle (outlined, yukkuri style; drawn over the sprites) ---- */
+#subtitle-box {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 4%;
+  width: 90%;
+  text-align: center;
+  z-index: 20;
+}
+#subtitle {
+  font-size: 2.7cqw;
+  font-weight: 800;
+  line-height: 1.5;
+  /* white outline so speaker-colored text reads over any slide content;
+     paint-order keeps the stroke behind the glyph fill */
+  -webkit-text-stroke: 0.14em #fff;
+  paint-order: stroke fill;
+}
+#subtitle-box.zundamon #subtitle { color: #3f7d22; }
+#subtitle-box.metan #subtitle { color: #d64f8e; }
+
+/* ---- seekbar (YouTube style) ---- */
+#progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 1px;
+  height: 0.9cqh;
+  z-index: 30;
+  transition: height 0.15s;
+}
+#progress:hover { height: 2.2cqh; }
+.seg {
+  flex: 1;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.25);
+}
+.seg.done { background: var(--seek); }
+.seg.current { background: #ff7b74; }
+.seg:hover { background: #fff; }

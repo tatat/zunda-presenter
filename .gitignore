@@ -1,0 +1,11 @@
+node_modules/
+runtime/
+tools/macos-arm64/
+tools/pyenv/
+tools/*.7z*
+tools/*.log
+assets/raw/
+deck/audio/
+*.log
+.DS_Store
+.zunda-presenter/

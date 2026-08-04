@@ -1,0 +1,169 @@
+{
+  "title": "デモ：この仕組みの紹介",
+  "slides": [
+    {
+      "id": "intro",
+      "html": "<div class='center'><h1>ずんだもん解説プレゼン</h1><p class='note'>agent の plan をゆっくり解説風にお届け</p></div>"
+    },
+    {
+      "id": "why",
+      "html": "<h2>なぜ作ったの？</h2><ul><li>agent の plan は<strong>長い文章</strong>になりがち</li><li>そして人間は<strong>文字が読めない</strong></li><li>→ ならば、読み上げればいいのでは？</li></ul>"
+    },
+    {
+      "id": "how",
+      "html": "<h2>仕組み</h2><ul><li>agent が <strong>台本</strong>（script.json）を書く</li><li>VOICEVOX がセリフを<strong>音声合成</strong></li><li>ブラウザが自動再生 ＋ スライド表示</li></ul>"
+    },
+    {
+      "id": "arch",
+      "chars": false,
+      "html": "<h2>全体の流れ</h2><div class='mermaid'>flowchart LR\n  deckfile[\"deck/script.json<br/>（台本）\"] --> synth[synthesize]\n  dict[\"deck/dictionary.json<br/>（読み仮名）\"] --> synth\n  synth -- audio_query --> vv[VOICEVOX]\n  vv -- wav --> synth\n  synth -- \"deck/audio/*.wav\" --> server[server]\n  server -- \"WebSocket / file watch\" --> browser[\"browser<br/>自動再生 + 字幕\"]</div>"
+    },
+    {
+      "id": "controls",
+      "html": "<h2>操作方法</h2><ul><li><strong>Space</strong>：一時停止 / 再開</li><li><strong>← →</strong>：セリフ単位で前後移動</li><li><strong>C</strong>：キャラ表示切替</li><li>止めてチャットで<strong>質問・訂正</strong>もできる</li></ul>"
+    }
+  ],
+  "lines": [
+    {
+      "id": "d1",
+      "speaker": "zundamon",
+      "slide": "intro",
+      "text": "ずんだもんなのだ！今日はこのプレゼンの仕組みを紹介するのだ！",
+      "audio": "audio/857317eba71f.wav"
+    },
+    {
+      "id": "d2",
+      "speaker": "metan",
+      "slide": "intro",
+      "text": "四国めたんですわ。coding agent の plan を、わたくしたちが解説していきますわよ。",
+      "audio": "audio/06fc7767b78f.wav"
+    },
+    {
+      "id": "w1",
+      "speaker": "zundamon",
+      "slide": "why",
+      "text": "そもそも、なんでこの仕組みを作ったのだ？",
+      "audio": "audio/a6d9fed3ed39.wav"
+    },
+    {
+      "id": "w2",
+      "speaker": "metan",
+      "slide": "why",
+      "text": "agent の書く plan って、長ーい文章になりがちでしょう？",
+      "audio": "audio/854c95e359d5.wav"
+    },
+    {
+      "id": "w3",
+      "speaker": "metan",
+      "slide": "why",
+      "text": "そして人間は……文字が、読めませんの。",
+      "postPause": 0.6,
+      "expression": "smug",
+      "audio": "audio/5e9061472b88.wav"
+    },
+    {
+      "id": "w4",
+      "speaker": "zundamon",
+      "slide": "why",
+      "text": "ひどい言われようなのだ！？でも、否定できないのだ……",
+      "expression": "surprised",
+      "faces": { "metan": "smug" },
+      "audio": "audio/53a65c55201e.wav"
+    },
+    {
+      "id": "w5",
+      "speaker": "metan",
+      "slide": "why",
+      "text": "ですから、わたくしたちが読んで差し上げますのよ。",
+      "expression": "happy",
+      "faces": { "zundamon": "troubled" },
+      "audio": "audio/c0df7bbfc8bc.wav"
+    },
+    {
+      "id": "d3",
+      "speaker": "zundamon",
+      "slide": "how",
+      "text": "この画面、どういう仕組みで動いているのだ？",
+      "audio": "audio/1e4907b4aae9.wav"
+    },
+    {
+      "id": "d4",
+      "speaker": "metan",
+      "slide": "how",
+      "text": "agent が台本を書いて、VOICEVOX がセリフを音声にしていますのよ。",
+      "audio": "audio/1cf0a71a4c95.wav"
+    },
+    {
+      "id": "d5",
+      "speaker": "zundamon",
+      "slide": "how",
+      "text": "へえ！じゃあ台本を書き換えたら、すぐ反映されるのだ？",
+      "audio": "audio/42a0234ad315.wav"
+    },
+    {
+      "id": "d6",
+      "speaker": "metan",
+      "slide": "how",
+      "text": "ええ、保存した瞬間に画面へ反映されますわ。訂正も簡単ですのよ。",
+      "audio": "audio/b24d97200945.wav"
+    },
+    {
+      "id": "a1",
+      "speaker": "zundamon",
+      "slide": "arch",
+      "text": "全体の流れを、図で見せてほしいのだ！",
+      "audio": "audio/b941989c9de6.wav"
+    },
+    {
+      "id": "a2",
+      "speaker": "metan",
+      "slide": "arch",
+      "text": "こちらが全体図ですわ。台本が音声になって、ブラウザに届きますのよ。",
+      "audio": "audio/dd802febadf8.wav"
+    },
+    {
+      "id": "a3",
+      "speaker": "metan",
+      "slide": "arch",
+      "text": "画面いっぱいに見せたいスライドでは、わたくしたちは引っ込みますの。",
+      "audio": "audio/53a7e2beb595.wav"
+    },
+    {
+      "id": "a4",
+      "speaker": "zundamon",
+      "slide": "arch",
+      "text": "おおー、スライドが広く使えて便利なのだ！",
+      "expression": "happy",
+      "audio": "audio/ca07b7d78334.wav"
+    },
+    {
+      "id": "d7",
+      "speaker": "zundamon",
+      "slide": "controls",
+      "text": "途中で止めたいときは、どうすればいいのだ？",
+      "audio": "audio/14b4fe04825e.wav"
+    },
+    {
+      "id": "d8",
+      "speaker": "metan",
+      "slide": "controls",
+      "text": "スペースキーで一時停止、矢印キーで前後に移動できますわ。",
+      "audio": "audio/abe65e02fba3.wav"
+    },
+    {
+      "id": "d8b",
+      "speaker": "metan",
+      "slide": "controls",
+      "text": "止めてチャットで質問すれば、agent が答えてくれますのよ。",
+      "audio": "audio/5990a6cf8ba5.wav"
+    },
+    {
+      "id": "d9",
+      "speaker": "zundamon",
+      "slide": "controls",
+      "text": "それじゃ、よろしくなのだ〜！",
+      "expression": "happy",
+      "audio": "audio/d81314c4546d.wav"
+    }
+  ]
+}

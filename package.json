@@ -1,0 +1,14 @@
+{
+  "name": "zunda-presenter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.mjs",
+    "synth": "node scripts/synthesize.mjs"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mermaid": "^11.16.0",
+    "ws": "^8.21.2"
+  }
+}

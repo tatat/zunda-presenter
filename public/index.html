@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>presenter</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div id="overlay">
+  <div id="overlay-box">
+    <div id="overlay-title">クリックで開始</div>
+    <div id="overlay-sub">音声を再生するにはクリックが必要です</div>
+    <div id="overlay-hints">クリック / Space: 再生 / 停止 ・ ← →: 前後のセリフ ・ C: キャラ表示切替 ・ 下のバーをクリックで移動</div>
+  </div>
+</div>
+
+<main>
+  <div id="stage">
+    <div id="slide"></div>
+
+    <div id="deck-title"></div>
+    <div id="status"></div>
+
+    <div class="char" id="char-zundamon">
+      <img class="close" src="/assets/zundamon_normal_close.png" alt="ずんだもん">
+      <img class="open" src="/assets/zundamon_normal_open.png" alt="">
+    </div>
+    <div class="char" id="char-metan">
+      <img class="close" src="/assets/metan_normal_close.png" alt="四国めたん">
+      <img class="open" src="/assets/metan_normal_open.png" alt="">
+    </div>
+
+    <div id="subtitle-box">
+      <div id="subtitle"></div>
+    </div>
+
+    <div id="progress"></div>
+  </div>
+</main>
+
+<script type="module">
+  import mermaid from "/vendor/mermaid/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#1c2230",
+      primaryColor: "#2a3347",
+      primaryBorderColor: "#6db3f2",
+      primaryTextColor: "#e8ecf4",
+      lineColor: "#8a93a6",
+      fontSize: "18px",
+    },
+    fontFamily: "Hiragino Sans, Noto Sans JP, sans-serif",
+  });
+  window.renderMermaid = () =>
+    mermaid.run({ nodes: document.querySelectorAll("#slide .mermaid") });
+</script>
+<script src="/app.js"></script>
+</body>
+</html>
