@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>presenter</title>
 <link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
 </head>
 <body>
 
@@ -71,6 +72,17 @@
   });
   window.renderMermaid = () =>
     mermaid.run({ nodes: document.querySelectorAll("#slide .mermaid") });
+</script>
+<script type="module">
+  import renderMathInElement from "/vendor/katex/contrib/auto-render.mjs";
+  window.renderMath = () =>
+    renderMathInElement(document.querySelector("#slide"), {
+      delimiters: [
+        { left: "\\[", right: "\\]", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
 </script>
 <script src="/app.js"></script>
 </body>

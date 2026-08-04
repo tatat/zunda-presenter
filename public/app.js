@@ -179,6 +179,7 @@ function renderSlide(line) {
     // simplification of the export (see scripts/export-video.mjs)
     setCharsVisible(slide.chars !== false);
     el.innerHTML = slide.html;
+    window.renderMath?.(); // synchronous; fonts awaited by __render.frame
     return window.renderMermaid?.();
   }
   el.classList.add("fading");
@@ -187,6 +188,7 @@ function renderSlide(line) {
     setCharsVisible(slide.chars !== false); // slides opt out with "chars": false
     el.innerHTML = slide.html;
     el.classList.remove("fading");
+    window.renderMath?.();
     window.renderMermaid?.();
   }, 200);
 }
