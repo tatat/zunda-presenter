@@ -133,6 +133,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 - Writes `<deck dir>/export.mp4`. One-time prerequisites: `ffmpeg` on PATH (`brew install ffmpeg`) and playwright in the plugin root (`npm i -D playwright && npx playwright install chromium`).
 - Synthesize first (`npm run synth`) — lines without audio get silence with the player's text-length timing.
 - Rendering is offline and deterministic (timeline computed from wav durations, frames screenshotted headlessly), so it's much faster than realtime and needs neither the server nor a browser tab. Slide changes are hard cuts (no fade).
+- Fonts come from the exporting machine: the UI stack is `"Hiragino Sans", "Noto Sans JP", sans-serif` (code: `Menlo, "SF Mono", monospace`), so on Windows text falls back to Yu Gothic / MS Gothic and the video looks different from the player on macOS. If the user cares about the look, install Noto Sans JP first (e.g. from Google Fonts) and re-export; a system-wide install is enough — no config needed.
 - Overrides: `PRESENTER_VIDEO_OUT` (output path), `PRESENTER_VIDEO_HEIGHT` (default 1080).
 
 ## Questions & corrections during playback
