@@ -19,9 +19,10 @@ app.use(express.static(path.join(ROOT, "public")));
 app.use("/decks", express.static(DECKS_ROOT));
 app.use("/vendor/mermaid", express.static(path.join(ROOT, "node_modules", "mermaid", "dist")));
 
-// Player page for a specific deck
+// Player page for a specific deck. root is passed explicitly so dot segments in
+// the install path (~/.claude/plugins/...) don't trip send's dotfiles check (#1)
 app.get("/d/:deck", (req, res) => {
-  res.sendFile(path.join(ROOT, "public", "index.html"));
+  res.sendFile("index.html", { root: path.join(ROOT, "public") });
 });
 
 app.get("/api/decks", (req, res) => {
