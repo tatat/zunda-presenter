@@ -114,6 +114,9 @@ main {
   justify-content: center;
   text-align: center;
 }
+/* align-items: center shrink-wraps flex children; an h2's accent underline
+   must still span the slide like it does outside .center */
+#slide .center h2 { align-self: stretch; }
 #slide .columns { display: flex; gap: 2em; }
 #slide .columns > * { flex: 1; }
 #slide .note { color: var(--muted); font-size: 0.95em; }
