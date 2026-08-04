@@ -13,6 +13,12 @@ const SCRIPT_PATH = path.join(DECK_DIR, "script.json");
 const AUDIO_DIR = path.join(DECK_DIR, "audio");
 const ENGINE = process.env.VOICEVOX_URL || "http://127.0.0.1:50021";
 
+/* --readings: print every line's engine reading (dictionary/spoken applied)
+   without synthesizing or writing anything. The synth log's `reading:` only
+   covers newly synthesized lines — cached lines pass silently — so this is
+   the way to audit a whole deck. */
+const READINGS_ONLY = process.argv.includes("--readings");
+
 // VOICEVOX style ids per character; referenced by name from script.json
 const STYLES = {
   zundamon: { normal: 3, amaama: 1, tsuntsun: 7, sexy: 5, sasayaki: 22, hisohiso: 38, herohero: 75, namidame: 76 },
@@ -74,6 +80,20 @@ function spokenText(line) {
   }
   return cleanSpaces(spoken);
 }
+
+async function audioQuery(text, styleId) {
+  const q = new URLSearchParams({ text, speaker: String(styleId) });
+  const res = await fetch(`${ENGINE}/audio_query?${q}`, { method: "POST" });
+  if (!res.ok) {
+    console.error(`audio_query failed (${res.status}): ${text}`);
+    process.exit(1);
+  }
+  return res.json();
+}
+
+// query.kana is AquesTalk-style notation: ' = accent nucleus, / = accent
+// phrase break, _ = unvoiced mora — strip the markers, keep phrase spacing
+const readingOf = (query) => (query.kana ?? "").replace(/['_]/g, "").replace(/\//g, " ");
 
 async function synthesize(query, styleId, text) {
   const res = await fetch(`${ENGINE}/synthesis?speaker=${styleId}`, {
@@ -203,6 +223,11 @@ async function synthesizeLines(lines) {
       process.exit(1);
     }
     const text = spokenText(line);
+    if (READINGS_ONLY) {
+      console.log(`${line.id} [${line.speaker}] ${line.text}`);
+      console.log(`  reading: ${readingOf(await audioQuery(text, p.styleId))}`);
+      continue;
+    }
     // v2: head-rescue changed synthesis output; bump invalidates pre-rescue caches
     const hash = createHash("sha1")
       .update(`v2|${p.styleId}|${p.speed}|${p.pitch}|${p.intonation}|${p.volume}|${p.postPause}|${text}`)
@@ -212,13 +237,7 @@ async function synthesizeLines(lines) {
     const abs = path.join(AUDIO_DIR, `${hash}.wav`);
 
     if (!existsSync(abs)) {
-      const q = new URLSearchParams({ text, speaker: String(p.styleId) });
-      const queryRes = await fetch(`${ENGINE}/audio_query?${q}`, { method: "POST" });
-      if (!queryRes.ok) {
-        console.error(`audio_query failed (${queryRes.status}): ${text}`);
-        process.exit(1);
-      }
-      const query = await queryRes.json();
+      const query = await audioQuery(text, p.styleId);
       query.speedScale = p.speed;
       query.pitchScale = p.pitch;
       query.intonationScale = p.intonation;
@@ -229,8 +248,9 @@ async function synthesizeLines(lines) {
       console.log(`synth: [${line.speaker}] ${text.slice(0, 30)}`);
       // Engine's actual reading — the agent can't listen, so this line is how
       // misreadings (rare-reading kanji terms, math vocabulary) get caught:
-      // eyeball it, fix via dictionary.json, re-run.
-      const reading = (query.kana ?? "").replace(/'/g, "").replace(/\//g, " ");
+      // eyeball it, fix via dictionary.json, re-run. Only new lines reach
+      // here; `--readings` audits the cached ones too.
+      const reading = readingOf(query);
       if (reading) console.log(`  reading: ${reading}`);
       const aps = query.accent_phrases;
       if (aps.length >= 2 && aps[0].pause_mora && aps[0].moras.length <= HEAD_MAX_MORAS) {
@@ -261,7 +281,7 @@ function writeIfChanged(p, raw, obj) {
 }
 
 await synthesizeLines(script.lines);
-writeIfChanged(SCRIPT_PATH, scriptRaw, script);
+if (!READINGS_ONLY) writeIfChanged(SCRIPT_PATH, scriptRaw, script);
 
 // Web Q&A answers live in <deck>/qa.json as per-question line groups
 const QA_PATH = path.join(DECK_DIR, "qa.json");
@@ -273,7 +293,12 @@ if (existsSync(QA_PATH)) {
     await synthesizeLines(q.lines ?? []);
     qaCount += q.lines?.length ?? 0;
   }
-  writeIfChanged(QA_PATH, qaRaw, qa);
+  if (!READINGS_ONLY) writeIfChanged(QA_PATH, qaRaw, qa);
 }
 
-console.log(`done: ${synthesized} synthesized, ${cached} cached, ${script.lines.length + qaCount} total${qaCount ? ` (incl. ${qaCount} qa)` : ""}`);
+const total = script.lines.length + qaCount;
+console.log(
+  READINGS_ONLY
+    ? `done: ${total} readings${qaCount ? ` (incl. ${qaCount} qa)` : ""}`
+    : `done: ${synthesized} synthesized, ${cached} cached, ${total} total${qaCount ? ` (incl. ${qaCount} qa)` : ""}`
+);
