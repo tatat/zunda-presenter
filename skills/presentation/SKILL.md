@@ -21,8 +21,8 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save.
 2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
-3. Add katakana readings for every English/technical term you used to `.zunda-presenter/dictionary.json` (kanji terms with tricky readings too — see Voice tuning).
-4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. The log prints the engine's actual reading for each **newly synthesized** line — scan it for misread terms and fix them via the dictionary. Cached lines pass silently, so before declaring the deck ready (and again at the end of any editing session), audit every line with `npm run readings` (same env var, no synthesis — prints text → actual reading for the whole deck).
+3. Add katakana readings for every English/technical term you used to `.zunda-presenter/dictionary.json` (kanji terms with tricky readings too — see Readings).
+4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Scan the readings in the log and audit the whole deck before playing (see Readings).
 5. Point the user's tab at the deck and play:
    ```
    curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"open","deck":"<deck-name>"}'
@@ -52,7 +52,7 @@ Sizing: ~1 slide per idea, 3–6 lines per slide. A 5-slide deck ≈ 20–25 lin
 - Roles: **めたん = 解説役**, **ずんだもん = 聞き役**. Before writing dialogue, read `references/roles/metan.md` and `references/roles/zundamon.md` (each character's voice) and `references/roles/interaction.md` (掛け合いルール — exchange cycle, question discipline, turn balance).
 - Each line ≤ 60 characters. Long lines sound monotonous and make seeking coarse. Split rather than cram.
 - Dialogue text is Japanese. English identifiers are fine in `text` (subtitle shows them as-is); the dictionary handles pronunciation.
-- Numbers in dialogue: **write Arabic numerals** (`99%`, `1,098人`, `10万人`), not kanji numerals. Digits have one reading path; kanji numerals additionally carry lexical readings the analyzer may pick (九十九 → ツクモ, 一日 → ツイタチ, 十八番 → オハコ), and digits scan far better in subtitles. `%`, decimal points and thousands separators all read correctly (`0.1%` → レーテンイチパーセント). Counting words (一つ目, 二人) are words, not figures — keep the kanji.
+- Numbers in dialogue: Arabic numerals (`99%`, `1,098人`), not kanji numerals — better for both the engine and the subtitle; details in Readings.
 - Slide transitions: give the first line on a new slide a short transition beat (「次は〜なのだ」「じゃあ、〜を見ていくわ」).
 
 **Expressions** — `normal / happy / surprised / troubled / smug`:
@@ -99,7 +99,7 @@ Rules:
 - Slide `html` is a JSON string: use single quotes for HTML attributes (`class='center'`), `\n` for newlines inside Mermaid blocks.
 - HTML helpers: `.center` (title slides), `.columns`, `.note`, plus styled `h1 h2 ul ol p pre code strong`.
 
-## Diagrams
+## Diagrams & charts
 
 Use Mermaid: `<div class='mermaid'>flowchart LR\n  a --> b</div>` — rendered dark-themed, scaled to fit, centered.
 
@@ -119,15 +119,37 @@ KaTeX auto-renders TeX in slide html: `\(…\)` inline, `\[…\]` display (block
 - Errors don't throw: bad TeX inside matched delimiters renders red, an unmatched delimiter just stays as raw source text — catch both in the preview screenshot.
 - Math is for slides only; dialogue `text` is spoken by VOICEVOX, so write formulas out in words there (「aをbで割るとc」).
 
+## Readings
+
+The engine misreads Japanese sometimes — a flaw of its morphological analysis, not of the text you wrote. You can't listen to the audio, so the loop is: write defensively, audit every line's reading, fix what's left.
+
+**Write defensively:**
+
+- Numbers: **write Arabic numerals** (`99%`, `1,098人`, `10万人`), not kanji numerals. Digits have one reading path; kanji numerals additionally carry lexical readings the analyzer may pick (九十九 → ツクモ, 一日 → ツイタチ, 十八番 → オハコ), and digits scan far better in subtitles. `%`, decimal points and thousands separators all read correctly (`0.1%` → レーテンイチパーセント). Counting words (一つ目, 二人) are words, not figures — keep the kanji.
+- A number immediately followed by 割 breaks: 割 is parsed as the tenths counter and る is left stranded (`99割る1098` → …ワリル…, digits and kanji numerals alike). Write `99÷1098` (reads correctly as ワル, subtitle looks like math), `99を1098で割る`, or `99わる1098`.
+- A kanji verb contracted to `〜ててる` can gain a spurious mora for some verbs (捨ててる → ステテテル, likewise 立ててる/育ててる — yet 建ててる is fine, so it's lexical and not predictable). Write the uncontracted 〜ている or the verb in kana.
+
+**Audit:** the synth log prints the engine's actual reading (`reading: …`) for each **newly synthesized** line — scan it on every run. Cached lines pass silently, so before declaring the deck ready (and again at the end of any editing session) audit every line — dictionary and `spoken` applied, nothing synthesized:
+
+```
+cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run readings
+```
+
+**Fix — pick by scope:**
+
+- One line, kana acceptable in the subtitle → respell `text` in kana.
+- A term that should read the same everywhere → **`.zunda-presenter/dictionary.json`**: `"term": "カタカナ読み"` per term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). Always register the English/technical terms you use — and kanji terms too: math and other specialist vocabulary is frequently misread (e.g. 偽陽性 → ニセヨウセイ instead of ギヨウセイ), so register those as well (`"偽陽性": "ギヨウセイ"`). Replacement is a plain substring match, which cuts both ways: keys may be whole phrases, and **context-dependent readings need the context in the key** — for 要→カナメ register `"設計の要": "セッケイノカナメ"`, never bare `"要": "カナメ"`, which would corrupt 必要/要素 into 必カナメ/カナメ素. Never register a single ambiguous kanji without surrounding context.
+- One line where the subtitle must keep its spelling → **`lines[].spoken`** — full override of the synthesized text; the subtitle keeps showing `text`. Verbatim: the dictionary does NOT apply, so spell out every tricky reading in the line yourself (kana/katakana).
+
 ## Voice tuning
 
 All params join the audio cache hash — tweaks re-synthesize only affected lines (run the synth command after any change). Cheapest first:
 
-1. **Rewrite the text** — 「、」 inserts a pause, 「！」「？」 change intonation, 「〜」 lengthens vowels. Misread words: respell in kana. Write Zundamon's surprise as 「えっ、」 never bare 「え、」 — the bare vowel synthesizes as a near-silent whisper (line-initial interjections like めたん's 「ええ、」 have the same failure mode; the synth script detects and repairs those automatically, but ずんだもん's bare 「え」 resists repair, so spell it 「えっ」). Two analyzer traps to avoid at write time: a number immediately followed by 割 breaks — 割 is parsed as the tenths counter and る is left stranded (`99割る1098` → …ワリル…, digits and kanji numerals alike) — write `99÷1098` (reads correctly as ワル, subtitle looks like math), `99を1098で割る`, or `99わる1098`; and a kanji verb contracted to `〜ててる` can gain a spurious mora for some verbs (捨ててる → ステテテル, likewise 立ててる/育ててる — yet 建ててる is fine, so it's lexical and not predictable) — write the uncontracted 〜ている or the verb in kana.
-2. **`.zunda-presenter/dictionary.json`** — `"term": "カタカナ読み"` per term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). Always register the English/technical terms you use — and it works for kanji terms too: math and other specialist vocabulary is frequently misread (e.g. 偽陽性 → ニセヨウセイ instead of ギヨウセイ), so register those as well (`"偽陽性": "ギヨウセイ"`). The synth log prints each line's actual reading (`reading: …`) — scan it after every synth run and fix misreadings via the dictionary before playing; remember it only covers newly synthesized lines, so finish with a full `npm run readings` audit (workflow step 4). Replacement is a plain substring match, which cuts both ways: keys may be whole phrases, and **context-dependent readings need the context in the key** — for 要→カナメ register `"設計の要": "セッケイノカナメ"`, never bare `"要": "カナメ"`, which would corrupt 必要/要素 into 必カナメ/カナメ素. Never register a single ambiguous kanji without surrounding context.
-3. **`lines[].spoken`** — per-line full override of the synthesized text; the subtitle keeps showing `text`. Verbatim: the dictionary does NOT apply, so spell out every tricky reading in the line yourself (kana/katakana). Pick by scope: misread fixable by respelling `text` in kana → do that; term that should read the same everywhere → dictionary; one line where the subtitle must keep its spelling → `spoken`.
-4. **Per-line params** — `style` (emotion voice; sparingly: 驚き=herohero/namidame, 内緒話=sasayaki), `speed` (~0.85–1.3), `pitch` (±0.15 is a lot), `intonation` (0=flat, 2=exaggerated), `volume`, `postPause`.
-5. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override. Recommended: zundamon `speed: 1.2` — his default pace is slow and drags the dialogue; ~1.2 sounds natural.
+1. **Rewrite the text** — 「、」 inserts a pause, 「！」「？」 change intonation, 「〜」 lengthens vowels. Write Zundamon's surprise as 「えっ、」 never bare 「え、」 — the bare vowel synthesizes as a near-silent whisper (line-initial interjections like めたん's 「ええ、」 have the same failure mode; the synth script detects and repairs those automatically, but ずんだもん's bare 「え」 resists repair, so spell it 「えっ」).
+2. **Per-line params** — `style` (emotion voice; sparingly: 驚き=herohero/namidame, 内緒話=sasayaki), `speed` (~0.85–1.3), `pitch` (±0.15 is a lot), `intonation` (0=flat, 2=exaggerated), `volume`, `postPause`.
+3. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override. Recommended: zundamon `speed: 1.2` — his default pace is slow and drags the dialogue; ~1.2 sounds natural.
+
+Wrong readings are not a tuning problem — see Readings.
 
 ## Playback control API
 
@@ -189,5 +211,7 @@ Verify layout without touching the user's tab: `http://localhost:3939/d/<deck-na
 ```
 
 Check at least: the title slide, the densest slide, every `chars: false` slide, and every slide with math (Mermaid syntax errors, red KaTeX error text, and overflowing content show up here). Fix, then re-check.
+
+Also run the full readings audit (`npm run readings` — see Readings): the synth log alone misses every cached line.
 
 After a rewrite, also reread the dialogue as a first-time viewer: no line may presume something the viewer never saw — an earlier version of the deck, a review, or anything that only happened in chat.
