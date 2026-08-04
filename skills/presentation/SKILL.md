@@ -145,6 +145,14 @@ When the user pauses and asks a question in chat:
 
 Corrections: edit `lines[].text` / slide html in place (keep ids) → synth → `{"action":"goto","lineId":"<first edited>"}` → `{"action":"play"}`.
 
+## Rewriting when the source changes
+
+Decks also get revised because the **artifact changed**, not because the viewer asked — a typical loop: write plan → build deck → plan gets reviewed → plan fixed → deck "updated". The trap: you saw the diff, the viewer didn't. **The deck presents the artifact's current state, not its edit history.** To the viewer there is only one plan.
+
+- When the source materially changed, re-outline from the final artifact and rewrite the affected sections wholesale — don't splice patch lines into old dialogue. Patch-shaped symptoms: emphasis proportional to what churned rather than what matters, lines written against the old plan sitting next to their corrections, 「〜に変更になったのだ」 narration of events the viewer never saw. Line-level splicing is for live corrections during playback (above); process-driven revisions get a rewrite.
+- Rewrites are cheap: keep ids for lines whose text survives and the synth cache skips them; everything else is just text.
+- Review feedback is good material in the wrong voice. Convert it into design reasoning — 「〜という案もあるけれど、〜だからこうするわ」 — never process narration (「レビューで指摘されて直したわ」). Drop the history, keep the reason (and record it in `context.md`).
+
 ## Web Q&A (questions typed into the player)
 
 The player has a question box (？質問, top right). Those questions are answered **without you**: the server spawns a headless `claude -p` (as Metan; read-only tools, cwd = the project) that sees `script.json` + `context.md` + the repo, appends the answer to `<deck>/qa.json` (`{"questions": [{id, question, ts, lines}]}`; `script.json` is never touched), synthesizes, and plays it. Each question is its own timeline in the player: a switcher next to the deck title lists メイン + 質問N, the answer plays in its own timeline (slides still anchored to what was in view when asked); switching back to メイン restores the viewer's saved position. The main timeline and video export stay pure. When revisiting a deck, feel free to promote good Q&A exchanges by moving their lines from `qa.json` into `script.json` (rewrite to fit the flow), delete stale ones, or delete `qa.json` entirely to reset. Requires the `claude` CLI on PATH; model via `PRESENTER_QA_MODEL` (default `sonnet`).
@@ -165,3 +173,5 @@ Verify layout without touching the user's tab: `http://localhost:3939/d/<deck-na
 ```
 
 Check at least: the title slide, the densest slide, and every `chars: false` slide (Mermaid syntax errors and overflowing content show up here). Fix, then re-check.
+
+After a rewrite, also reread the dialogue as a first-time viewer: no line may presume something the viewer never saw — an earlier version of the deck, a review, or anything that only happened in chat.
