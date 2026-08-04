@@ -54,43 +54,21 @@ Use this preference order:
 flowchart TD
     A["Draft a neutral Japanese clause"] --> B{"What is the speech act?"}
 
-    B -- "New information, correction, warning" --> C[
-        "YO family:
-        〜よ / 〜のよ / 〜なのよ"
-    ]
+    B -- "New information, correction, warning" --> C["YO family:<br/>〜よ / 〜のよ / 〜なのよ"]
 
-    B -- "Firm decision, realization, personal assertion" --> D[
-        "WA family:
-        〜わ / 〜だわ / occasionally 〜わよ"
-    ]
+    B -- "Firm decision, realization, personal assertion" --> D["WA family:<br/>〜わ / 〜だわ / occasionally 〜わよ"]
 
-    B -- "Agreement, shared evaluation, softening" --> E[
-        "NE family:
-        〜ね / 〜わね / 〜なのね"
-    ]
+    B -- "Agreement, shared evaluation, softening" --> E["NE family:<br/>〜ね / 〜わね / 〜なのね"]
 
-    B -- "Explanation, background, circumstances" --> F[
-        "NO family:
-        〜の / 〜のよ
-        noun or na-adjective: 〜なの / 〜なのよ"
-    ]
+    B -- "Explanation, background, circumstances" --> F["NO family:<br/>〜の / 〜のよ<br/>noun or na-adjective: 〜なの / 〜なのよ"]
 
-    B -- "Information question" --> G[
-        "〜の？ / 〜なの？"
-    ]
+    B -- "Information question" --> G["〜の？ / 〜なの？"]
 
-    B -- "Genuine uncertainty or self-questioning" --> H[
-        "〜かしら？"
-    ]
+    B -- "Genuine uncertainty or self-questioning" --> H["〜かしら？"]
 
-    B -- "Confirmation or challenge" --> I[
-        "〜でしょ？ / 〜じゃない？"
-    ]
+    B -- "Confirmation or challenge" --> I["〜でしょ？ / 〜じゃない？"]
 
-    B -- "Directive or tsukkomi" --> J[
-        "V-て / V-てよ / V-なさい /
-        V-ないで / 〜じゃない / 〜なのよ"
-    ]
+    B -- "Directive or tsukkomi" --> J["V-て / V-てよ / V-なさい /<br/>V-ないで / 〜じゃない / 〜なのよ"]
 
     C --> K{"What is the final predicate class?"}
     D --> K
@@ -101,41 +79,17 @@ flowchart TD
     I --> K
     J --> K
 
-    K -- "Verb or i-adjective" --> L[
-        "Attach the selected family directly:
-        行くわ / 高いわ
-        行くのよ / 高いの？
-        分かったわね"
-    ]
+    K -- "Verb or i-adjective" --> L["Attach the selected family directly:<br/>行くわ / 高いわ<br/>行くのよ / 高いの？<br/>分かったわね"]
 
-    K -- "Present affirmative noun or na-adjective" --> M[
-        "Choose by function:
-        firm WA → だわ
-        simple YO → よ
-        explanatory NO → なの / なのよ
-        recognition → なのね
-        question → なの？"
-    ]
+    K -- "Present affirmative noun or na-adjective" --> M["Choose by function:<br/>firm WA → だわ<br/>simple YO → よ<br/>explanatory NO → なの / なのよ<br/>recognition → なのね<br/>question → なの？"]
 
-    K -- "Past or negative predicate" --> N[
-        "Attach after the inflected form:
-        行かなかったわ
-        高くないのよ
-        学生じゃないわ"
-    ]
+    K -- "Past or negative predicate" --> N["Attach after the inflected form:<br/>行かなかったわ<br/>高くないのよ<br/>学生じゃないわ"]
 
     L --> O["Validate morphology and distribution"]
     M --> O
     N --> O
 
-    O --> P{
-        "Reject:
-        noun or na-adjective + bare わ
-        verb or i-adjective + なのよ
-        routine ですわ / ますわ
-        repeated わよ
-        generic かしら"
-    }
+    O --> P{"Reject:<br/>noun or na-adjective + bare わ<br/>verb or i-adjective + なのよ<br/>routine ですわ / ますわ<br/>repeated わよ<br/>generic かしら"}
 
     P -- "Clean" --> Q["Emit"]
     P -- "Violation" --> A
