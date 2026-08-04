@@ -57,15 +57,22 @@ const DICT_PATH = [
 const dict = DICT_PATH ? JSON.parse(readFileSync(DICT_PATH, "utf8")) : {};
 const dictTerms = Object.keys(dict).sort((a, b) => b.length - a.length);
 
-function spokenText(text) {
-  let spoken = text;
+// Drop spaces touching Japanese characters (left over from "agent の plan"-style
+// spacing after dictionary replacement) so they don't become awkward pauses
+function cleanSpaces(text) {
+  return text.replace(/([^\x00-\x7F]) +/g, "$1").replace(/ +([^\x00-\x7F])/g, "$1");
+}
+
+function spokenText(line) {
+  // Per-line override: sent to the engine verbatim — the dictionary does NOT
+  // apply, so the line has full authority over its own reading
+  if (line.spoken != null) return cleanSpaces(line.spoken);
+  let spoken = line.text;
   for (const term of dictTerms) {
     const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     spoken = spoken.replace(new RegExp(escaped, "gi"), dict[term]);
   }
-  // Drop spaces touching Japanese characters (left over from "agent の plan"-style
-  // spacing after dictionary replacement) so they don't become awkward pauses
-  return spoken.replace(/([^\x00-\x7F]) +/g, "$1").replace(/ +([^\x00-\x7F])/g, "$1");
+  return cleanSpaces(spoken);
 }
 
 async function synthesize(query, styleId, text) {
@@ -195,7 +202,7 @@ async function synthesizeLines(lines) {
       console.error(`unknown speaker/style: ${JSON.stringify(line)}`);
       process.exit(1);
     }
-    const text = spokenText(line.text);
+    const text = spokenText(line);
     // v2: head-rescue changed synthesis output; bump invalidates pre-rescue caches
     const hash = createHash("sha1")
       .update(`v2|${p.styleId}|${p.speed}|${p.pitch}|${p.intonation}|${p.volume}|${p.postPause}|${text}`)
@@ -220,6 +227,11 @@ async function synthesizeLines(lines) {
 
       let wav = await synthesize(query, p.styleId, text);
       console.log(`synth: [${line.speaker}] ${text.slice(0, 30)}`);
+      // Engine's actual reading — the agent can't listen, so this line is how
+      // misreadings (rare-reading kanji terms, math vocabulary) get caught:
+      // eyeball it, fix via dictionary.json, re-run.
+      const reading = (query.kana ?? "").replace(/'/g, "").replace(/\//g, " ");
+      if (reading) console.log(`  reading: ${reading}`);
       const aps = query.accent_phrases;
       if (aps.length >= 2 && aps[0].pause_mora && aps[0].moras.length <= HEAD_MAX_MORAS) {
         const ratio = headRatio(query, wav);

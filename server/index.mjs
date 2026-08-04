@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(express.static(path.join(ROOT, "public")));
 app.use("/decks", express.static(DECKS_ROOT));
 app.use("/vendor/mermaid", express.static(path.join(ROOT, "node_modules", "mermaid", "dist")));
+app.use("/vendor/katex", express.static(path.join(ROOT, "node_modules", "katex", "dist")));
 
 // Player page for a specific deck. root is passed explicitly so dot segments in
 // the install path (~/.claude/plugins/...) don't trip send's dotfiles check (#1)

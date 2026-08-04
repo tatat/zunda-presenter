@@ -145,6 +145,7 @@ const app = express();
 app.use(express.static(path.join(ROOT, "public")));
 app.use("/decks/export", express.static(DECK_DIR));
 app.use("/vendor/mermaid", express.static(path.join(ROOT, "node_modules", "mermaid", "dist")));
+app.use("/vendor/katex", express.static(path.join(ROOT, "node_modules", "katex", "dist")));
 app.get("/d/:deck", (req, res) => res.sendFile("index.html", { root: path.join(ROOT, "public") }));
 const server = app.listen(0, "127.0.0.1");
 await new Promise((resolve) => server.once("listening", resolve));

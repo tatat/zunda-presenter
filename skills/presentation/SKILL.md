@@ -21,8 +21,8 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save.
 2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
-3. Add katakana readings for every English/technical term you used to `.zunda-presenter/dictionary.json`.
-4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely.
+3. Add katakana readings for every English/technical term you used to `.zunda-presenter/dictionary.json` (kanji terms with tricky readings too — see Voice tuning).
+4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. The log prints the engine's actual reading per line — scan it for misread terms and fix them via the dictionary before playing.
 5. Point the user's tab at the deck and play:
    ```
    curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"open","deck":"<deck-name>"}'
@@ -88,6 +88,7 @@ Line fields (only `id`, `speaker`, `slide`, `text` are required):
 | `style` | VOICEVOX emotion voice: `normal/amaama/tsuntsun/sexy/sasayaki/hisohiso` (+zundamon: `herohero/namidame`) | `normal` |
 | `speed` / `pitch` / `intonation` / `volume` | voice params (see Voice tuning) | 1 / 0 / 1 / 1 |
 | `postPause` | trailing silence in seconds | engine default |
+| `spoken` | full override of the synthesized text for this line — sent to the engine verbatim (dictionary does NOT apply), subtitle still shows `text` | — |
 | `audio` | managed by the synth script — never write by hand | — |
 
 Rules:
@@ -105,14 +106,23 @@ Use Mermaid: `<div class='mermaid'>flowchart LR\n  a --> b</div>` — rendered d
 - Escape gotchas inside the JSON string: newlines must be `\n`, and `"` inside labels must be `\"` (or restructure to avoid them).
 - Big diagrams pair with `"chars": false`. `<pre>` ASCII art is the fallback when exact layout matters (rendered in monospace, auto-centered).
 
+## Math
+
+KaTeX auto-renders TeX in slide html: `\(…\)` inline, `\[…\]` display (block, centered).
+
+- **Every TeX backslash is doubled in the JSON string** — delimiters included: `"html": "<p>\\[ \\frac{a}{b} = c \\]</p>"` renders `\[ \frac{a}{b} = c \]`. A single `\[` or `\f` is an invalid JSON escape and breaks the whole file.
+- Errors don't throw: bad TeX inside matched delimiters renders red, an unmatched delimiter just stays as raw source text — catch both in the preview screenshot.
+- Math is for slides only; dialogue `text` is spoken by VOICEVOX, so write formulas out in words there (「aをbで割るとc」).
+
 ## Voice tuning
 
 All params join the audio cache hash — tweaks re-synthesize only affected lines (run the synth command after any change). Cheapest first:
 
 1. **Rewrite the text** — 「、」 inserts a pause, 「！」「？」 change intonation, 「〜」 lengthens vowels. Misread words: respell in kana. Write Zundamon's surprise as 「えっ、」 never bare 「え、」 — the bare vowel synthesizes as a near-silent whisper (line-initial interjections like めたん's 「ええ、」 have the same failure mode; the synth script detects and repairs those automatically, but ずんだもん's bare 「え」 resists repair, so spell it 「えっ」).
-2. **`.zunda-presenter/dictionary.json`** — `"term": "カタカナ読み"` per English/technical term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). Always register terms you use.
-3. **Per-line params** — `style` (emotion voice; sparingly: 驚き=herohero/namidame, 内緒話=sasayaki), `speed` (~0.85–1.3), `pitch` (±0.15 is a lot), `intonation` (0=flat, 2=exaggerated), `volume`, `postPause`.
-4. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override. Recommended: zundamon `speed: 1.2` — his default pace is slow and drags the dialogue; ~1.2 sounds natural.
+2. **`.zunda-presenter/dictionary.json`** — `"term": "カタカナ読み"` per term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). Always register the English/technical terms you use — and it works for kanji terms too: math and other specialist vocabulary is frequently misread (e.g. 偽陽性 → ニセヨウセイ instead of ギヨウセイ), so register those as well (`"偽陽性": "ギヨウセイ"`). The synth log prints each line's actual reading (`reading: …`) — scan it after every synth run and fix misreadings via the dictionary before playing. Replacement is a plain substring match, which cuts both ways: keys may be whole phrases, and **context-dependent readings need the context in the key** — for 要→カナメ register `"設計の要": "セッケイノカナメ"`, never bare `"要": "カナメ"`, which would corrupt 必要/要素 into 必カナメ/カナメ素. Never register a single ambiguous kanji without surrounding context.
+3. **`lines[].spoken`** — per-line full override of the synthesized text; the subtitle keeps showing `text`. Verbatim: the dictionary does NOT apply, so spell out every tricky reading in the line yourself (kana/katakana). Pick by scope: misread fixable by respelling `text` in kana → do that; term that should read the same everywhere → dictionary; one line where the subtitle must keep its spelling → `spoken`.
+4. **Per-line params** — `style` (emotion voice; sparingly: 驚き=herohero/namidame, 内緒話=sasayaki), `speed` (~0.85–1.3), `pitch` (±0.15 is a lot), `intonation` (0=flat, 2=exaggerated), `volume`, `postPause`.
+5. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override. Recommended: zundamon `speed: 1.2` — his default pace is slow and drags the dialogue; ~1.2 sounds natural.
 
 ## Playback control API
 
@@ -173,6 +183,6 @@ Verify layout without touching the user's tab: `http://localhost:3939/d/<deck-na
   "http://localhost:3939/d/<deck-name>#preview:N"
 ```
 
-Check at least: the title slide, the densest slide, and every `chars: false` slide (Mermaid syntax errors and overflowing content show up here). Fix, then re-check.
+Check at least: the title slide, the densest slide, every `chars: false` slide, and every slide with math (Mermaid syntax errors, red KaTeX error text, and overflowing content show up here). Fix, then re-check.
 
 After a rewrite, also reread the dialogue as a first-time viewer: no line may presume something the viewer never saw — an earlier version of the deck, a review, or anything that only happened in chat.
