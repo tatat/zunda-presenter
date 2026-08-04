@@ -107,6 +107,10 @@ Use Mermaid: `<div class='mermaid'>flowchart LR\n  a --> b</div>` — rendered d
 - Escape gotchas inside the JSON string: newlines must be `\n`, and `"` inside labels must be `\"` (or restructure to avoid them).
 - Big diagrams pair with `"chars": false`. `<pre>` ASCII art is the fallback when exact layout matters (rendered in monospace, auto-centered).
 
+**Data charts**: Mermaid also renders these — `pie` and `xychart-beta` (bar + line) work today. One gotcha: in xychart, Japanese axis labels must be quoted (`x-axis ["1月", "2月"]` — unquoted non-ASCII is a syntax error).
+
+**Function graphs** (curves, shaded regions): no plotting library is bundled — hand-author inline SVG instead; it looks properly production-grade. Compute the geometry with a throwaway node script (map the x/y ranges to viewBox coordinates, sample the function into `<polyline points='…'>`, closed `<path>` for shaded regions), embed the result in the slide html, and put the formula in KaTeX. Style to match the stage: axes/ticks `#8a93a6`, gridlines `#2c3444`, curves `#6db3f2` (accent) / `#f2a0c4` (pink), highlights `#ffd479`. `viewBox='0 0 800 430'` with `width='100%' style='max-height:56cqh'` fits a `chars: false` slide with an `h2` and a one-line formula.
+
 ## Math
 
 KaTeX auto-renders TeX in slide html: `\(…\)` inline, `\[…\]` display (block, centered).

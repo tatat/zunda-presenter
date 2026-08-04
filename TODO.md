@@ -18,6 +18,16 @@ reviewed and judged "not now", not "never".
   them. Add a raw-notation flag if accent-level complaints ("reading is
   right, intonation is wrong") start appearing.
 
+## Slides
+
+- **Plot library for function graphs.** Hand-authored SVG (pattern documented
+  in the presentation skill's Diagrams section, verified with a sin/cos +
+  normal-distribution sample deck) covers curves and shaded regions with zero
+  deps. If decks need function graphs often enough that hand-authoring
+  becomes the bottleneck, bundle a plot library (e.g. function-plot) behind a
+  `<div class='plot'>` helper instead — less authoring effort, steadier
+  output.
+
 ## Web Q&A
 
 - **Shared VOICEVOX client module.** `scripts/synthesize.mjs` and
