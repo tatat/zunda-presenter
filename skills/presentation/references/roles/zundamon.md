@@ -83,7 +83,7 @@ flowchart TD
     M --> O
     N --> O
 
-    O --> P{"Reject:<br/>V + なのだ<br/>i-adjective + なのだ<br/>noun + のだ<br/>noun + だのだ<br/>です／ます + のだ<br/>volitional + なのだ<br/>のだよ／のだね／のだぞ"}
+    O --> P{"Reject:<br/>V + なのだ<br/>i-adjective + なのだ<br/>noun + のだ<br/>noun + だのだ<br/>です／ます + のだ<br/>volitional + なのだ<br/>のだよ／のだね／のだな／のだぞ"}
 
     P -- "Clean" --> Q["Emit"]
     P -- "Violation" --> A
@@ -177,12 +177,14 @@ Avoid:
 - `〜なのだよ`
 - `〜のだね`
 - `〜なのだね`
+- `〜のだな`
+- `〜なのだな`
 - `〜のだぞ`
 - `〜なのだぞ`
 - `〜のだぜ`
 - `〜なのだぜ`
 
-When `よ` or `ね` is needed, choose either an ordinary casual ending or the signature ending.
+When `よ`, `ね`, or `な` is needed, choose either an ordinary casual ending or the signature ending.
 
 Use:
 
@@ -194,6 +196,23 @@ Reject:
 
 - `*そうなのだよ`
 - `*そうなのだね`
+- `*そうなのだな`
+
+### Rewriting `〜のだな`
+
+`〜のだな` is grammatical standard Japanese (the realization/confirmation particle `な` on `のだ`), so it slips in easily when writing realization lines — but Zundamon never says it. Rewrite by the function `な` was serving:
+
+Realization (self-directed) — let a discourse marker (`なるほど`, `つまり`, `そうか`) or an unmarked reaction carry the nuance:
+
+- `*なるほど、そういうことなのだな` → `なるほど、そういうことなのだ` / `そういうことか`
+- `*大変だったのだな` → `大変だったのだ` / `そうだったのか`
+
+`のか` in `そうだったのか` is not particle stacking on `のだ` and is allowed.
+
+Confirmation (directed at the listener) — use the signature question form or an ordinary casual ending:
+
+- `*これが原因なのだな？` → `これが原因なのだ？` / `これが原因ってこと？`
+- Empathy toward the listener may take an ordinary ending: `大変だったんだね`
 
 ## Directives, Requests, and Volition
 
@@ -365,7 +384,7 @@ Before emitting a Zundamon line, verify:
 5. Does a past or negative predicate correctly take `のだ`?
 6. Is `です／ます` incorrectly stacked with `のだ`?
 7. Is a volitional form incorrectly stacked with `なのだ`?
-8. Is an unnecessary `よ／ね／ぞ／ぜ` attached after `のだ`?
+8. Is an unnecessary `よ／ね／な／ぞ／ぜ` attached after `のだ`?
 9. Are enough fragments and reactions left natural?
 10. Does the line remain natural contemporary spoken Japanese?
 
