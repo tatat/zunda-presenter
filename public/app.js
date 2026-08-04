@@ -23,6 +23,10 @@ const state = {
   audio: null,
   fallbackTimer: null,
   mouthTimer: null,
+  qa: [],              // question timelines from qa.json: [{id, question, lines}]
+  track: "main",       // the timeline being played: "main" or a question id
+  mainReturnIdx: null, // main position to restore when switching back from a question
+  pendingTrack: null,  // answer that arrived while playing — played on chip click
 };
 
 let ws = null;
@@ -42,6 +46,9 @@ function connectWS() {
       }
       if (msg.deck && msg.deck !== DECK) return;
       handleControl(msg);
+    } else if (msg.type === "qa") {
+      if (msg.deck && msg.deck !== DECK) return;
+      handleQA(msg);
     }
   };
   ws.onclose = () => setTimeout(connectWS, 1500);
@@ -57,7 +64,8 @@ function sendState() {
     lineText: line?.text ?? null,
     paused: !state.playing,
     finished: state.finished,
-    total: state.script?.lines.length ?? 0,
+    track: state.track,
+    total: trackLines().length,
   };
   if (ws?.readyState === 1) ws.send(JSON.stringify(payload));
 }
@@ -73,7 +81,7 @@ function handleControl(msg) {
   else if (msg.action === "goto") {
     let i = msg.index;
     if (msg.lineId != null) {
-      const found = state.script.lines.findIndex((l) => l.id === msg.lineId);
+      const found = trackLines().findIndex((l) => l.id === msg.lineId);
       if (found >= 0) i = found;
     }
     if (typeof i === "number") goto(i);
@@ -102,27 +110,58 @@ async function loadScript({ preservePosition = false } = {}) {
   if (!DECK) return;
   const res = await fetch(`${deckUrl("script.json")}?ts=${Date.now()}`);
   if (!res.ok) return;
-  const prevId = preservePosition ? currentLine()?.id : null;
+  const prevLine = preservePosition ? currentLine() : null;
+  const prevId = prevLine?.id ?? null;
   state.script = await res.json();
+
+  // Web Q&A answers live in qa.json, keeping script.json pristine; each
+  // question is its own timeline. Render mode (video export) stays main-only.
+  state.qa = [];
+  if (!RENDER) {
+    try {
+      const qaRes = await fetch(`${deckUrl("qa.json")}?ts=${Date.now()}`);
+      if (qaRes.ok) state.qa = (await qaRes.json()).questions ?? [];
+    } catch {}
+  }
+  if (state.track !== "main" && !state.qa.some((q) => q.id === state.track)) {
+    state.track = "main"; // the timeline we were on disappeared
+    state.idx = 0;
+  }
 
   document.title = state.script.title ?? "presenter";
   $("#deck-title").textContent = state.script.title ?? "presenter";
 
   if (prevId != null) {
-    const found = state.script.lines.findIndex((l) => l.id === prevId);
-    state.idx = found >= 0 ? found : Math.min(state.idx, state.script.lines.length - 1);
+    const found = trackLines().findIndex((l) => l.id === prevId);
+    state.idx = found >= 0 ? found : Math.min(state.idx, trackLines().length - 1);
   } else {
     state.idx = preview?.[1] ? Number(preview[1]) : 0;
   }
   state.idx = Math.max(0, state.idx);
   state.finished = false;
 
+  buildTrackList();
   buildProgress();
-  showCurrent({ speak: state.playing });
+  // Hot reloads arrive routinely mid-playback (file watcher, answer arrival);
+  // when the playing line is unchanged, keep its audio going instead of
+  // restarting it — just re-render
+  const line = currentLine();
+  if (state.playing && state.audio && line && line.id === prevLine?.id && line.audio === prevLine.audio) {
+    renderLine(line);
+    sendState();
+  } else {
+    showCurrent({ speak: state.playing });
+  }
+}
+
+/* The active timeline: the main script, or one question's answer lines */
+function trackLines() {
+  if (state.track === "main") return state.script?.lines ?? [];
+  return state.qa.find((q) => q.id === state.track)?.lines ?? [];
 }
 
 function currentLine() {
-  return state.script?.lines[state.idx] ?? null;
+  return trackLines()[state.idx] ?? null;
 }
 
 /* ---------- rendering ---------- */
@@ -170,6 +209,7 @@ function renderLine(line) {
   return slideReady;
 }
 
+// Keep in sync with server/qa.mjs and the sprite set in public/assets/
 const EXPRESSIONS = ["normal", "happy", "surprised", "troubled", "smug"];
 
 function setFace(who, expr) {
@@ -181,7 +221,7 @@ function setFace(who, expr) {
 function buildProgress() {
   const bar = $("#progress");
   bar.innerHTML = "";
-  state.script.lines.forEach((line, i) => {
+  trackLines().forEach((line, i) => {
     const seg = document.createElement("div");
     seg.className = `seg ${line.speaker}`;
     seg.title = `${i + 1}. ${line.text}`;
@@ -199,7 +239,7 @@ function updateProgress() {
 }
 
 function updateStatus() {
-  const total = state.script?.lines.length ?? 0;
+  const total = trackLines().length;
   const status = $("#status");
   const label = state.finished ? "おわり" : state.playing ? "再生中" : "一時停止";
   status.textContent = `${state.idx + 1} / ${total} ・ ${label}`;
@@ -241,10 +281,12 @@ function showCurrent({ speak } = { speak: true }) {
     stopSpeaking();
     state.fallbackTimer = setTimeout(() => {
       if (!state.playing) return;
-      if (state.idx < state.script.lines.length - 1) {
+      if (state.idx < trackLines().length - 1) {
         state.idx += 1;
         showCurrent({ speak: true });
       } else {
+        // End of the timeline — question timelines too just finish in place;
+        // switching back to メイン (position preserved) is the viewer's move
         state.finished = true;
         state.playing = false;
         updateStatus();
@@ -281,7 +323,7 @@ function pause() {
 }
 
 function resume() {
-  if (!state.script?.lines.length) return;
+  if (!trackLines().length) return;
   if (state.finished) {
     state.idx = 0;
     state.finished = false;
@@ -292,10 +334,194 @@ function resume() {
 
 function goto(i) {
   if (!state.script) return;
-  state.idx = Math.max(0, Math.min(i, state.script.lines.length - 1));
+  state.idx = Math.max(0, Math.min(i, trackLines().length - 1));
   state.finished = false;
   showCurrent({ speak: state.playing });
 }
+
+/* ---------- timelines (main + one per question) ---------- */
+
+function setTrack(id, { play = false } = {}) {
+  if (state.track === "main" && id !== "main") state.mainReturnIdx = state.idx;
+  state.track = id;
+  if (id === "main") {
+    state.idx = state.mainReturnIdx ?? 0;
+    state.mainReturnIdx = null;
+  } else {
+    state.idx = 0;
+  }
+  state.finished = false;
+  if (!play) state.playing = false;
+  updateTrackUI();
+  buildProgress();
+  if (play) resume();
+  else showCurrent({ speak: false });
+}
+
+// Rebuild the menu's items (deck/question set changed)
+function buildTrackList() {
+  const list = $("#track-list");
+  list.innerHTML = "";
+  const items = [
+    { id: "main", label: "メイン" },
+    ...state.qa.map((q, i) => ({ id: q.id, label: `質問${i + 1}`, hint: q.question })),
+  ];
+  for (const it of items) {
+    const el = document.createElement("div");
+    el.className = "track-item";
+    el.dataset.track = it.id;
+    el.textContent = it.hint
+      ? `${it.label}: ${it.hint.length > 20 ? `${it.hint.slice(0, 20)}…` : it.hint}`
+      : it.label;
+    if (it.hint) el.title = it.hint;
+    el.onclick = () => {
+      setPopup(null);
+      if (it.id !== state.track) setTrack(it.id, { play: it.id !== "main" });
+    };
+    list.appendChild(el);
+  }
+  updateTrackUI();
+}
+
+// Reflect the current track in the menu (active item, toggle label/visibility)
+function updateTrackUI() {
+  document.querySelectorAll("#track-list .track-item").forEach((el) => {
+    el.classList.toggle("active", el.dataset.track === state.track);
+  });
+  const i = state.qa.findIndex((q) => q.id === state.track);
+  $("#track-toggle").textContent = `${i >= 0 ? `質問${i + 1}` : "メイン"} ▾`;
+  $("#track-toggle").classList.toggle("hidden", state.qa.length === 0);
+}
+
+/* ---------- popups (track menu / question panel) ---------- */
+
+let openPopup = null; // "#track-list" | "#qa-panel" | null
+
+function setPopup(sel) {
+  openPopup = sel;
+  for (const p of ["#track-list", "#qa-panel"]) {
+    $(p).classList.toggle("hidden", p !== sel);
+  }
+}
+
+$("#track-toggle").addEventListener("click", () => {
+  setPopup(openPopup === "#track-list" ? null : "#track-list");
+});
+
+// Clicking anywhere outside the open popup dismisses it
+document.addEventListener("click", (e) => {
+  if (!openPopup) return;
+  if (e.target.closest("#track-toggle, #track-list, #qa-toggle, #qa-panel")) return;
+  setPopup(null);
+});
+
+/* ---------- Q&A (question box answered by the server's headless agent) ---------- */
+
+let qaAudio = null; // Metan's "let me think" filler, played while the agent works
+
+function qaStatus(text, { clickable = false } = {}) {
+  const chip = $("#qa-status");
+  chip.classList.toggle("clickable", clickable);
+  if (!text) return chip.classList.add("hidden");
+  chip.textContent = text;
+  chip.classList.remove("hidden");
+}
+
+function qaStatusFlash(text) {
+  qaStatus(text);
+  setTimeout(() => qaStatus(null), 5000);
+}
+
+function stopFiller() {
+  qaAudio?.pause();
+  qaAudio = null;
+}
+
+function handleQA(msg) {
+  if (msg.status === "thinking") {
+    qaStatus("めたんが考え中…");
+    if (msg.audio && state.unlocked && !state.playing) {
+      stopFiller();
+      qaAudio = new Audio(msg.audio);
+      qaAudio.play().catch(() => {});
+    }
+  } else if (msg.status === "ready") {
+    stopFiller();
+    onAnswerReady(msg.track);
+  } else if (msg.status === "error") {
+    stopFiller();
+    qaStatusFlash("回答に失敗しました");
+  }
+}
+
+// Reload explicitly: the "ready" message can beat the file watcher's
+// qa.json broadcast, and switching tracks needs the new question
+async function onAnswerReady(trackId) {
+  await loadScript({ preservePosition: true });
+  if (state.playing) {
+    // The viewer resumed watching while waiting — don't interrupt
+    state.pendingTrack = trackId;
+    qaStatus("回答できたわ ▶ クリックで再生", { clickable: true });
+    return;
+  }
+  qaStatus(null);
+  setTrack(trackId, { play: true });
+}
+
+$("#qa-status").addEventListener("click", () => {
+  if (!state.pendingTrack) return;
+  const track = state.pendingTrack;
+  state.pendingTrack = null;
+  qaStatus(null);
+  setTrack(track, { play: true });
+});
+
+async function submitQuestion() {
+  const text = $("#qa-text").value.trim();
+  if (!text || !DECK) return;
+  pause();
+  $("#qa-text").value = "";
+  setPopup(null);
+  qaStatus("質問を送信中…");
+  try {
+    const res = await fetch("/api/question", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ deck: DECK, question: text }),
+    });
+    if (!res.ok) throw new Error();
+  } catch {
+    qaStatusFlash("送信に失敗しました");
+  }
+}
+
+$("#qa-toggle").addEventListener("click", () => {
+  if (openPopup === "#qa-panel") return setPopup(null);
+  setPopup("#qa-panel");
+  pause();
+  // Point the bubble's arrow at the ？質問 button. Measured after pause():
+  // pausing changes the status pill's width, which shifts the button
+  const cluster = $("#top-right").getBoundingClientRect();
+  const btn = $("#qa-toggle").getBoundingClientRect();
+  $("#qa-panel").style.setProperty("--arrow-right", `${cluster.right - (btn.left + btn.width / 2)}px`);
+  $("#qa-text").focus();
+});
+
+$("#qa-panel").addEventListener("submit", (e) => {
+  e.preventDefault();
+  submitQuestion();
+});
+
+$("#qa-text").addEventListener("keydown", (e) => {
+  e.stopPropagation(); // keep player shortcuts (Space, arrows) out of the textarea
+  if (e.isComposing || e.keyCode === 229) return; // IME conversion Enter is not a submit
+  if (e.code === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    submitQuestion();
+  } else if (e.code === "Escape") {
+    setPopup(null);
+  }
+});
 
 /* ---------- input ---------- */
 
@@ -332,6 +558,10 @@ stage.addEventListener("mousedown", (e) => {
 stage.addEventListener("click", (e) => {
   if (!state.script) return;
   if (e.target.closest("#progress")) return;
+  if (e.target.closest("#qa-toggle, #qa-panel, #qa-status, #track-toggle, #track-list")) return;
+  // A click that dismisses an open popup shouldn't also toggle playback
+  // (this runs before the document-level listener that closes it)
+  if (openPopup) return;
   if (Math.hypot(e.clientX - downX, e.clientY - downY) > 5) return; // drag-select
   if (!window.getSelection()?.isCollapsed) return; // active text selection
   state.playing ? pause() : resume();
@@ -339,8 +569,9 @@ stage.addEventListener("click", (e) => {
 
 document.addEventListener("keydown", (e) => {
   if (!state.script) return;
-  // Leave OS shortcuts (⌘C etc.) alone
+  // Leave OS shortcuts (⌘C etc.) alone, and don't fight text inputs
   if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target.matches("textarea, input, [contenteditable]")) return;
   if (e.code === "Space") {
     e.preventDefault();
     state.playing ? pause() : resume();

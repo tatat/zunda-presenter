@@ -21,7 +21,20 @@
     <div id="slide"></div>
 
     <div id="deck-title"></div>
-    <div id="status"></div>
+    <div id="top-right">
+      <button id="track-toggle" class="hidden">メイン ▾</button>
+      <button id="qa-toggle" title="めたんに質問する">？ 質問</button>
+      <div id="status"></div>
+      <div id="track-list" class="hidden"></div>
+      <form id="qa-panel" class="hidden">
+        <textarea id="qa-text" rows="3" placeholder="めたんに質問…"></textarea>
+        <div id="qa-footer">
+          <span id="qa-hint">Enterで送信・Shift+Enterで改行</span>
+          <button type="submit" id="qa-send">送信</button>
+        </div>
+      </form>
+    </div>
+    <div id="qa-status" class="hidden"></div>
 
     <div class="char" id="char-zundamon">
       <img class="close" src="/assets/zundamon_normal_close.png" alt="ずんだもん">

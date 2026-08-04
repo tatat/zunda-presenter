@@ -4,7 +4,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 
 ## Architecture
 
-- `server/index.mjs` — express + ws, one server per project on port 3939 (`PORT` to override; setup picks the next free port when taken). Serves `public/` and all decks under the decks root (`PRESENTER_DECKS_DIR`, default `<repo>/.zunda-presenter`), one dir per deck at `/d/<name>`, watches every `script.json` and pushes reloads, exposes `GET /api/state`, `GET /api/info` (identity: decks root + port), and `POST /api/control` (incl. `open` to switch a tab's deck). Writes `<decks root>/server.json` (`{port, pid}`) on startup for discovery, removed on shutdown. `scripts/synthesize.mjs` targets one deck via `PRESENTER_DECK_DIR`.
+- `server/index.mjs` — express + ws, one server per project on port 3939 (`PORT` to override; setup picks the next free port when taken). Serves `public/` and all decks under the decks root (`PRESENTER_DECKS_DIR`, default `<repo>/.zunda-presenter`), one dir per deck at `/d/<name>`, watches every `script.json` and pushes reloads, exposes `GET /api/state`, `GET /api/info` (identity: decks root + port), `POST /api/control` (incl. `open` to switch a tab's deck), and `POST /api/question` (player question box). `server/qa.mjs` answers those questions headlessly: spawns `claude -p` as Metan (read-only tools, cwd = project, `--resume` per deck, context from `<deck>/context.md`), appends the answer to `<deck>/qa.json` as a per-question entry (never touches `script.json`; the player shows each question as its own switchable timeline next to the main one, excluded from video export), synthesizes, and plays it (switching back to the main timeline restores the viewer's position); unanswerable ones land in `<deck>/questions.log` for the interactive agent. Writes `<decks root>/server.json` (`{port, pid}`) on startup for discovery, removed on shutdown. `scripts/synthesize.mjs` targets one deck via `PRESENTER_DECK_DIR`.
 - `public/` — presentation UI: 16:9 video-style stage, character sprites (expression × mouth PNGs in `public/assets/`), outlined subtitles, auto-advance playback with pause/seek, Mermaid rendering.
 - `deck/` — bundled sample deck (`script.json`, `dictionary.json`; audio is generated, not committed).
 - `scripts/synthesize.mjs` — VOICEVOX synthesis (`npm run synth`, honors `PRESENTER_DECK_DIR`). Engine expected at `127.0.0.1:50021`.
@@ -17,6 +17,8 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 - `skills/presentation` — deck construction guide, script format, control API, and the question/correction workflow. Read it before touching any `script.json`.
 
 ## Conventions
+
+- `TODO.md` records improvements that were considered and deliberately deferred, with the trigger that would make each worth doing. Check it before redesigning something it covers; add to it when deferring non-trivial ideas.
 
 - Code comments and design docs in English; UI copy and dialogue text in Japanese.
 - Always pick the latest stable version when adding dependencies.

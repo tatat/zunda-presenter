@@ -140,9 +140,7 @@ body.no-chars .char { opacity: 0; pointer-events: none; }
 body.no-chars #slide { padding: 4% 6% 14%; }
 
 /* ---- title / status overlays ---- */
-#deck-title, #status {
-  position: absolute;
-  top: 2.5%;
+#deck-title, #status, #qa-toggle, #track-toggle {
   font-size: 1.05cqw;
   padding: 0.3em 0.9em;
   border-radius: 99px;
@@ -150,9 +148,138 @@ body.no-chars #slide { padding: 4% 6% 14%; }
   color: #cfd6e4;
   z-index: 5;
 }
-#deck-title { left: 2%; }
-#status { right: 2%; }
+#deck-title { position: absolute; top: 2.5%; left: 2%; }
+#top-right {
+  position: absolute;
+  top: 2.5%;
+  right: 2%;
+  display: flex;
+  gap: 0.6em;
+  align-items: center;
+  z-index: 5;
+}
 #status.paused { color: #f2c66d; }
+
+/* ---- timeline switcher (main + one per question) ---- */
+#track-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: inherit;
+  cursor: pointer;
+}
+#track-toggle:hover { background: rgba(109, 179, 242, 0.35); }
+#track-toggle.hidden { display: none; }
+#track-list {
+  /* Dropdown under the top-right control cluster (its containing block) */
+  position: absolute;
+  top: calc(100% + 0.5em);
+  right: 0;
+  min-width: 16em;
+  max-width: 30em;
+  padding: 0.35em;
+  border-radius: 0.7em;
+  background: rgba(10, 12, 18, 0.9);
+  border: 1px solid #2c3444;
+  font-size: 1.05cqw;
+  z-index: 40;
+}
+#track-list.hidden { display: none; }
+.track-item {
+  padding: 0.4em 0.8em;
+  border-radius: 0.4em;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-item:hover { background: #232b3b; }
+.track-item.active { color: var(--accent); }
+
+/* ---- Q&A (question box for the headless agent) ---- */
+/* Metan-pink action buttons (ask + send): her subtitle color */
+#qa-toggle, #qa-send {
+  border: none;
+  background: #d64f8e;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+#qa-toggle:hover, #qa-send:hover { background: #e4699f; }
+/* Speech-bubble popover under the ？質問 button (its containing block is
+   the top-right cluster); --arrow-right is set by JS to point at the button */
+#qa-panel {
+  position: absolute;
+  top: calc(100% + 0.8em);
+  right: 0;
+  width: 27em;
+  max-width: 70cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  padding: 0.7em;
+  border-radius: 0.8em;
+  background: rgba(10, 12, 18, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  font-size: 1.15cqw;
+  z-index: 40;
+}
+#qa-panel::before,
+#qa-panel::after {
+  content: "";
+  position: absolute;
+  border: 0.55em solid transparent;
+  border-top: none;
+  right: calc(var(--arrow-right, 3em) - 0.55em);
+}
+#qa-panel::before { top: -0.55em; border-bottom-color: rgba(255, 255, 255, 0.45); }
+#qa-panel::after { top: calc(-0.55em + 3px); border-bottom-color: #101319; }
+#qa-panel.hidden { display: none; }
+#qa-text {
+  resize: none;
+  border: none;
+  border-radius: 0.5em;
+  padding: 0.55em 0.75em;
+  background: #12161f;
+  color: var(--text);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.6;
+}
+/* Focus is already obvious (autofocus + caret); a hard outline would just add
+   chrome — lightening the field slightly is enough */
+#qa-text:focus { outline: none; background: #1a2130; }
+#qa-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#qa-hint { color: var(--muted); font-size: 0.85em; }
+#qa-send {
+  border-radius: 99px;
+  padding: 0.35em 1.4em;
+  font-size: inherit;
+}
+#qa-status {
+  position: absolute;
+  top: 2.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.05cqw;
+  padding: 0.3em 1.1em;
+  border-radius: 99px;
+  background: rgba(214, 79, 142, 0.35);
+  border: 1px solid rgba(242, 160, 196, 0.5);
+  color: #ffd9ea;
+  z-index: 40;
+  animation: qa-pulse 1.6s ease-in-out infinite;
+}
+#qa-status.hidden { display: none; }
+#qa-status.clickable { cursor: pointer; animation: none; background: rgba(214, 79, 142, 0.55); }
+#qa-status.clickable:hover { background: rgba(214, 79, 142, 0.8); color: #fff; }
+@keyframes qa-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
 
 /* ---- characters (bottom corners, video style) ---- */
 .char {
@@ -198,6 +325,8 @@ body.render *, body.render *::before, body.render *::after {
   animation: none !important;
 }
 body.render #status, body.render #progress { display: none; }
+body.render #qa-toggle, body.render #qa-panel, body.render #qa-status,
+body.render #track-toggle, body.render #track-list { display: none; }
 
 /* ---- seekbar (YouTube style) ---- */
 #progress {
