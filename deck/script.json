@@ -35,7 +35,7 @@
       "id": "d2",
       "speaker": "metan",
       "slide": "intro",
-      "text": "四国めたんですわ。coding agent の plan を、わたくしたちが解説していきますわよ。",
+      "text": "四国めたんよ。coding agent の plan を、私たちが解説していくわ。",
       "audio": "audio/06fc7767b78f.wav"
     },
     {
@@ -49,14 +49,14 @@
       "id": "w2",
       "speaker": "metan",
       "slide": "why",
-      "text": "agent の書く plan って、長ーい文章になりがちでしょう？",
+      "text": "agent の書く plan って、長ーい文章になりがちでしょ？",
       "audio": "audio/854c95e359d5.wav"
     },
     {
       "id": "w3",
       "speaker": "metan",
       "slide": "why",
-      "text": "そして人間は……文字が、読めませんの。",
+      "text": "そして人間は……文字が、読めないのよ。",
       "postPause": 0.6,
       "expression": "smug",
       "audio": "audio/5e9061472b88.wav"
@@ -74,7 +74,7 @@
       "id": "w5",
       "speaker": "metan",
       "slide": "why",
-      "text": "ですから、わたくしたちが読んで差し上げますのよ。",
+      "text": "だから、私たちが読んであげるのよ。",
       "expression": "happy",
       "faces": { "zundamon": "troubled" },
       "audio": "audio/c0df7bbfc8bc.wav"
@@ -90,7 +90,7 @@
       "id": "d4",
       "speaker": "metan",
       "slide": "how",
-      "text": "agent が台本を書いて、VOICEVOX がセリフを音声にしていますのよ。",
+      "text": "agent が台本を書いて、VOICEVOX がセリフを音声にしてるの。",
       "audio": "audio/1cf0a71a4c95.wav"
     },
     {
@@ -104,7 +104,7 @@
       "id": "d6",
       "speaker": "metan",
       "slide": "how",
-      "text": "ええ、保存した瞬間に画面へ反映されますわ。訂正も簡単ですのよ。",
+      "text": "ええ、保存した瞬間に画面に反映されるわ。訂正も簡単なのよ。",
       "audio": "audio/b24d97200945.wav"
     },
     {
@@ -118,14 +118,14 @@
       "id": "a2",
       "speaker": "metan",
       "slide": "arch",
-      "text": "こちらが全体図ですわ。台本が音声になって、ブラウザに届きますのよ。",
+      "text": "これが全体図よ。台本が音声になって、ブラウザに届くの。",
       "audio": "audio/dd802febadf8.wav"
     },
     {
       "id": "a3",
       "speaker": "metan",
       "slide": "arch",
-      "text": "画面いっぱいに見せたいスライドでは、わたくしたちは引っ込みますの。",
+      "text": "画面いっぱいに見せたいスライドでは、私たちは引っ込むの。",
       "audio": "audio/53a7e2beb595.wav"
     },
     {
@@ -147,14 +147,14 @@
       "id": "d8",
       "speaker": "metan",
       "slide": "controls",
-      "text": "スペースキーで一時停止、矢印キーで前後に移動できますわ。",
+      "text": "スペースキーで一時停止、矢印キーで前後に移動できるわ。",
       "audio": "audio/abe65e02fba3.wav"
     },
     {
       "id": "d8b",
       "speaker": "metan",
       "slide": "controls",
-      "text": "止めてチャットで質問すれば、agent が答えてくれますのよ。",
+      "text": "止めてチャットで質問すれば、agent が答えてくれるのよ。",
       "audio": "audio/5990a6cf8ba5.wav"
     },
     {

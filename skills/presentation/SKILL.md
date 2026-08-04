@@ -46,10 +46,10 @@ Sizing: ~1 slide per idea, 3–6 lines per slide. A 5-slide deck ≈ 20–25 lin
 
 **Dialogue rules:**
 
-- Roles: **めたん = 解説役** (お嬢様口調:「〜ですわ」「〜かしら」「〜ますのよ」), **ずんだもん = 聞き役** (「〜なのだ」「〜のだ？」). Zundamon asks what the audience would ask, pushes back on unclear points (「それって〜じゃないのだ？」), and reacts. Alternate speakers naturally — avoid 3+ consecutive lines by one character.
+- Roles: **めたん = 解説役**, **ずんだもん = 聞き役**. Before writing dialogue, read `references/roles/metan.md` and `references/roles/zundamon.md` (each character's voice) and `references/roles/interaction.md` (掛け合いルール — exchange cycle, question discipline, turn balance).
 - Each line ≤ 60 characters. Long lines sound monotonous and make seeking coarse. Split rather than cram.
 - Dialogue text is Japanese. English identifiers are fine in `text` (subtitle shows them as-is); the dictionary handles pronunciation.
-- Slide transitions: give the first line on a new slide a short transition beat (「次は〜なのだ」「では、〜を見ていきますわよ」).
+- Slide transitions: give the first line on a new slide a short transition beat (「次は〜なのだ」「じゃあ、〜を見ていくわ」).
 
 **Expressions** — `normal / happy / surprised / troubled / smug`:
 
