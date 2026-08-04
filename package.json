@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node server/index.mjs",
     "synth": "node scripts/synthesize.mjs",
+    "readings": "node scripts/synthesize.mjs --readings",
     "export": "node scripts/export-video.mjs"
   },
   "dependencies": {

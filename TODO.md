@@ -4,6 +4,20 @@ Items considered during development and deliberately deferred — with the
 trigger that would make them worth doing. Not a wishlist: each entry was
 reviewed and judged "not now", not "never".
 
+## Synthesis
+
+- **Plugin-level distribution for common misreadings.** If the same
+  misreadings keep recurring across projects despite the `npm run readings`
+  audit loop, add a mechanism with real distribution — the engine's user_dict
+  API, or a plugin-bundled dictionary merged at synth time. Seeding them into
+  the copied `deck/dictionary.json` was tried and rejected: no defensible
+  boundary for the word list, and setup copies the file only on first seed,
+  so projects drift.
+- **Raw AquesTalk kana in `--readings`.** Accent (`'`) and devoicing (`_`)
+  markers are stripped because nothing in the current workflow can act on
+  them. Add a raw-notation flag if accent-level complaints ("reading is
+  right, intonation is wrong") start appearing.
+
 ## Web Q&A
 
 - **Shared VOICEVOX client module.** `scripts/synthesize.mjs` and
