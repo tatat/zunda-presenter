@@ -117,7 +117,7 @@ KaTeX auto-renders TeX in slide html: `\(…\)` inline, `\[…\]` display (block
 
 - **Every TeX backslash is doubled in the JSON string** — delimiters included: `"html": "<p>\\[ \\frac{a}{b} = c \\]</p>"` renders `\[ \frac{a}{b} = c \]`. A single `\[` or `\f` is an invalid JSON escape and breaks the whole file.
 - Errors don't throw: bad TeX inside matched delimiters renders red, an unmatched delimiter just stays as raw source text — catch both in the preview screenshot.
-- Math is for slides only; dialogue `text` is spoken by VOICEVOX, so write formulas out in words there (「aをbで割るとc」) or as short symbol expressions that read correctly (`99÷1098`, `0.1%`). Keep the symbols in `text` either way — a symbol the engine misreads or drops gets its reading via `spoken`, never by katakana-izing the subtitle (see Readings).
+- TeX is for slides only (it doesn't render in subtitles). But in dialogue `text`, still write formulas as formulas — `99÷1098`, `0.1%`, `√2は約1.414` — notation in the subtitle is easier to follow than a prose paraphrase (「aをbで割るとc」). The engine speaks much of it correctly as-is; a symbol it misreads or drops gets its reading via `spoken`, never by katakana-izing the subtitle (see Readings).
 
 ## Readings
 
