@@ -21,8 +21,8 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save.
 2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
-3. Add katakana readings for every English/technical term you used to `.zunda-presenter/dictionary.json` (kanji terms with tricky readings too — see Readings).
-4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Scan the readings in the log and audit the whole deck before playing (see Readings).
+3. Audit the readings — `npm run readings` works before anything is synthesized — and fix what is actually misread (see Readings).
+4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Re-audit after any edit (see Readings).
 5. Point the user's tab at the deck and play:
    ```
    curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"open","deck":"<deck-name>"}'
@@ -121,7 +121,7 @@ KaTeX auto-renders TeX in slide html: `\(…\)` inline, `\[…\]` display (block
 
 ## Readings
 
-The engine misreads Japanese sometimes — a flaw of its morphological analysis, not of the text you wrote. You can't listen to the audio, so the loop is: write defensively, audit every line's reading, fix what's left.
+The engine misreads Japanese sometimes — a flaw of its morphological analysis, not of the text you wrote. You can't listen to the audio, so the loop is: write defensively, audit every line's reading, fix what's left. **Fix from evidence, not suspicion**: a word that looks risky is a reason to run the audit, never to pre-register a reading — the engine reads far more than you'd guess (`%`, decimal points, `10万人` all come out right), and speculative dictionary entries and `spoken` overrides are themselves a source of wrong readings.
 
 **Write defensively:**
 
@@ -129,7 +129,7 @@ The engine misreads Japanese sometimes — a flaw of its morphological analysis,
 - A number immediately followed by 割 breaks: 割 is parsed as the tenths counter and る is left stranded (`99割る1098` → …ワリル…, digits and kanji numerals alike). Write `99÷1098` (reads correctly as ワル, subtitle looks like math) or `99を1098で割る` — not `99わる1098`, which fixes the reading at the subtitle's expense.
 - A kanji verb contracted to `〜ててる` can gain a spurious mora for some verbs (捨ててる → ステテテル, likewise 立ててる/育ててる — yet 建ててる is fine, so it's lexical and not predictable). Write the uncontracted 〜ている or the verb in kana.
 
-**Audit:** the synth log prints the engine's actual reading (`reading: …`) for each **newly synthesized** line — scan it on every run. Cached lines pass silently, so before declaring the deck ready (and again at the end of any editing session) audit every line — dictionary and `spoken` applied, nothing synthesized:
+**Audit:** the synth log prints the engine's actual reading (`reading: …`) for each **newly synthesized** line — scan it on every run. Cached lines pass silently, so audit every line — dictionary and `spoken` applied, nothing synthesized, so it also works before the first synth — after writing the script, before declaring the deck ready, and again at the end of any editing session:
 
 ```
 cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run readings
@@ -137,7 +137,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 **Fix — on the audio side, not in `text`.** `text` is the subtitle: it's what the viewer reads, so it keeps proper orthography — kanji, symbols, notation — exactly as you'd write them for print. Never rewrite `text` into katakana to steer the engine; route the reading around it instead, picked by scope:
 
-- A term that should read the same everywhere → **`.zunda-presenter/dictionary.json`**: `"term": "カタカナ読み"` per term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). Always register the English/technical terms you use — and kanji terms too: math and other specialist vocabulary is frequently misread (e.g. 偽陽性 → ニセヨウセイ instead of ギヨウセイ), so register those as well (`"偽陽性": "ギヨウセイ"`). Replacement is a plain substring match, which cuts both ways: keys may be whole phrases, and **context-dependent readings need the context in the key** — for 要→カナメ register `"設計の要": "セッケイノカナメ"`, never bare `"要": "カナメ"`, which would corrupt 必要/要素 into 必カナメ/カナメ素. Never register a single ambiguous kanji without surrounding context.
+- A term that should read the same everywhere → **`.zunda-presenter/dictionary.json`**: `"term": "カタカナ読み"` per term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). English/technical terms and specialist kanji vocabulary (e.g. 偽陽性 → ニセヨウセイ instead of ギヨウセイ) are the usual offenders — expect most entries to come from them, but register what the audit showed broken, not what looks risky. Replacement is a plain substring match, which cuts both ways: keys may be whole phrases, and **context-dependent readings need the context in the key** — for 要→カナメ register `"設計の要": "セッケイノカナメ"`, never bare `"要": "カナメ"`, which would corrupt 必要/要素 into 必カナメ/カナメ素. Never register a single ambiguous kanji without surrounding context.
 - One specific line → **`lines[].spoken`** — full override of the synthesized text; the subtitle keeps showing `text`. Verbatim: the dictionary does NOT apply, so spell out every tricky reading in the line yourself (kana/katakana). This is the tool for symbol-heavy lines — the engine silently drops symbols it can't read (`√2は約1.414よ` reads as ニワ…): keep `"text": "√2は約1.414よ"` and add `"spoken": "ルート2は約1.414よ"`.
 - Respelling `text` itself in kana is a last resort, only for wording where the kana form is what you might naturally write anyway (ひらがな置き換えが日本語として自然な語). If the kana version would look like a pronunciation hack in the subtitle — any math notation, any technical term — use `spoken`.
 
