@@ -109,15 +109,11 @@ Use Mermaid: `<div class='mermaid'>flowchart LR\n  a --> b</div>` — rendered d
 
 **Data charts**: Mermaid also renders these — `pie` and `xychart-beta` (bar + line) work today. One gotcha: in xychart, Japanese axis labels must be quoted (`x-axis ["1月", "2月"]` — unquoted non-ASCII is a syntax error).
 
-**Function graphs** (curves, shaded regions): no plotting library is bundled — hand-author inline SVG instead; it looks properly production-grade. Compute the geometry with a throwaway node script (map the x/y ranges to viewBox coordinates, sample the function into `<polyline points='…'>`, closed `<path>` for shaded regions), embed the result in the slide html, and put the formula in KaTeX. Style to match the stage: axes/ticks `#8a93a6`, gridlines `#2c3444`, curves `#6db3f2` (accent) / `#f2a0c4` (pink), highlights `#ffd479`. `viewBox='0 0 800 430'` with `width='100%' style='max-height:56cqh'` fits a `chars: false` slide with an `h2` and a one-line formula.
+**Function graphs** (curves, shaded regions): no plotting library is bundled — hand-author inline SVG; pattern in `references/math.md`.
 
 ## Math
 
-KaTeX auto-renders TeX in slide html: `\(…\)` inline, `\[…\]` display (block, centered).
-
-- **Every TeX backslash is doubled in the JSON string** — delimiters included: `"html": "<p>\\[ \\frac{a}{b} = c \\]</p>"` renders `\[ \frac{a}{b} = c \]`. A single `\[` or `\f` is an invalid JSON escape and breaks the whole file.
-- Errors don't throw: bad TeX inside matched delimiters renders red, an unmatched delimiter just stays as raw source text — catch both in the preview screenshot.
-- TeX is for slides only (it doesn't render in subtitles). But in dialogue `text`, still write formulas as formulas — `99÷1098`, `0.1%`, `√2は約1.414` — notation in the subtitle is easier to follow than a prose paraphrase (「aをbで割るとc」). A few symbols read correctly as-is (`+ × ÷ %`), but most — `=` above all — are silently dropped and get their reading via `spoken`, never by katakana-izing the subtitle (see Readings).
+Before writing any deck that contains a formula or a plot, read `references/math.md` — KaTeX on slides (and its JSON escaping, which breaks the whole file when wrong), formulas in dialogue `text` (kept as notation; equation-shaped lines pair with `spoken` since the engine drops `=`), and hand-authored SVG function graphs.
 
 ## Readings
 
