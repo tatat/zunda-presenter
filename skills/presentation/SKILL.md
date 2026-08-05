@@ -117,7 +117,7 @@ KaTeX auto-renders TeX in slide html: `\(…\)` inline, `\[…\]` display (block
 
 - **Every TeX backslash is doubled in the JSON string** — delimiters included: `"html": "<p>\\[ \\frac{a}{b} = c \\]</p>"` renders `\[ \frac{a}{b} = c \]`. A single `\[` or `\f` is an invalid JSON escape and breaks the whole file.
 - Errors don't throw: bad TeX inside matched delimiters renders red, an unmatched delimiter just stays as raw source text — catch both in the preview screenshot.
-- Math is for slides only; dialogue `text` is spoken by VOICEVOX, so write formulas out in words there (「aをbで割るとc」).
+- Math is for slides only; dialogue `text` is spoken by VOICEVOX, so write formulas out in words there (「aをbで割るとc」) or as short symbol expressions that read correctly (`99÷1098`, `0.1%`). Keep the symbols in `text` either way — a symbol the engine misreads or drops gets its reading via `spoken`, never by katakana-izing the subtitle (see Readings).
 
 ## Readings
 
@@ -126,7 +126,7 @@ The engine misreads Japanese sometimes — a flaw of its morphological analysis,
 **Write defensively:**
 
 - Numbers: **write Arabic numerals** (`99%`, `1,098人`, `10万人`), not kanji numerals. Digits have one reading path; kanji numerals additionally carry lexical readings the analyzer may pick (九十九 → ツクモ, 一日 → ツイタチ, 十八番 → オハコ), and digits scan far better in subtitles. `%`, decimal points and thousands separators all read correctly (`0.1%` → レーテンイチパーセント). Counting words (一つ目, 二人) are words, not figures — keep the kanji.
-- A number immediately followed by 割 breaks: 割 is parsed as the tenths counter and る is left stranded (`99割る1098` → …ワリル…, digits and kanji numerals alike). Write `99÷1098` (reads correctly as ワル, subtitle looks like math), `99を1098で割る`, or `99わる1098`.
+- A number immediately followed by 割 breaks: 割 is parsed as the tenths counter and る is left stranded (`99割る1098` → …ワリル…, digits and kanji numerals alike). Write `99÷1098` (reads correctly as ワル, subtitle looks like math) or `99を1098で割る` — not `99わる1098`, which fixes the reading at the subtitle's expense.
 - A kanji verb contracted to `〜ててる` can gain a spurious mora for some verbs (捨ててる → ステテテル, likewise 立ててる/育ててる — yet 建ててる is fine, so it's lexical and not predictable). Write the uncontracted 〜ている or the verb in kana.
 
 **Audit:** the synth log prints the engine's actual reading (`reading: …`) for each **newly synthesized** line — scan it on every run. Cached lines pass silently, so before declaring the deck ready (and again at the end of any editing session) audit every line — dictionary and `spoken` applied, nothing synthesized:
@@ -135,11 +135,11 @@ The engine misreads Japanese sometimes — a flaw of its morphological analysis,
 cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run readings
 ```
 
-**Fix — pick by scope:**
+**Fix — on the audio side, not in `text`.** `text` is the subtitle: it's what the viewer reads, so it keeps proper orthography — kanji, symbols, notation — exactly as you'd write them for print. Never rewrite `text` into katakana to steer the engine; route the reading around it instead, picked by scope:
 
-- One line, kana acceptable in the subtitle → respell `text` in kana.
 - A term that should read the same everywhere → **`.zunda-presenter/dictionary.json`**: `"term": "カタカナ読み"` per term. Subtitles keep the original spelling; only the audio uses the reading (longest match first, case-insensitive). Always register the English/technical terms you use — and kanji terms too: math and other specialist vocabulary is frequently misread (e.g. 偽陽性 → ニセヨウセイ instead of ギヨウセイ), so register those as well (`"偽陽性": "ギヨウセイ"`). Replacement is a plain substring match, which cuts both ways: keys may be whole phrases, and **context-dependent readings need the context in the key** — for 要→カナメ register `"設計の要": "セッケイノカナメ"`, never bare `"要": "カナメ"`, which would corrupt 必要/要素 into 必カナメ/カナメ素. Never register a single ambiguous kanji without surrounding context.
-- One line where the subtitle must keep its spelling → **`lines[].spoken`** — full override of the synthesized text; the subtitle keeps showing `text`. Verbatim: the dictionary does NOT apply, so spell out every tricky reading in the line yourself (kana/katakana).
+- One specific line → **`lines[].spoken`** — full override of the synthesized text; the subtitle keeps showing `text`. Verbatim: the dictionary does NOT apply, so spell out every tricky reading in the line yourself (kana/katakana). This is the tool for symbol-heavy lines — the engine silently drops symbols it can't read (`√2は約1.414よ` reads as ニワ…): keep `"text": "√2は約1.414よ"` and add `"spoken": "ルート2は約1.414よ"`.
+- Respelling `text` itself in kana is a last resort, only for wording where the kana form is what you might naturally write anyway (ひらがな置き換えが日本語として自然な語). If the kana version would look like a pronunciation hack in the subtitle — any math notation, any technical term — use `spoken`.
 
 ## Voice tuning
 
