@@ -1,5 +1,7 @@
 # Deck Structure
 
+> Read in full on first exposure — this file ends with the section "Blind Flow Check" and an end-marker line; if you did not see them, you read an excerpt. (Pinpoint re-consultation via grep later is fine.)
+
 ## Scope
 
 This document controls macro-level composition: what earns a slide, in what
@@ -232,3 +234,5 @@ Reading the result:
 - Triage as with the term review: the reviewer can't see slides, so a
   flagged jump that the visible slide bridges may be dismissible — but
   verify against the outline's `shows` before dismissing.
+
+*End of structure.md — you have read the whole file.*

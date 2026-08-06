@@ -1,5 +1,7 @@
 # ずんだもん
 
+> Read in full on first exposure — this file ends with the section "Silent Morphological Check" and an end-marker line; if you did not see them, you read an excerpt. (Pinpoint re-consultation via grep later is fine.)
+
 **Role: 聞き役** — listener, questioner, and comprehension proxy. This file defines the voice; the interaction pattern with Metan is in [interaction.md](interaction.md).
 
 ## Core Voice
@@ -389,3 +391,5 @@ Before emitting a Zundamon line, verify:
 10. Does the line remain natural contemporary spoken Japanese?
 
 If any check fails, revise before emitting.
+
+*End of zundamon.md — you have read the whole file.*
