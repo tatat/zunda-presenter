@@ -2,7 +2,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { formatDeck } from "../scripts/view-deck.mjs";
+import { formatDeck, formatDialogue } from "../scripts/view-deck.mjs";
 
 const deck = () => ({
   title: "t",
@@ -50,6 +50,15 @@ test("slide filter keeps absolute indices and per-slide flags", () => {
   assert.ok(joined.includes("⚠ same speaker"));
   assert.ok(rows.at(-1).includes("1 same-speaker line(s)"));
   assert.ok(formatDeck(deck(), { onlySlides: ["nope"] }).join("\n").includes("⚠ no such slide: nope"));
+});
+
+test("formatDialogue emits bare speaker: text lines, untruncated, no framing", () => {
+  const rows = formatDialogue(deck());
+  assert.equal(rows.length, 4);
+  assert.equal(rows[0], `zundamon: ${"あ".repeat(50)}`);
+  assert.equal(rows[2], "metan: スライドまたぎ");
+  const joined = rows.join("\n");
+  assert.ok(!joined.includes("title") && !joined.includes("──") && !joined.includes("⚠"));
 });
 
 test("long text is truncated and unknown slide refs are marked", () => {

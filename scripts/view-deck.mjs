@@ -10,6 +10,11 @@
    default <repo>/deck; slide ids restrict output to those slides, with
    line indices kept absolute so they stay valid for goto-by-index)
 
+   npm run view-deck -- --dialogue prints only `speaker: text` per line,
+   untruncated, with no title/ids/slide headers — the blinded input for the
+   naive-reader review (the reviewing subagent must not learn the deck's
+   topic from framing).
+
    Read-only display; for validation run check-deck. */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -75,6 +80,12 @@ export function formatDeck(script, { onlySlides = null } = {}) {
   return out;
 }
 
+export function formatDialogue(script) {
+  return (Array.isArray(script.lines) ? script.lines : []).map(
+    (l) => `${l?.speaker ?? "?"}: ${l?.text ?? ""}`
+  );
+}
+
 /* ---------- CLI ---------- */
 
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
@@ -93,6 +104,10 @@ if (isMain) {
     console.error(`script.json: ${e.message}`);
     process.exit(1);
   }
-  const slideArgs = process.argv.slice(2);
-  console.log(formatDeck(script, { onlySlides: slideArgs.length ? slideArgs : null }).join("\n"));
+  const args = process.argv.slice(2);
+  if (args.includes("--dialogue")) {
+    console.log(formatDialogue(script).join("\n"));
+  } else {
+    console.log(formatDeck(script, { onlySlides: args.length ? args : null }).join("\n"));
+  }
 }
