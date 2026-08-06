@@ -370,12 +370,12 @@ The last section closure is also the ending of the show, and it needs one extra 
 After Metan's final takeaway, close with a short beat that releases the audience. Good closing beats:
 
 - a callback to the opening hook or to a motif that ran through the deck;
-- Zundamon over-applying the lesson to a personal everyday concern, answered by Metan's concise tsukkomi;
+- Zundamon earnestly over-applying the lesson to a personal everyday concern — Zundamon genuinely means it, it is not a performed joke — answered by Metan's concise tsukkomi, then one final Zundamon line sincerely absorbing the correction (ideally in a way that restates the lesson);
 - Metan sealing Zundamon's final understanding check with a slightly theatrical flourish in her own voice.
 
 Constraints:
 
-- keep it short — one or two lines after the takeaway;
+- keep it short — one to three lines after the takeaway;
 - the humor must still arise from the explained content (see Humor and Tsukkomi), not from an unrelated gag;
 - the takeaway must already be delivered before the beat — the ending releases tension and must not introduce new information;
 - do not end on Zundamon's unanswered question or unverified interpretation: the last word that carries meaning belongs to Metan, even when the last laugh belongs to Zundamon.
