@@ -25,5 +25,5 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 - `docs/` holds design docs (English). When a change has enough moving parts that its rationale needs review, write a doc there instead of an issue thread.
 
 - Code comments and design docs in English; UI copy and dialogue text in Japanese.
-- Always pick the latest stable version when adding dependencies.
+- Always pick the latest stable version when adding dependencies — subject to the supply-chain cooldown: `.npmrc` routes installs through the Takumi Guard proxy (blocks known-malicious packages; anonymous mode) and sets `min-release-age=7`, so versions published within the last 7 days are refused. That refusal is intended — take the newest version older than the cooldown rather than overriding it.
 - VOICEVOX style ids: zundamon = 3, metan = 2 (normal styles).
