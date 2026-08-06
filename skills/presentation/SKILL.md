@@ -19,7 +19,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 ## Workflow
 
-1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save. After writing or editing it, validate with `npm run check-deck` (same env var as the synth command; also covers `qa.json`) — it checks JSON syntax, required fields, id uniqueness, slide references, and enum values, so no ad-hoc JSON parsing needed. Errors mean invalid deck structure or values — fix them all (some break playback/synthesis, others the runtime papers over with fallbacks); warnings flag guideline violations and likely typos.
+1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save. After writing or editing it, validate with `npm run check-deck` (same env var as the synth command; also covers `qa.json`) — it checks JSON syntax, required fields, id uniqueness, slide references, and enum values, so no ad-hoc JSON parsing needed. Errors mean invalid deck structure or values — fix them all (some break playback/synthesis, others the runtime papers over with fallbacks); warnings flag guideline violations and likely typos. After any structural edit (inserting/reordering lines, splitting slides), re-check the deck's shape with `npm run view-deck`: it prints the lines in **actual playback order** (array position — the only thing that determines order; ids drift from story order after edits and the slides array orders independently), grouped by slide, flagging same-speaker runs mid-slide (often an insert that landed out of order).
 2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
 3. Audit the readings — `npm run readings` works before anything is synthesized — and fix what is actually misread (see Readings).
 4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Re-audit after any edit (see Readings).
@@ -95,7 +95,7 @@ Line fields (only `id`, `speaker`, `slide`, `text` are required):
 
 Rules:
 
-- `lines[].id` must be **stable and unique** — playback position survives edits by id. Never renumber existing ids; inserted lines get fresh ids (`q1a`, `fix3`).
+- `lines[].id` must be **stable and unique** — playback position survives edits by id. Never renumber existing ids; inserted lines get fresh ids (`q1a`, `fix3`). Ids therefore drift from story order over time — that's expected; `npm run view-deck` shows the real order.
 - `slides[].chars: false` — for slides whose content IS the thing being explained (architecture diagram, code walkthrough, big table). Characters fade out; voices and subtitles keep narrating over the full frame.
 - Slide `html` is a JSON string: use single quotes for HTML attributes (`class='center'`), `\n` for newlines inside Mermaid blocks.
 - HTML helpers: `.center` (title slides), `.columns`, `.note`, plus styled `h1 h2 ul ol p pre code strong`.
