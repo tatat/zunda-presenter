@@ -2,7 +2,9 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { checkScript, checkQa } from "../scripts/check-deck.mjs";
@@ -74,6 +76,62 @@ test("long lines, unknown fields and unreferenced slides are warnings", () => {
   assert.ok(warnings.some((w) => w.includes("61 chars")));
   assert.ok(warnings.some((w) => w.includes('unknown field "expresion"')));
   assert.ok(warnings.some((w) => w.includes('"s2"') && w.includes("no line references")));
+});
+
+test("malformed container shapes are reported, not crashes", () => {
+  const s1 = valid();
+  s1.voice = { zundamon: null };
+  assert.ok(checkScript(s1).errors.some((e) => e.includes("voice.zundamon") && e.includes("must be an object")));
+
+  const s2 = valid();
+  s2.voice = "loud";
+  assert.ok(checkScript(s2).errors.some((e) => e === "voice: must be an object"));
+
+  const s3 = valid();
+  s3.lines[0].faces = "smug";
+  assert.ok(checkScript(s3).errors.some((e) => e.includes("faces must be an object")));
+
+  const s4 = valid();
+  s4.lines = [null];
+  assert.ok(checkScript(s4).errors.some((e) => e.includes("lines[0]") && e.includes("must be an object")));
+
+  const qa = checkQa({ questions: [null] }, new Set());
+  assert.ok(qa.errors.some((e) => e.includes("questions[0]") && e.includes("must be an object")));
+});
+
+const CLI = path.join(ROOT, "scripts", "check-deck.mjs");
+
+function runCli(files) {
+  const dir = mkdtempSync(path.join(os.tmpdir(), "check-deck-"));
+  try {
+    for (const [name, content] of Object.entries(files)) writeFileSync(path.join(dir, name), content);
+    return spawnSync(process.execPath, [CLI], {
+      env: { ...process.env, PRESENTER_DECK_DIR: dir },
+      encoding: "utf8",
+    });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test("CLI exit codes: 0 for valid and warnings-only, 1 for errors, bad JSON, missing file", () => {
+  assert.equal(runCli({ "script.json": JSON.stringify(valid()) }).status, 0);
+
+  const warny = valid();
+  warny.lines[0].expresion = "smug";
+  const w = runCli({ "script.json": JSON.stringify(warny) });
+  assert.equal(w.status, 0);
+  assert.match(w.stdout, /warn:/);
+
+  const bad = valid();
+  bad.lines[0].slide = "s9";
+  assert.equal(runCli({ "script.json": JSON.stringify(bad) }).status, 1);
+
+  assert.equal(runCli({ "script.json": "{oops" }).status, 1);
+  assert.equal(runCli({}).status, 1);
+
+  const qa = { questions: [{ id: "q1", question: "?", lines: [{ id: "a", speaker: "metan", slide: "s9", text: "x" }] }] };
+  assert.equal(runCli({ "script.json": JSON.stringify(valid()), "qa.json": JSON.stringify(qa) }).status, 1);
 });
 
 test("qa.json questions validate against the script's slides", () => {

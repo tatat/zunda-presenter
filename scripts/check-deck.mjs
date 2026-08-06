@@ -7,8 +7,10 @@
 
    npm run check-deck   (honors PRESENTER_DECK_DIR, default <repo>/deck)
 
-   Errors (would break playback/synthesis) exit 1; warnings (style guideline
-   violations, unknown fields — likely typos) exit 0. */
+   Errors (invalid deck structure or values — fix them; some break playback
+   or synthesis outright, others the runtime tolerates via fallbacks) exit 1;
+   warnings (style guideline violations, unknown fields — likely typos)
+   exit 0. */
 
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -33,6 +35,7 @@ const TOP_FIELDS = new Set(["title", "voice", "slides", "lines"]);
 const MAX_LINE_CHARS = 60;
 
 const isStr = (v) => typeof v === "string" && v.length > 0;
+const isObj = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
 
 function checkVoiceParams(obj, where, err) {
   for (const p of VOICE_PARAMS) {
@@ -71,7 +74,9 @@ function checkLines(lines, slideIds, label, err, warn) {
       warn(`${where}: text is ${line.text.length} chars (guideline ≤ ${MAX_LINE_CHARS} — split the line)`);
     if (line.expression != null && !EXPRESSIONS.includes(line.expression))
       err(`${where}: unknown expression "${line.expression}" (${EXPRESSIONS.join("/")})`);
-    if (line.faces != null) {
+    if (line.faces != null && !isObj(line.faces)) {
+      err(`${where}: faces must be an object`);
+    } else if (line.faces != null) {
       for (const [who, expr] of Object.entries(line.faces)) {
         if (!SPEAKERS.includes(who)) err(`${where}: faces key must be ${SPEAKERS.join("|")}, got "${who}"`);
         else if (!EXPRESSIONS.includes(expr)) err(`${where}: faces.${who}: unknown expression "${expr}"`);
@@ -99,11 +104,15 @@ export function checkScript(script) {
   }
   if (script.title != null && !isStr(script.title)) err("title: must be a non-empty string");
   if (script.voice != null) {
-    for (const [who, params] of Object.entries(script.voice)) {
-      if (!SPEAKERS.includes(who)) err(`voice: key must be ${SPEAKERS.join("|")}, got "${who}"`);
-      else {
-        checkVoiceParams(params, `voice.${who}`, err);
-        checkStyle(params.style, who, `voice.${who}`, err);
+    if (!isObj(script.voice)) err("voice: must be an object");
+    else {
+      for (const [who, params] of Object.entries(script.voice)) {
+        if (!SPEAKERS.includes(who)) err(`voice: key must be ${SPEAKERS.join("|")}, got "${who}"`);
+        else if (!isObj(params)) err(`voice.${who}: must be an object`);
+        else {
+          checkVoiceParams(params, `voice.${who}`, err);
+          checkStyle(params.style, who, `voice.${who}`, err);
+        }
       }
     }
   }
@@ -152,11 +161,15 @@ export function checkQa(qa, slideIds) {
   const seen = new Set();
   qa.questions.forEach((q, i) => {
     const where = `questions[${i}]${isStr(q?.id) ? ` (id "${q.id}")` : ""}`;
-    if (!isStr(q?.id)) err(`${where}: missing id`);
+    if (!isObj(q)) {
+      err(`${where}: must be an object`);
+      return;
+    }
+    if (!isStr(q.id)) err(`${where}: missing id`);
     else if (seen.has(q.id)) err(`${where}: duplicate id`);
     else seen.add(q.id);
-    if (!isStr(q?.question)) err(`${where}: missing question`);
-    checkLines(q?.lines ?? [], slideIds, `${where}.lines`, err, warn);
+    if (!isStr(q.question)) err(`${where}: missing question`);
+    checkLines(q.lines ?? [], slideIds, `${where}.lines`, err, warn);
   });
   return { errors, warnings };
 }
