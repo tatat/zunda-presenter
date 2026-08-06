@@ -223,6 +223,12 @@ Reading the result:
   or evidence the spine sentence is too narrow for what the deck actually
   is (e.g. a deliberate feature tour). Decide against the outline's spine,
   not the reviewer's reconstruction.
+- **A clean report is not a pass certificate.** One blinded reviewer is one
+  sample: two runs on the same deck reliably overlap on the big misses and
+  diverge on the rest (observed directly during validation — a second
+  reviewer found real issues on a deck whose first review's findings had
+  already been fixed). Fix what a run finds; for decks headed to video or a
+  wide audience, run two reviewers and merge their flags.
 - Triage as with the term review: the reviewer can't see slides, so a
   flagged jump that the visible slide bridges may be dismissible — but
   verify against the outline's `shows` before dismissing.
