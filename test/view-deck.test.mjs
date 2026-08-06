@@ -42,6 +42,16 @@ test("same-speaker runs are flagged mid-slide only", () => {
   assert.ok(rows.at(-1).includes("1 same-speaker line(s) mid-slide"));
 });
 
+test("slide filter keeps absolute indices and per-slide flags", () => {
+  const rows = formatDeck(deck(), { onlySlides: ["s2"] });
+  const joined = rows.join("\n");
+  assert.ok(!joined.includes("l50b") && !joined.includes("── s1"), "filtered slide is hidden");
+  assert.ok(joined.includes("   2  l2"), "indices stay absolute");
+  assert.ok(joined.includes("⚠ same speaker"));
+  assert.ok(rows.at(-1).includes("1 same-speaker line(s)"));
+  assert.ok(formatDeck(deck(), { onlySlides: ["nope"] }).join("\n").includes("⚠ no such slide: nope"));
+});
+
 test("long text is truncated and unknown slide refs are marked", () => {
   const d = deck();
   d.lines.push({ id: "l9", speaker: "metan", slide: "s9", text: "x" });
