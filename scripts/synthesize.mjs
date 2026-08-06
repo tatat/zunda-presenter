@@ -55,7 +55,8 @@ mkdirSync(AUDIO_DIR, { recursive: true });
 /* Pronunciation dictionary: subtitles keep the original text, but the text sent
    to VOICEVOX has each term replaced by its katakana reading (longest match
    first, case-insensitive) so English/technical words are read correctly. */
-// Dictionary can live in the deck dir or be shared at the decks root (one level up)
+// Dictionary lives in the deck dir; the decks-root fallback (one level up) is
+// the deprecated legacy shared location, kept for existing projects (TODO.md)
 const DICT_PATH = [
   path.join(DECK_DIR, "dictionary.json"),
   path.join(path.dirname(DECK_DIR), "dictionary.json"),

@@ -6,6 +6,15 @@ reviewed and judged "not now", not "never".
 
 ## Synthesis
 
+- **Remove the decks-root dictionary fallback.** Per-deck `dictionary.json`
+  is the documented location as of 0.8 (setup no longer seeds a shared one;
+  decided over shared because entries had no owner — junk accumulated, one
+  bad entry poisoned every deck, and resolution is selection-not-merge so a
+  deck-local file silently drops all shared entries). The parent-dir lookup
+  in `synthesize.mjs`/`reading-tools.mjs` stays for existing projects.
+  Remove it when shared dictionaries stop appearing in the wild, or at the
+  next deliberately breaking release.
+
 - **Plugin-level distribution for common misreadings.** If the same
   misreadings keep recurring across projects despite the `npm run readings`
   audit loop, add a mechanism with real distribution — the engine's user_dict
