@@ -19,7 +19,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 ## Workflow
 
-1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save.
+1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save. After writing or editing it, validate with `npm run check-deck` (same env var as the synth command; also covers `qa.json`) — it checks JSON syntax, required fields, id uniqueness, slide references, and enum values, so no ad-hoc JSON parsing needed. Errors break playback/synthesis; warnings flag guideline violations and likely typos.
 2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
 3. Audit the readings — `npm run readings` works before anything is synthesized — and fix what is actually misread (see Readings).
 4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Re-audit after any edit (see Readings).

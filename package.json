@@ -8,6 +8,7 @@
     "readings": "node scripts/synthesize.mjs --readings",
     "try-reading": "node scripts/reading-tools.mjs try",
     "check-dictionary": "node scripts/reading-tools.mjs check-dict",
+    "check-deck": "node scripts/check-deck.mjs",
     "export": "node scripts/export-video.mjs",
     "test": "node --test"
   },
