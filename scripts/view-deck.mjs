@@ -13,7 +13,8 @@
    npm run view-deck -- --dialogue prints only `speaker: text` per line,
    untruncated, with no title/ids/slide headers — the blinded input for the
    naive-reader review (the reviewing subagent must not learn the deck's
-   topic from framing).
+   topic from framing). Slide boundaries appear as blank lines: grouping
+   leaks, titles don't — the blind flow check asks a question per boundary.
 
    Read-only display; for validation run check-deck. */
 
@@ -81,9 +82,14 @@ export function formatDeck(script, { onlySlides = null } = {}) {
 }
 
 export function formatDialogue(script) {
-  return (Array.isArray(script.lines) ? script.lines : []).map(
-    (l) => `${l?.speaker ?? "?"}: ${l?.text ?? ""}`
-  );
+  const out = [];
+  let prevSlide;
+  for (const l of Array.isArray(script.lines) ? script.lines : []) {
+    if (out.length && l?.slide !== prevSlide) out.push("");
+    out.push(`${l?.speaker ?? "?"}: ${l?.text ?? ""}`);
+    prevSlide = l?.slide;
+  }
+  return out;
 }
 
 /* ---------- CLI ---------- */

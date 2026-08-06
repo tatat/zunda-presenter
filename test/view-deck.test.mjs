@@ -52,11 +52,12 @@ test("slide filter keeps absolute indices and per-slide flags", () => {
   assert.ok(formatDeck(deck(), { onlySlides: ["nope"] }).join("\n").includes("⚠ no such slide: nope"));
 });
 
-test("formatDialogue emits bare speaker: text lines, untruncated, no framing", () => {
+test("formatDialogue emits bare speaker: text lines with blank-line slide boundaries", () => {
   const rows = formatDialogue(deck());
-  assert.equal(rows.length, 4);
+  assert.equal(rows.length, 5);
   assert.equal(rows[0], `zundamon: ${"あ".repeat(50)}`);
-  assert.equal(rows[2], "metan: スライドまたぎ");
+  assert.equal(rows[2], "", "slide boundary is a blank line");
+  assert.equal(rows[3], "metan: スライドまたぎ");
   const joined = rows.join("\n");
   assert.ok(!joined.includes("title") && !joined.includes("──") && !joined.includes("⚠"));
 });
