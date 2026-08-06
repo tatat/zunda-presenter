@@ -373,12 +373,14 @@ After Metan's final takeaway, close with a short beat that releases the audience
 - Zundamon earnestly over-applying the lesson to a personal everyday concern — Zundamon genuinely means it, it is not a performed joke — answered by Metan's concise tsukkomi, then one final Zundamon line sincerely absorbing the correction (ideally in a way that restates the lesson);
 - Metan sealing Zundamon's final understanding check with a slightly theatrical flourish in her own voice.
 
+The beat does not have to be witty. A plain, sincere close — a callback resolved by Zundamon's genuine reaction, nothing after it — beats a strained punchline. Signs of straining: a Zundamon line that exists only to set up a prepared Metan retort, or a final Metan quip that restates the deck's lesson as a slogan (a 「祈るんじゃなくて、監視するのよ」-shaped line). If a line's only job is to enable the next line, cut both and end earlier.
+
 Constraints:
 
 - keep it short — one to three lines after the takeaway;
 - the humor must still arise from the explained content (see Humor and Tsukkomi), not from an unrelated gag;
 - the takeaway must already be delivered before the beat — the ending releases tension and must not introduce new information;
-- do not end on Zundamon's unanswered question or unverified interpretation: the last word that carries meaning belongs to Metan, even when the last laugh belongs to Zundamon.
+- Metan must have settled the content before the beat — but her ownership is over facts, not line order. Ending on Zundamon's sincere reaction is fine; forcing one more Metan line just to give her the literal last word is how slogan-quips happen. What remains prohibited is ending on an unanswered question or an unverified interpretation.
 
 Do not:
 
