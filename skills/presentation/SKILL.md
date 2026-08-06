@@ -19,7 +19,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 ## Workflow
 
-1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save.
+1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save. After writing or editing it, validate with `npm run check-deck` (same env var as the synth command; also covers `qa.json`) — it checks JSON syntax, required fields, id uniqueness, slide references, and enum values, so no ad-hoc JSON parsing needed. Errors mean invalid deck structure or values — fix them all (some break playback/synthesis, others the runtime papers over with fallbacks); warnings flag guideline violations and likely typos.
 2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
 3. Audit the readings — `npm run readings` works before anything is synthesized — and fix what is actually misread (see Readings).
 4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Re-audit after any edit (see Readings).
@@ -132,6 +132,10 @@ The engine misreads Japanese sometimes — a flaw of its morphological analysis,
 ```
 cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run readings
 ```
+
+**Probe a single string** — to check one term's reading (before registering a dictionary entry, or when a reading feels off) without editing script.json, `npm run try-reading -- "<text>"` (same env vars as above) prints the raw and dictionary-applied readings side by side, in the same kana display as `npm run readings`.
+
+**Audit the dictionary itself** — `npm run check-dictionary` reads every entry's key both raw and with the replacement value, and prints the two kana outputs per entry. A katakana value is not automatically safer than the original: the engine may read the raw term correctly and the "fix" worse (measured: raw `VPC` → ブイピーシー correct, but the replacement string ブイピーシー renders シー as スィー — the entry made things worse). Drop entries flagged `[no effect]` (identical reading *and* accent structure — the comparison keeps VOICEVOX's accent markers, so an accent-only difference still counts as a change) and entries whose replaced reading is worse than raw. Run it when inheriting a shared dictionary or after a batch of additions.
 
 **Fix — on the audio side, not in `text`.** `text` is the subtitle: it's what the viewer reads, so it keeps proper orthography — kanji, symbols, notation — exactly as you'd write them for print. Never rewrite `text` into katakana to steer the engine; route the reading around it instead, picked by scope:
 
