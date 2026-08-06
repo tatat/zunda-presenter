@@ -41,7 +41,7 @@ Work top-down: outline the sections first, then write slides and dialogue per se
 3. 全体像 — one diagram (`chars: false` + Mermaid) before any details
 4. 本題 ×2〜4 — one idea per slide; for a plan: 各ステップ、設計判断とトレードオフ
 5. リスク・未定事項 — what could go wrong, what's still open
-6. まとめ — recap + next actions
+6. まとめ — recap + next actions, then an オチ (closing beat — see Dialogue rules)
 
 Sizing: ~1 slide per idea, 3–6 lines per slide. A 5-slide deck ≈ 20–25 lines ≈ 2–3 minutes — good default. Don't exceed ~40 lines without the user asking for depth.
 
@@ -54,6 +54,7 @@ Sizing: ~1 slide per idea, 3–6 lines per slide. A 5-slide deck ≈ 20–25 lin
 - Dialogue text is Japanese. English identifiers are fine in `text` (subtitle shows them as-is); the dictionary handles pronunciation.
 - Numbers in dialogue: Arabic numerals (`99%`, `1,098人`), not kanji numerals — better for both the engine and the subtitle; details in Readings.
 - Slide transitions: give the first line on a new slide a short transition beat (「次は〜なのだ」「じゃあ、〜を見ていくわ」).
+- **オチ**: never end the deck on a flat confirmation — めたん「そうよ」 as the last line is an anticlimax. After Metan's final takeaway, add a few closing lines (1–3) that land: a callback to the opening hook, Zundamon earnestly over-applying the lesson to a personal everyday concern → Metan's tsukkomi → Zundamon sincerely absorbing the correction, or a light 掛け合い that releases the tension. Sincere beats witty: a plain close on ずんだもん's genuine reaction outperforms a bolted-on retort or a slogan-shaped quip — if the beat already closed, stop. Details in `references/roles/interaction.md` (Deck Ending); expressions + `postPause` on the final lines help it land.
 
 **Expressions** — `normal / happy / surprised / troubled / smug`:
 
