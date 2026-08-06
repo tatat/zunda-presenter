@@ -148,6 +148,27 @@ outline is the record of the spine, and editing it first keeps structural
 decisions explicit instead of emergent (same ordering discipline as
 SKILL.md's rewrite section: the deck presents the artifact's current state).
 
+## From Outline to Dialogue
+
+The outline is a skeleton, not a script. The observed failure mode: every
+slide opens with Zundamon voicing that slide's `holds` verbatim — the seams
+all hold, yet the deck sounds like a filled-in template, because the
+outline is showing through and every exchange becomes predictable.
+
+- `holds` records what the viewer wonders; it does not dictate that
+  Zundamon asks it aloud. Surface it through any of interaction.md's
+  listener functions: a plausible wrong proposal (misconception probe), a
+  reaction to the previous claim, a concrete paraphrase, an implication
+  test. In live validation the strongest beat surfaced its holds as a
+  wrong design proposal (「script.json にそのまま追記すればいいのだ」);
+  the weakest sections all opened with the planted question read out
+  verbatim.
+- Vary the entry move across consecutive slides: if the last slide opened
+  on a question, open the next on a reaction or a misconception.
+- `claim` is what the slide argues, not a line for Metan to recite in one
+  breath. Spread it across the exchange; the shape of the exchange comes
+  from interaction.md, not from the outline's fields.
+
 ## Worked Contrast
 
 Same material — a plan introducing a build cache — outlined both ways.
@@ -215,7 +236,10 @@ to the prompt:
 > Additionally: (1) at each blank line, before reading further, write one
 > line — the question you expect the next section to answer. (2) After
 > finishing, state the script's single main claim in one sentence. (3) List
-> any sections that did not serve that claim.
+> any sections that did not serve that claim. (4) As a listening
+> experience, does any repeated conversational device — e.g. every section
+> opening with the same move — make the dialogue feel like a filled-in
+> template rather than a conversation? Point at concrete lines.
 
 Reading the result:
 
@@ -231,6 +255,9 @@ Reading the result:
   or evidence the spine sentence is too narrow for what the deck actually
   is (e.g. a deliberate feature tour). Decide against the outline's spine,
   not the reviewer's reconstruction.
+- **Template rhythm flagged** — the outline is showing through. Don't patch
+  individual lines: re-vary how each beat's `holds` surfaces (see From
+  Outline to Dialogue) and re-run.
 - **A clean report is not a pass certificate.** One blinded reviewer is one
   sample: two runs on the same deck reliably overlap on the big misses and
   diverge on the rest (observed directly during validation — a second
