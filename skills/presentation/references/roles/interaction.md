@@ -370,7 +370,7 @@ The last section closure is also the ending of the show, and it needs one extra 
 After Metan's final takeaway, close with a short beat that releases the audience. Good closing beats:
 
 - a callback to the opening hook or to a motif that ran through the deck;
-- Zundamon over-applying the lesson to something personal (zunda mochi is the classic target), answered by Metan's concise tsukkomi;
+- Zundamon over-applying the lesson to a personal everyday concern, answered by Metan's concise tsukkomi;
 - Metan sealing Zundamon's final understanding check with a slightly theatrical flourish in her own voice.
 
 Constraints:
