@@ -189,7 +189,10 @@ Symptoms of a fed listener:
 - he never wants anything, never resists, never misapplies out of
   self-interest;
 - every section transition is requested by Zundamon (transitions belong to
-  Metan — see Transitions).
+  Metan — see Transitions);
+- he is the first to name an implementation detail he could not know (a
+  tool, a file, an internal API) — author knowledge leaking through the
+  listener's mouth.
 
 Repairs:
 
@@ -199,7 +202,14 @@ Repairs:
   syllabus;
 - when a concept is hard, let his confusion survive one extra exchange
   instead of dissolving on cue;
-- let Metan volunteer some transitions unprompted — she owns them.
+- let Metan volunteer some transitions unprompted — she owns them;
+- when a technical term must enter the dialogue, Metan introduces it;
+  Zundamon may grope toward it in his own vocabulary, from what the deck
+  has established or from everyday knowledge;
+- when Zundamon builds on earlier deck content, bind the reference inside
+  the deck: 「さっきの話だと」, not 「前に聞いた話だと」 — 「前に」 can
+  read as citing a conversation the viewer never saw, and sends a
+  first-time reader hunting for an antecedent that does not exist.
 
 ## Metan's Response Discipline
 

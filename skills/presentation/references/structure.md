@@ -225,6 +225,18 @@ outline is showing through and every exchange becomes predictable.
   verbatim.
 - Vary the entry move across consecutive slides: if the last slide opened
   on a question, open the next on a reaction or a misconception.
+- **Seams have two sides, and uniformity migrates.** `plants` can surface
+  on either side of a boundary, from either mouth, and in forms other than
+  a question: the listener's not-yet-formed unease, a confident assertion
+  the next slide overturns, or no hook at all — a flat close with Metan
+  opening the next slide herself (transitions are hers). Do not run the
+  same seam move on consecutive boundaries: across two validation decks,
+  fixing uniform entries produced uniform exits instead — every section
+  ending on a Zundamon cliffhanger question, predictable by the third.
+- The same listener device recurring at the same position in every section
+  (a つまり paraphrase mid-section, an えっ reaction after each reveal)
+  reads as template even when each use is individually correct. Budget
+  repeated devices across the deck, not per section.
 - `claim` is what the slide argues, not a line for Metan to recite in one
   breath. Spread it across the exchange; the shape of the exchange comes
   from interaction.md, not from the outline's fields.
