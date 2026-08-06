@@ -31,9 +31,9 @@ If `<project>/.zunda-presenter/` has no decks yet, seed the bundled demo:
 ```
 mkdir -p .zunda-presenter/demo
 cp "${CLAUDE_PLUGIN_ROOT}/deck/script.json" .zunda-presenter/demo/
-cp "${CLAUDE_PLUGIN_ROOT}/deck/dictionary.json" .zunda-presenter/
+cp "${CLAUDE_PLUGIN_ROOT}/deck/dictionary.json" .zunda-presenter/demo/
 ```
-(`dictionary.json` at the `.zunda-presenter/` root is shared by all decks in the project.)
+(Each deck carries its own `dictionary.json`. Do not seed one at the `.zunda-presenter/` root — that legacy shared location is deprecated, though still honored for existing projects.)
 
 ## 4. presenter server
 
