@@ -239,7 +239,9 @@ to the prompt:
 > any sections that did not serve that claim. (4) As a listening
 > experience, does any repeated conversational device — e.g. every section
 > opening with the same move — make the dialogue feel like a filled-in
-> template rather than a conversation? Point at concrete lines.
+> template rather than a conversation? And does the listener character
+> seem to speak from their own motivation, or only to prompt the
+> explainer? Point at concrete lines.
 
 Reading the result:
 
