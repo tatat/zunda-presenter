@@ -373,7 +373,12 @@ After Metan's final takeaway, close with a short beat that releases the audience
 - Zundamon earnestly over-applying the lesson to a personal everyday concern — Zundamon genuinely means it, it is not a performed joke — answered by Metan's concise tsukkomi, then one final Zundamon line sincerely absorbing the correction (ideally in a way that restates the lesson);
 - Metan sealing Zundamon's final understanding check with a slightly theatrical flourish in her own voice.
 
-The beat does not have to be witty. A plain, sincere close — a callback resolved by Zundamon's genuine reaction, nothing after it — beats a strained punchline. Signs of straining: a Zundamon line that exists only to set up a prepared Metan retort, or a final Metan quip that restates the deck's lesson as a slogan (a 「祈るんじゃなくて、監視するのよ」-shaped line). If a line's only job is to enable the next line, cut both and end earlier.
+The beat does not have to be witty. A plain, sincere close — a callback resolved by Zundamon's genuine reaction, nothing after it — beats a strained punchline. Worked example, from a deck about alert monitoring whose opening hook was being woken up at night:
+
+- Clean close: めたん「これで夜中に起こされることは、もうないはずよ」→ ずんだもん「久しぶりに朝まで夢が見られるのだ」 — the callback resolves on a sincere reaction; stop here.
+- Strained: appending ずんだもん「アラートが鳴らないことを祈るのだ」→ めたん「祈るんじゃなくて、監視するのよ」 — the Zundamon line exists only to set up the retort (nobody sincerely "prays" right after being told the problem is fixed), and the retort merely recasts the deck's lesson as a slogan.
+
+If a line's only job is to enable the next line, cut both and end earlier.
 
 Constraints:
 
