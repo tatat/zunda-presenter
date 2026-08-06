@@ -8,6 +8,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 - `public/` — presentation UI: 16:9 video-style stage, character sprites (expression × mouth PNGs in `public/assets/`), outlined subtitles, auto-advance playback with pause/seek, Mermaid and KaTeX math rendering.
 - `deck/` — bundled sample deck (`script.json`, `dictionary.json`; audio is generated, not committed).
 - `scripts/synthesize.mjs` — VOICEVOX synthesis (`npm run synth`, honors `PRESENTER_DECK_DIR`). Engine expected at `127.0.0.1:50021`.
+- `scripts/reading-tools.mjs` — reading audit without synthesis (honors `PRESENTER_DECK_DIR`): `npm run try-reading -- "<text>"` prints one string's reading raw vs dictionary-applied; `npm run check-dictionary` compares each dictionary entry's raw-key reading against its replacement's and flags no-effect entries.
 - `scripts/export-video.mjs` — MP4 export (`npm run export`, honors `PRESENTER_DECK_DIR`; needs ffmpeg + playwright). Deterministic offline render: drives the page's `#render` mode (`window.__render` in `public/app.js`) in headless Chromium, replays two screenshots per line on a timeline computed from the wav durations, stitches audio sample-exactly in Node, muxes with ffmpeg.
 - `assets/raw/` — character sprite source PSDs (坂本アヒル's 立ち絵素材, free-use per zunko.jp/guideline.html; not committed — see README links). `tools/export_sprites.py` (run with `tools/pyenv/bin/python`) composites expression × mouth pairs into `public/assets/`; edit its `CHARS` config to change expressions/outfits.
 
