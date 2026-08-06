@@ -1,5 +1,7 @@
 # Metan × Zundamon Interaction
 
+> Read in full on first exposure — this file ends with the section "Silent Interaction Check" and an end-marker line; if you did not see them, you read an excerpt. (Pinpoint re-consultation via grep later is fine.)
+
 ## Scope
 
 This document controls only the interaction pattern between Shikoku Metan and Zundamon.
@@ -421,3 +423,5 @@ Before emitting a dialogue segment, verify:
 10. Is the dialogue more than a monologue divided between two speaker labels?
 
 If any check fails, revise before emitting.
+
+*End of interaction.md — you have read the whole file.*

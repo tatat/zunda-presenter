@@ -28,6 +28,17 @@ reviewed and judged "not now", not "never".
   `<div class='plot'>` helper instead — less authoring effort, steadier
   output.
 
+## Skill docs
+
+- **Hook-enforced full reads of references.** SKILL.md instructs full
+  Read-tool reads of `references/` (end-marker lines make partial reads
+  self-evident), after observing an agent read interaction.md lines 1–400
+  and silently miss the tail checklist. If partial first reads persist
+  despite the markers, ship a plugin PreToolUse hook that rejects
+  sed/head/tail excerpting of `skills/presentation/references/*.md` and
+  points at the Read tool. Cost: hook complexity and false positives on
+  legitimate re-consultation greps — hence deferred.
+
 ## Web Q&A
 
 - **Shared VOICEVOX client module.** `scripts/synthesize.mjs` and

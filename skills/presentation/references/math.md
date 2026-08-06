@@ -1,5 +1,7 @@
 # Math in decks
 
+> Read in full on first exposure — this file ends with the section "Function graphs (hand-authored SVG)" and an end-marker line; if you did not see them, you read an excerpt. (Pinpoint re-consultation via grep later is fine.)
+
 Everything math-specific: TeX on slides, formulas in dialogue, function graphs.
 Read this before writing any deck that contains a formula or a plot.
 
@@ -34,3 +36,5 @@ No plotting library is bundled — hand-author inline SVG; it looks properly pro
 - `viewBox='0 0 800 430'` with `width='100%' style='max-height:56cqh'` fits a `chars: false` slide with an `h2` and a one-line formula.
 
 Data charts (bar/line/pie) are not math-specific — Mermaid renders them; see Diagrams & charts in the skill.
+
+*End of math.md — you have read the whole file.*
