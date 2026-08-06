@@ -61,7 +61,7 @@ Sizing: ~1 slide per idea, 3–6 lines per slide. A 5-slide deck ≈ 20–25 lin
 - Each line ≤ 60 characters. Long lines sound monotonous and make seeking coarse. Split rather than cram.
 - Dialogue text is Japanese. English identifiers are fine in `text` (subtitle shows them as-is); the dictionary handles pronunciation.
 - Numbers in dialogue: Arabic numerals (`99%`, `1,098人`), not kanji numerals — better for both the engine and the subtitle; details in Readings.
-- Slide transitions: give the first line on a new slide a short transition beat. Transitions belong to Metan (「じゃあ、〜を見ていくわ」) — Zundamon may motivate one occasionally (「次は〜なのだ」), but if he requests every transition the listener is being fed (interaction.md, Listener Agency).
+- Slide transitions: give the first line on a new slide a short transition beat. Transitions belong to Metan (「じゃあ、〜を見ていくわ」) — Zundamon may motivate one occasionally (「次は〜なのだ」), but if every transition is Zundamon-requested, the listener is being fed (interaction.md, Listener Agency).
 - **オチ**: never end the deck on a flat confirmation — めたん「そうよ」 as the last line is an anticlimax. After Metan's final takeaway, add a 1–3 line closing beat; the patterns, constraints, and worked examples live in `references/roles/interaction.md` (Deck Ending). Expressions + `postPause` on the final lines help it land.
 
 **Expressions** — `normal / happy / surprised / troubled / smug`:
@@ -157,7 +157,7 @@ All params join the audio cache hash — tweaks re-synthesize only affected line
 
 1. **Rewrite the text** — 「、」 inserts a pause, 「！」「？」 change intonation, 「〜」 lengthens vowels. Write Zundamon's surprise as 「えっ、」 never bare 「え、」 — the bare vowel synthesizes as a near-silent whisper (line-initial interjections like めたん's 「ええ、」 have the same failure mode; the synth script detects and repairs those automatically, but ずんだもん's bare 「え」 resists repair, so spell it 「えっ」).
 2. **Per-line params** — `style` (emotion voice; sparingly: 驚き=herohero/namidame, 内緒話=sasayaki), `speed` (~0.85–1.3), `pitch` (±0.15 is a lot), `intonation` (0=flat, 2=exaggerated), `volume`, `postPause`.
-3. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override. Recommended: zundamon `speed: 1.2` — his default pace is slow and drags the dialogue; ~1.2 sounds natural.
+3. **Per-speaker defaults** — top-level `"voice": {"zundamon": {...}, "metan": {...}}`; per-line values override. Recommended: zundamon `speed: 1.2` — the default pace is slow and drags the dialogue; ~1.2 sounds natural.
 
 Wrong readings are not a tuning problem — see Readings.
 
