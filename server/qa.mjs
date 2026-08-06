@@ -97,7 +97,7 @@ export function createQA({ root, decksRoot, broadcast, getDeckState }) {
     const lines = sanitizeLines(answer.lines, idBase, slideId);
     if (lines.length === 0) throw new Error("agent returned no usable lines");
 
-    mergeDictionary(answer.dictionary);
+    mergeDictionary(deckDir, answer.dictionary);
     qa.questions.push({ id: idBase, question, ts: new Date().toISOString(), lines });
     writeJSON(qaPath, qa);
 
@@ -120,9 +120,16 @@ export function createQA({ root, decksRoot, broadcast, getDeckState }) {
     broadcast({ type: "qa", deck, status: "ready", track: idBase });
   }
 
-  function mergeDictionary(dict) {
+  function mergeDictionary(deckDir, dict) {
     if (!dict || typeof dict !== "object") return;
-    const p = path.join(decksRoot, "dictionary.json");
+    /* Write where synthesis will read (synthesize.mjs resolution selects one
+       file, it does not merge): the deck-local dictionary when it exists, the
+       legacy shared root only while it is the deck's active dictionary, and a
+       new deck-local file otherwise. Writing anywhere else strands the
+       readings — they would never reach the audio. */
+    const local = path.join(deckDir, "dictionary.json");
+    const legacy = path.join(decksRoot, "dictionary.json");
+    const p = existsSync(local) ? local : existsSync(legacy) ? legacy : local;
     // Re-read right before writing: the interactive agent may have edited the
     // dictionary during the claude run
     const cur = readJSON(p, {});
@@ -268,7 +275,9 @@ function buildPrompt({ script, qa, decksRoot, deckDir, playState, question, fres
   if (fresh) {
     const slim = { ...script, lines: script.lines.map(({ audio, ...l }) => l) };
     parts.push(`# Presentation deck (script.json)\n${JSON.stringify(slim, null, 2)}`);
-    const dictionary = readJSON(path.join(decksRoot, "dictionary.json"), {});
+    // Same resolution as synthesize.mjs: deck-local first, legacy root fallback
+    const dictPath = [path.join(deckDir, "dictionary.json"), path.join(decksRoot, "dictionary.json")].find(existsSync);
+    const dictionary = dictPath ? readJSON(dictPath, {}) : {};
     parts.push(
       `# Pronunciation dictionary (already registered)\n${JSON.stringify(dictionary, null, 2)}\n\nAny English/technical term you use in "lines" that is NOT in this dictionary — including tool names, file names, and identifiers (e.g. Read, ffmpeg, npm run export) — MUST get a katakana reading in your "dictionary" output.`
     );
