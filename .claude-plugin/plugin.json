@@ -1,7 +1,7 @@
 {
   "name": "zunda-presenter",
   "description": "ずんだもん × 四国めたん narrate your plans as an auto-playing, pausable presentation with VOICEVOX voices",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "author": { "name": "tatat" },
   "repository": "https://github.com/tatat/zunda-presenter",
   "keywords": ["voicevox", "zundamon", "presentation", "yukkuri"]
