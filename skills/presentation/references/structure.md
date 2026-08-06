@@ -39,6 +39,12 @@ Each content slide is a step in an argument, specified by four fields:
   "none". This plans the slide/dialogue division of labor up front: dialogue
   points at what the slide shows and adds the why — it never re-derives it.
   A heavy `shows` is also the moment to decide `chars: false`.
+  `shows: none` means the beat adds no **new** visual — it does not license
+  a near-empty slide. Either let the beat run on the previous slide (beats
+  need not map 1:1 to slides) or compose a minimal card (`.center` + the
+  beat's question as a pull-quote with a `note` line). A bare heading
+  floating on an empty frame through thirty seconds of dialogue reads as a
+  rendering bug; `check-deck` warns on heading-only slides.
 - **claim** — the one sentence this slide argues.
 - **plants** — the question this slide hands to the next one.
 
@@ -66,7 +72,10 @@ structure slots in SKILL.md:
    the viewer has a question is furniture; the same diagram shown after is
    an answer taking shape.
 4. **Beats** — each answers the planted question and plants the next. The
-   chain is what pulls a viewer through the middle of a deck.
+   chain is what pulls a viewer through the middle of a deck. SKILL.md's
+   リスク・未定事項 slot has no slot of its own here: risk enters as an
+   ordinary beat wherever the chain raises it (as in the worked example's
+   s5).
 5. **Recap + オチ** — restate the spine (now earned), close per the Deck
    Ending rules in interaction.md.
 
@@ -97,7 +106,7 @@ answer moves out.
 - **Cut = relocate, not delete.** Cut details go to `context.md`, which the
   Web Q&A agent reads — a viewer who cares about a cut detail can ask and
   get it answered on demand. The deck carries the spine; the long tail is
-  served by Q&A. Nothing is lost; things are placed.
+  served by Q&A.
 - **Length is an order, shape is unconditional.** Long, dense decks are a
   legitimate request (SKILL.md already allows >40 lines when the user asks
   for depth). This document forbids shapelessness — no statable spine,
@@ -199,6 +208,27 @@ Same facts. The difference is that #2's `plants` makes #3 wanted, #3's
 but not the viewer's question — becomes one annotation on the map plus a
 Q&A-served detail.
 
+## From Outline to Dialogue
+
+The outline is a skeleton, not a script. The observed failure mode: every
+slide opens with Zundamon voicing that slide's `holds` verbatim — the seams
+all hold, yet the deck sounds like a filled-in template, because the
+outline is showing through and every exchange becomes predictable.
+
+- `holds` records what the viewer wonders; it does not dictate that
+  Zundamon asks it aloud. Surface it through any of interaction.md's
+  listener functions: a plausible wrong proposal (misconception probe), a
+  reaction to the previous claim, a concrete paraphrase, an implication
+  test. In live validation the strongest beat surfaced its holds as a
+  wrong design proposal (「script.json にそのまま追記すればいいのだ」);
+  the weakest sections all opened with the planted question read out
+  verbatim.
+- Vary the entry move across consecutive slides: if the last slide opened
+  on a question, open the next on a reaction or a misconception.
+- `claim` is what the slide argues, not a line for Metan to recite in one
+  breath. Spread it across the exchange; the shape of the exchange comes
+  from interaction.md, not from the outline's fields.
+
 ## Blind Flow Check
 
 Runs together with the naive-reader term review (SKILL.md workflow): the
@@ -209,7 +239,12 @@ to the prompt:
 > Additionally: (1) at each blank line, before reading further, write one
 > line — the question you expect the next section to answer. (2) After
 > finishing, state the script's single main claim in one sentence. (3) List
-> any sections that did not serve that claim.
+> any sections that did not serve that claim. (4) As a listening
+> experience, does any repeated conversational device — e.g. every section
+> opening with the same move — make the dialogue feel like a filled-in
+> template rather than a conversation? And does the listener character
+> seem to speak from their own motivation, or only to prompt the
+> explainer? Point at concrete lines.
 
 Reading the result:
 
@@ -225,6 +260,9 @@ Reading the result:
   or evidence the spine sentence is too narrow for what the deck actually
   is (e.g. a deliberate feature tour). Decide against the outline's spine,
   not the reviewer's reconstruction.
+- **Template rhythm flagged** — the outline is showing through. Don't patch
+  individual lines: re-vary how each beat's `holds` surfaces (see From
+  Outline to Dialogue) and re-run.
 - **A clean report is not a pass certificate.** One blinded reviewer is one
   sample: two runs on the same deck reliably overlap on the big misses and
   diverge on the rest (observed directly during validation — a second

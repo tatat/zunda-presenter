@@ -169,6 +169,38 @@ Prefer questions that expose structure:
 - what happens in a concrete scenario;
 - where the boundary of the rule lies.
 
+## Listener Agency
+
+Every Zundamon line must be explainable from Zundamon's own current state —
+what he just heard, what he wants, what he misunderstands — without
+referring to what the explanation needs next. A line whose only motivation
+is downstream (it exists so Metan can deliver the next point) reads as fed
+(言わされている), and a run of such lines turns the listener into a
+prompting device.
+
+Symptoms of a fed listener:
+
+- his question is exactly the next section's agenda item, with no personal
+  angle on it;
+- generic floor-passing reactions (「聞きたいのだ！」) that carry no
+  content of their own;
+- comprehension arriving exactly on schedule — confusion never persists
+  past the line that resolves it;
+- he never wants anything, never resists, never misapplies out of
+  self-interest;
+- every section transition is requested by Zundamon (transitions belong to
+  Metan — see Transitions).
+
+Repairs:
+
+- give the question a stake: why does *he* care about this, right now;
+- let the misconception come from his own frame (eagerness, concreteness,
+  occasional boastfulness — zundamon.md's Core Voice), not from the
+  syllabus;
+- when a concept is hard, let his confusion survive one extra exchange
+  instead of dissolving on cue;
+- let Metan volunteer some transitions unprompted — she owns them.
+
 ## Metan's Response Discipline
 
 Metan must answer Zundamon's actual question before expanding the topic.
@@ -421,6 +453,8 @@ Before emitting a dialogue segment, verify:
 8. Does Metan own final definitions, corrections, transitions, and synthesis?
 9. Is Zundamon's understanding confirmed before being treated as settled?
 10. Is the dialogue more than a monologue divided between two speaker labels?
+11. Can each Zundamon line be motivated from his own state (heard, wants,
+    misunderstands), never solely by what the exposition needs next?
 
 If any check fails, revise before emitting.
 

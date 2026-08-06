@@ -14,7 +14,7 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const valid = () => ({
   title: "t",
   voice: { zundamon: { speed: 1.2 } },
-  slides: [{ id: "s1", html: "<h1>x</h1>" }],
+  slides: [{ id: "s1", html: "<h1>x</h1><p>y</p>" }],
   lines: [{ id: "l1", speaker: "zundamon", slide: "s1", text: "やあなのだ" }],
 });
 
@@ -64,6 +64,18 @@ test("non-numeric voice params are errors", () => {
   const { errors } = checkScript(s);
   assert.ok(errors.some((e) => e.includes("l1") && e.includes("speed must be a number")));
   assert.ok(errors.some((e) => e.includes("voice.metan") && e.includes("pitch must be a number")));
+});
+
+test("heading-only slides are warned, composed slides are not", () => {
+  const s = valid();
+  s.slides[0].html = "<h2>見出しだけ</h2>";
+  const { errors, warnings } = checkScript(s);
+  assert.deepEqual(errors, []);
+  assert.ok(warnings.some((w) => w.includes("s1") && w.includes("heading-only")));
+
+  const ok = valid();
+  ok.slides[0].html = "<div class='center'><h2>問い</h2><p class='note'>一言</p></div>";
+  assert.ok(!checkScript(ok).warnings.some((w) => w.includes("heading-only")));
 });
 
 test("long lines, unknown fields and unreferenced slides are warnings", () => {
