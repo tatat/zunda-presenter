@@ -172,7 +172,7 @@ Prefer questions that expose structure:
 ## Listener Agency
 
 Every Zundamon line must be explainable from Zundamon's own current state —
-what he just heard, what he wants, what he misunderstands — without
+what Zundamon just heard, wants, or misunderstands — without
 referring to what the explanation needs next. A line whose only motivation
 is downstream (it exists so Metan can deliver the next point) reads as fed
 (言わされている), and a run of such lines turns the listener into a
@@ -180,26 +180,36 @@ prompting device.
 
 Symptoms of a fed listener:
 
-- his question is exactly the next section's agenda item, with no personal
+- the question is exactly the next section's agenda item, with no personal
   angle on it;
 - generic floor-passing reactions (「聞きたいのだ！」) that carry no
   content of their own;
 - comprehension arriving exactly on schedule — confusion never persists
   past the line that resolves it;
-- he never wants anything, never resists, never misapplies out of
+- Zundamon never wants anything, never resists, never misapplies out of
   self-interest;
 - every section transition is requested by Zundamon (transitions belong to
-  Metan — see Transitions).
+  Metan — see Transitions);
+- Zundamon is the first to name an implementation detail no listener could know (a
+  tool, a file, an internal API) — author knowledge leaking through the
+  listener's mouth.
 
 Repairs:
 
 - give the question a stake: why does *he* care about this, right now;
-- let the misconception come from his own frame (eagerness, concreteness,
+- let the misconception come from Zundamon's own frame (eagerness, concreteness,
   occasional boastfulness — zundamon.md's Core Voice), not from the
   syllabus;
-- when a concept is hard, let his confusion survive one extra exchange
+- when a concept is hard, let the confusion survive one extra exchange
   instead of dissolving on cue;
-- let Metan volunteer some transitions unprompted — she owns them.
+- let Metan volunteer some transitions unprompted — she owns them;
+- when a technical term must enter the dialogue, Metan introduces it;
+  Zundamon may grope toward it in familiar vocabulary, from what the deck
+  has established or from everyday knowledge;
+- when Zundamon builds on earlier deck content, bind the reference inside
+  the deck: 「さっきの話だと」, not 「前に聞いた話だと」 — 「前に」 can
+  read as citing a conversation the viewer never saw, and sends a
+  first-time reader hunting for an antecedent that does not exist.
 
 ## Metan's Response Discipline
 
@@ -453,7 +463,7 @@ Before emitting a dialogue segment, verify:
 8. Does Metan own final definitions, corrections, transitions, and synthesis?
 9. Is Zundamon's understanding confirmed before being treated as settled?
 10. Is the dialogue more than a monologue divided between two speaker labels?
-11. Can each Zundamon line be motivated from his own state (heard, wants,
+11. Can each Zundamon line be motivated from Zundamon's own state (heard, wants,
     misunderstands), never solely by what the exposition needs next?
 
 If any check fails, revise before emitting.
