@@ -194,8 +194,9 @@ Symptoms of a fed listener:
 Repairs:
 
 - give the question a stake: why does *he* care about this, right now;
-- let the misconception come from his own frame (appetite, laziness,
-  impatience — see zundamon.md), not from the syllabus;
+- let the misconception come from his own frame (eagerness, concreteness,
+  occasional boastfulness — zundamon.md's Core Voice), not from the
+  syllabus;
 - when a concept is hard, let his confusion survive one extra exchange
   instead of dissolving on cue;
 - let Metan volunteer some transitions unprompted — she owns them.

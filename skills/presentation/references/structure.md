@@ -72,7 +72,10 @@ structure slots in SKILL.md:
    the viewer has a question is furniture; the same diagram shown after is
    an answer taking shape.
 4. **Beats** — each answers the planted question and plants the next. The
-   chain is what pulls a viewer through the middle of a deck.
+   chain is what pulls a viewer through the middle of a deck. SKILL.md's
+   リスク・未定事項 slot has no slot of its own here: risk enters as an
+   ordinary beat wherever the chain raises it (as in the worked example's
+   s5).
 5. **Recap + オチ** — restate the spine (now earned), close per the Deck
    Ending rules in interaction.md.
 
@@ -103,7 +106,7 @@ answer moves out.
 - **Cut = relocate, not delete.** Cut details go to `context.md`, which the
   Web Q&A agent reads — a viewer who cares about a cut detail can ask and
   get it answered on demand. The deck carries the spine; the long tail is
-  served by Q&A. Nothing is lost; things are placed.
+  served by Q&A.
 - **Length is an order, shape is unconditional.** Long, dense decks are a
   legitimate request (SKILL.md already allows >40 lines when the user asks
   for depth). This document forbids shapelessness — no statable spine,
@@ -147,27 +150,6 @@ Lifecycle: on any rewrite, update the outline first, then the script — the
 outline is the record of the spine, and editing it first keeps structural
 decisions explicit instead of emergent (same ordering discipline as
 SKILL.md's rewrite section: the deck presents the artifact's current state).
-
-## From Outline to Dialogue
-
-The outline is a skeleton, not a script. The observed failure mode: every
-slide opens with Zundamon voicing that slide's `holds` verbatim — the seams
-all hold, yet the deck sounds like a filled-in template, because the
-outline is showing through and every exchange becomes predictable.
-
-- `holds` records what the viewer wonders; it does not dictate that
-  Zundamon asks it aloud. Surface it through any of interaction.md's
-  listener functions: a plausible wrong proposal (misconception probe), a
-  reaction to the previous claim, a concrete paraphrase, an implication
-  test. In live validation the strongest beat surfaced its holds as a
-  wrong design proposal (「script.json にそのまま追記すればいいのだ」);
-  the weakest sections all opened with the planted question read out
-  verbatim.
-- Vary the entry move across consecutive slides: if the last slide opened
-  on a question, open the next on a reaction or a misconception.
-- `claim` is what the slide argues, not a line for Metan to recite in one
-  breath. Spread it across the exchange; the shape of the exchange comes
-  from interaction.md, not from the outline's fields.
 
 ## Worked Contrast
 
@@ -225,6 +207,27 @@ Same facts. The difference is that #2's `plants` makes #3 wanted, #3's
 `plants` makes #4 the star, and the storage comparison — a real decision,
 but not the viewer's question — becomes one annotation on the map plus a
 Q&A-served detail.
+
+## From Outline to Dialogue
+
+The outline is a skeleton, not a script. The observed failure mode: every
+slide opens with Zundamon voicing that slide's `holds` verbatim — the seams
+all hold, yet the deck sounds like a filled-in template, because the
+outline is showing through and every exchange becomes predictable.
+
+- `holds` records what the viewer wonders; it does not dictate that
+  Zundamon asks it aloud. Surface it through any of interaction.md's
+  listener functions: a plausible wrong proposal (misconception probe), a
+  reaction to the previous claim, a concrete paraphrase, an implication
+  test. In live validation the strongest beat surfaced its holds as a
+  wrong design proposal (「script.json にそのまま追記すればいいのだ」);
+  the weakest sections all opened with the planted question read out
+  verbatim.
+- Vary the entry move across consecutive slides: if the last slide opened
+  on a question, open the next on a reaction or a misconception.
+- `claim` is what the slide argues, not a line for Metan to recite in one
+  breath. Spread it across the exchange; the shape of the exchange comes
+  from interaction.md, not from the outline's fields.
 
 ## Blind Flow Check
 
