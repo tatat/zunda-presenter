@@ -131,6 +131,15 @@ export function checkScript(script) {
       else if (slideIds.has(slide.id)) err(`${where}: duplicate id`);
       else slideIds.add(slide.id);
       if (!isStr(slide.html)) err(`${where}: missing html`);
+      else {
+        // A slide whose only content is a heading sits near-empty on screen
+        // for the whole beat — compose it or share the previous slide
+        const textOf = (h) => h.replace(/<[^>]+>/g, "").trim();
+        const heading = /<h[12][^>]*>(.*?)<\/h[12]>/s.exec(slide.html);
+        if (heading && textOf(slide.html) === textOf(heading[1])) {
+          warn(`${where}: heading-only html — compose the slide (.center + note) or share the previous slide (see structure.md, shows)`);
+        }
+      }
       if (slide.chars != null && typeof slide.chars !== "boolean") err(`${where}: chars must be a boolean`);
       for (const k of Object.keys(slide)) {
         if (!SLIDE_FIELDS.has(k)) warn(`${where}: unknown field "${k}" — typo?`);

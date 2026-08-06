@@ -39,6 +39,12 @@ Each content slide is a step in an argument, specified by four fields:
   "none". This plans the slide/dialogue division of labor up front: dialogue
   points at what the slide shows and adds the why — it never re-derives it.
   A heavy `shows` is also the moment to decide `chars: false`.
+  `shows: none` means the beat adds no **new** visual — it does not license
+  a near-empty slide. Either let the beat run on the previous slide (beats
+  need not map 1:1 to slides) or compose a minimal card (`.center` + the
+  beat's question as a pull-quote with a `note` line). A bare heading
+  floating on an empty frame through thirty seconds of dialogue reads as a
+  rendering bug; `check-deck` warns on heading-only slides.
 - **claim** — the one sentence this slide argues.
 - **plants** — the question this slide hands to the next one.
 
