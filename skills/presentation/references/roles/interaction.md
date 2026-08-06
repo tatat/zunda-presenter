@@ -387,6 +387,8 @@ Constraints:
 - the takeaway must already be delivered before the beat — the ending releases tension and must not introduce new information;
 - Metan must have settled the content before the beat — but her ownership is over facts, not line order. Ending on Zundamon's sincere reaction is fine; forcing one more Metan line just to give her the literal last word is how slogan-quips happen. What remains prohibited is ending on an unanswered question or an unverified interpretation.
 
+## Prohibited Interaction Patterns
+
 Do not:
 
 - reverse the roles and make Zundamon the main explainer;
