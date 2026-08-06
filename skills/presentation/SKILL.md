@@ -20,10 +20,15 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 ## Workflow
 
 1. Create a new deck dir (or reuse an existing one for updates) and write `.zunda-presenter/<deck-name>/script.json` (reference below). The browser hot-reloads the open deck on every save. After writing or editing it, validate with `npm run check-deck` (same env var as the synth command; also covers `qa.json`) — it checks JSON syntax, required fields, id uniqueness, slide references, and enum values, so no ad-hoc JSON parsing needed. Errors mean invalid deck structure or values — fix them all (some break playback/synthesis, others the runtime papers over with fallbacks); warnings flag guideline violations and likely typos. After any structural edit (inserting/reordering lines, splitting slides), re-check the deck's shape with `npm run view-deck`: it prints the lines in **actual playback order** (array position — the only thing that determines order; ids drift from story order after edits and the slides array orders independently), grouped by slide, flagging same-speaker runs mid-slide (often an insert that landed out of order). Pass slide ids to restrict output while keeping indices absolute: `npm run view-deck -- s3 s4`.
-2. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
-3. Audit the readings — `npm run readings` works before anything is synthesized — and fix what is actually misread (see Readings).
-4. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Re-audit after any edit (see Readings).
-5. Point the user's tab at the deck and play:
+2. **Naive-reader review** — you just absorbed the source material, so you cannot reliably simulate not knowing it: terms, system names, and plan names will read as "already known" to you while a first-time viewer meets them cold (curse of knowledge — a checklist can't fix this, only a reader without the knowledge can). After the dialogue draft, extract the dialogue alone with `npm run view-deck -- --dialogue` and spawn a fresh subagent whose prompt contains ONLY that text — no deck title, no `context.md`, no source docs, no statement of the topic, no hint of what feedback you expect. Prompt template:
+
+   > The following is the script of an explanatory dialogue between two characters. Read it as a viewer with zero prior knowledge and list: (1) every term, proper noun, acronym, or fact treated as already known without being introduced first, and (2) every point where you lose the thread — each with the line where it first appears. Do not guess the script's topic to fill gaps.
+
+   Triage the flags with your full context: the reviewer can't see the slides, so a flag that the visible slide resolves (deixis like これが全体図よ pointing at a diagram) is dismissible — but an unintroduced term is not, because slides carry keywords, they don't introduce anything. Patch a short introduction line before each surviving first use (or cut the term). Repeat after any major rewrite — rewrites reintroduce the same blind spot.
+3. Write `<deck-name>/context.md` — background for the live Q&A agent (see Web Q&A below), which sees only this file, the deck, and the repo. In English, capture what the deck is about, key decisions **and rejected alternatives with reasons**, pointers to the relevant files, and anything discussed in chat that the deck omits. Update it whenever later discussion adds context.
+4. Audit the readings — `npm run readings` works before anything is synthesized — and fix what is actually misread (see Readings).
+5. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Re-audit after any edit (see Readings).
+6. Point the user's tab at the deck and play:
    ```
    curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"open","deck":"<deck-name>"}'
    curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"play","deck":"<deck-name>"}'
@@ -45,7 +50,7 @@ Work top-down: outline the sections first, then write slides and dialogue per se
 
 Sizing: ~1 slide per idea, 3–6 lines per slide. A 5-slide deck ≈ 20–25 lines ≈ 2–3 minutes — good default. Don't exceed ~40 lines without the user asking for depth.
 
-**Slides carry the skeleton, dialogue carries the reasoning.** Slides: keywords, bullets (≤5, each ≤ ~10 words), diagrams, code — never full sentences duplicating the dialogue. Dialogue: the why, tradeoffs, context, reactions. If you're about to write a paragraph on a slide, move it into Metan's mouth and leave a keyword behind.
+**Slides carry the skeleton, dialogue carries the reasoning.** Slides: keywords, bullets (≤5, each ≤ ~10 words), diagrams, code — never full sentences duplicating the dialogue. Dialogue: the why, tradeoffs, context, reactions. If you're about to write a paragraph on a slide, move it into Metan's mouth and leave a keyword behind. The split cuts the other way too: once a fact sits on the slide as a bullet (a number, a mechanism name), the dialogue must not re-derive or re-confirm it through a Q&A exchange — point at it and add what the slide can't show (the why, the implication). Re-deriving a visible bullet reads as padding.
 
 **Dialogue rules:**
 
@@ -184,6 +189,9 @@ When the user pauses and asks a question in chat:
 3. Run the synth command, then `{"action":"play"}`.
 
 Corrections: edit `lines[].text` / slide html in place (keep ids) → synth → `{"action":"goto","lineId":"<first edited>"}` → `{"action":"play"}`.
+
+- **A line edit isn't done until its neighbors still read coherently.** Fixing exactly the flagged line routinely breaks the line next to it — a transition word now points at content that moved, a callback gets answered twice. After every edit, reread the edited line together with its immediate neighbors and the first line of the following slide, as one exchange.
+- **Second rejection of the same line = stop word-swapping.** If a fix to a line gets rejected again, the problem is structural, not lexical: re-derive the sentence from scratch — tense/conditional agreement, and what each pronoun and connective actually refers to. Iterating surface synonyms on a structurally broken sentence converges on nothing.
 
 ## Rewriting when the source changes
 
