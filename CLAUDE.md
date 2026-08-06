@@ -22,6 +22,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 ## Conventions
 
 - `TODO.md` records improvements that were considered and deliberately deferred, with the trigger that would make each worth doing. Check it before redesigning something it covers; add to it when deferring non-trivial ideas.
+- `docs/` holds design docs (English). When a change has enough moving parts that its rationale needs review, write a doc there instead of an issue thread.
 
 - Code comments and design docs in English; UI copy and dialogue text in Japanese.
 - Always pick the latest stable version when adding dependencies.
