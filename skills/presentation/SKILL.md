@@ -106,6 +106,7 @@ Use Mermaid: `<div class='mermaid'>flowchart LR\n  a --> b</div>` — rendered d
 
 - Prefer `flowchart` and `sequenceDiagram`. Keep node labels short; `<br/>` for two-line labels; quote labels containing spaces or slashes: `x["deck/audio/*.wav"]`.
 - Escape gotchas inside the JSON string: newlines must be `\n`, and `"` inside labels must be `\"` (or restructure to avoid them).
+- Multiple `subgraph`s with no edges between them (e.g. a Before/After comparison) render stacked in **reverse declaration order** — a mermaid/dagre quirk (mermaid-js/mermaid#2789), not your mistake. Declare them in the reverse of the intended top-to-bottom order, and confirm the result in the self-check screenshot.
 - Big diagrams pair with `"chars": false`. `<pre>` ASCII art is the fallback when exact layout matters (rendered in monospace, auto-centered).
 
 **Data charts**: Mermaid also renders these — `pie` and `xychart-beta` (bar + line) work today. One gotcha: in xychart, Japanese axis labels must be quoted (`x-axis ["1月", "2月"]` — unquoted non-ASCII is a syntax error).
