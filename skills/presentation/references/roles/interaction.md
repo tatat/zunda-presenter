@@ -398,23 +398,28 @@ Do not let emotional performance displace the explanation.
 
 ## Interjection Openers
 
-Line-initial interjections — Zundamon's えっ, Metan's ええ／ううん／あら —
-are a budget item, not a default reaction. Measured across six real decks
-they settled at one line in ten, which viewers report as cloying; the
-budget is a few per deck, and never on two consecutive beat boundaries
-(`check-deck` warns past the budget).
+Avoid line-initial interjections — Zundamon's えっ／え, Metan's ええ／
+ううん／あら — by default. Measured across six real decks they settled at
+one line in ten and viewers report the effect as cloying; on the audio
+side they synthesize unreliably (near-silent heads, and ううん keeps
+sounding like an assenting うん even amplified — a meaning bug). The
+default is zero: a kept opener is a marked exception whose turn pivots on
+the emotion itself, carrying something the clause cannot. `check-deck`
+warns when a deck exceeds a small tolerance.
 
-- An interjection carries information only when the turn pivots on the
-  emotion itself — a genuine reversal, a real concession. When the clause
-  after it already states the surprise or the denial (「えっ、1枚ずつ
-  なのだ？」 — the question IS the surprise; 「ううん、逆よ」 — the content
-  IS the denial), the opener is redundant: cut it and let the content
-  react.
-- Every reaction function above stays legible without an interjection —
-  wording, word order, and the exchange itself carry it.
-- This is a writing budget, not a voice rule: when an interjection is
-  used, spell it for synthesis per SKILL.md's voice-tuning notes (えっ,
-  never bare え).
+Say it with content instead:
+
+- **Surprise (Zundamon)** — the echo question or a scale marker carries
+  it: 「1枚ずつなのだ？」「そんなに違うのだ？」「まさか全部やり直しなの
+  だ？」. The question IS the surprise; えっ adds nothing.
+- **Denial (Metan)** — reversal markers keep her softness in-register:
+  「それが、〜のよ」「そうじゃないの、〜」; the plain contradiction
+  「そっちは逆よ」; or partial credit 「惜しいわね、〜。ただ〜」.
+  ううん is out on semantics (hears as うん), いや on register.
+- **Assent (Metan)** — 「そうよ」「その通りよ」 instead of ええ.
+- A kept interjection still follows the voice rules: spell えっ, never
+  bare え (near-silent), and let the synth script's head-rescue carry its
+  volume.
 
 ## Section Closure
 
@@ -485,9 +490,8 @@ Before emitting a dialogue segment, verify:
 10. Is the dialogue more than a monologue divided between two speaker labels?
 11. Can each Zundamon line be motivated from Zundamon's own state (heard, wants,
     misunderstands), never solely by what the exposition needs next?
-12. Are line-initial interjections within the deck budget (a few per deck,
-    no consecutive boundaries), each carrying emotion the clause itself
-    does not?
+12. Are line-initial interjections rare, marked exceptions — each carrying
+    emotion its clause cannot — rather than default reactions?
 
 If any check fails, revise before emitting.
 

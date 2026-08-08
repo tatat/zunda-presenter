@@ -160,8 +160,8 @@ export function checkScript(script) {
   if (interjections.length > INTERJECTION_BUDGET) {
     const kinds = [...new Set(interjections.map((l) => INTERJECTION_OPENER.exec(l.text)[1]))];
     warn(
-      `lines: ${interjections.length} lines open with interjections (${kinds.join("/")}) — budget is a few per deck; ` +
-        `cut the ones whose clause already carries the reaction (interaction.md, Interjection Openers)`
+      `lines: ${interjections.length} lines open with interjections (${kinds.join("/")}) — prefer zero: ` +
+        `say it with content (interaction.md, Interjection Openers)`
     );
   }
   const used = new Set((Array.isArray(script.lines) ? script.lines : []).map((l) => l?.slide));
