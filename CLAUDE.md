@@ -21,7 +21,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 - `skills/setup` — install/start VOICEVOX engine (`~/.cache/voicevox-engine/`), npm deps, server, browser.
 - `skills/presentation` — deck construction guide, script format, control API, and the question/correction workflow. Read it before touching any `script.json`.
 - `skills/export` — MP4 export of a deck: prerequisites (ffmpeg, playwright), synth-first, font caveats.
-- `agents/` — subagents the presentation skill spawns in parallel with the rest of the workflow: `naive-reader` (blind first-viewer review of the dialogue; question sets baked into the definition), `reading-auditor` (range-assigned VOICEVOX reading audit; full-deck context, try-reading-verified findings), `slide-checker` (runs `npm run snap` and judges every shot against the script's intent).
+- `agents/` — subagents the presentation skill spawns: `outline-checker` (pre-dialogue structure gate on `outline.md`; sees the outline and structure.md, never the source), `naive-reader` (blind first-viewer review of the dialogue; question sets baked into the definition), `reading-auditor` (range-assigned VOICEVOX reading audit; full-deck context, try-reading-verified findings), `slide-checker` (runs `npm run snap` and judges every shot against the script's intent). All but the outline gate run in parallel with the rest of the workflow.
 
 ## Conventions
 
