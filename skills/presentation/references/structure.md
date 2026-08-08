@@ -48,6 +48,12 @@ Each content slide is a step in an argument, specified by four fields:
 - **claim** — the one sentence this slide argues.
 - **plants** — the question this slide hands to the next one.
 
+Two optional weighting fields (see Weighting the Beats):
+
+- **depth** — `peak`, `ridge`, or `transit`; unmarked = standard.
+- **dig** — required on the `peak` beat: the concrete thing the dialogue
+  will dig into there.
+
 Rules that fall out of the form:
 
 - Slide k's `plants` must match slide k+1's `holds`. A mismatch is a broken
@@ -58,6 +64,33 @@ Rules that fall out of the form:
 - Title and closing slides take a one-line entry (hook / recap+オチ); the
   four-field form is for content beats only.
 
+## Weighting the Beats
+
+A summary flattens: every point at the source's middle depth, nothing dug
+into, nothing skipped — and a viewer who is never told where to lean in
+retains nothing. Declare the profile in the outline, per beat:
+
+- **`depth: peak`** — exactly one per deck (per chapter in long decks). The
+  beat the spine exists for. Requires a `dig:` naming the concrete material
+  the dialogue goes deeper into than a summary would: a worked example, the
+  rejected alternative and its reason, the failure case, the number that
+  contradicts intuition. 「詳しく話す」 is not a dig; `dig` names a thing.
+  The recap/オチ should land back on this beat.
+- **`depth: ridge`** — zero to two. Explained properly: a why plus one
+  concrete grounding, at standard budget.
+- **unmarked** — standard: explain, don't dig.
+- **`depth: transit`** — exists only to carry the chain to the next beat.
+  Compressed to the minimum that keeps the seam alive; compression here is
+  design, not neglect — a transit written at ridge detail is how decks go
+  flat.
+
+Marking everything up is the same flatness by other means: if most beats
+are peak/ridge, nothing is. The declaration is also a testable contract:
+the blinded reviewer force-ranks sections by how much the script seems to
+care, and a ranking that contradicts the declared depths means either the
+dialogue failed to realize the outline's intent or the peak was chosen
+wrong (see Blind Flow Check).
+
 ## The Question Chain
 
 The default arc for plan-explanation decks, mapped onto the standard
@@ -67,7 +100,11 @@ structure slots in SKILL.md:
    「ビルド 20 分、昼寝には長く仕事には短い」 pulls; 「今日はキャッシュの話」
    doesn't.
 2. **Stakes** — why the viewer should care, sharpening the hook into the
-   entry question.
+   entry question. By the end of this slot the deck has **voiced its
+   promise** — what the viewer will understand or be able to decide by the
+   end — in dialogue, not just in the author's head: a spine that is never
+   spoken reads as「何の話か分からないまま進む」even when every beat serves
+   it. (The blinded review measures this as time-to-purpose.)
 3. **Map** (全体像) — only after the question exists. A diagram shown before
    the viewer has a question is furniture; the same diagram shown after is
    an answer taking shape.
@@ -138,6 +175,8 @@ Japanese).
    - shows:  <what the slide displays — or "none">
    - claim:  <the one sentence this slide argues>
    - plants: <the question handed to the next slide>
+   - depth:  <peak|ridge|transit — omit for standard>
+   - dig:    <peak only: the concrete thing to dig into>
 ...
 n. `sN` まとめ — recap + オチ: <one line>
 
@@ -193,11 +232,15 @@ nobody asked about.
    - shows:  鍵の構成要素の図 + stale cache の再現例 1 行
    - claim:  入力だけでは足りない。ツールチェイン版数と環境変数も鍵に入れる
    - plants: 鍵を厳密にしすぎたらヒットしなくなるのでは？
+   - depth:  peak
+   - dig:    stale cache の再現例 — コンパイラ更新後に古い成果物が
+             復元される具体シナリオで「入力だけでは足りない」を接地
 5. `s5` リスク: ヒット率 vs 正しさ
    - holds:  前スライドの plants そのまま
    - shows:  none（掛け合いで運ぶ）
    - claim:  意図的にヒット率を犠牲にする側に倒した。stale は検出困難、
              miss はただ遅い
+   - depth:  ridge
 6. `s6` まとめ — recap + オチ
 Cut → context.md: ストレージ比較の検討過程、CI プロバイダ別の設定手順、
 ベンチマーク生データ
@@ -240,6 +283,12 @@ outline is showing through and every exchange becomes predictable.
 - `claim` is what the slide argues, not a line for Metan to recite in one
   breath. Spread it across the exchange; the shape of the exchange comes
   from interaction.md, not from the outline's fields.
+- **`depth` sets the dialogue budget.** The peak runs multiple exchange
+  cycles and may exceed the 3–6-lines-per-slide default — its `dig` is
+  where the deck slows down and gets concrete. A ridge gets the standard
+  treatment. A transit crosses in 2–3 lines: state, connect, hand over —
+  writing a transit at peak care is how the declared profile flattens back
+  out in the script.
 
 ## Blind Flow Check
 
@@ -265,6 +314,15 @@ guide for its report:
 - **Template rhythm flagged** — the outline is showing through. Don't patch
   individual lines: re-vary how each beat's `holds` surfaces (see From
   Outline to Dialogue) and re-run.
+- **Force-ranking vs declared depths** — the reviewer ranks sections by how
+  much the script seems to care. A ranking that contradicts the outline's
+  `depth` markings means the dialogue didn't realize the declared profile
+  (rewrite the peak's dig / compress the transits) — or the peak was chosen
+  wrong (outline fix). "I cannot rank them, they all feel the same" is the
+  flatness finding, not a pass.
+- **Time-to-purpose late** — if the reviewer couldn't say what the deck
+  wanted until deep into the middle, the promise wasn't voiced (Question
+  Chain, Stakes): fix the opening beats, not the middle.
 - **A clean report is not a pass certificate.** One blinded reviewer is one
   sample: two runs on the same deck reliably overlap on the big misses and
   diverge on the rest (observed directly during validation — a second
