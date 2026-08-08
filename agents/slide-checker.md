@@ -22,13 +22,18 @@ What to flag (each with the slide id and what is visible in the shot):
 
 - **Mermaid failures** — a missing/blank diagram, a raw error box, or a diagram whose structure contradicts the source (note: multiple edge-less `subgraph`s render stacked in reverse declaration order — a known mermaid quirk; flag when the visible order contradicts the intended top-to-bottom reading, e.g. After above Before).
 - **KaTeX failures** — red error text, or raw TeX/`\`-escapes showing instead of typeset math.
-- **Overflow and clipping** — content cut off at the frame or slide-area edges, scrollbars, bullets running under the subtitle band or behind the character sprites.
-- **Collisions and illegibility** — text overlapping the characters or subtitle, unreadably small type in a scaled-down diagram, a slide so dense it cannot be scanned in the seconds a line takes to speak.
+- **Overflow and clipping** — content cut off at the frame or slide-area edges, scrollbars.
+- **Slide content hidden** — bullets, diagram parts, or code hidden behind the character sprites or the subtitle band so the viewer cannot read them.
+- **Illegibility** — unreadably small type in a scaled-down diagram, a slide so dense it cannot be scanned in the seconds a line takes to speak.
 - **Empty-looking or broken slides** — a slide that renders visibly different from what its html declares (missing sections, unstyled dump).
 
-Do not flag stylistic taste (colors, spacing preferences) — only defects a viewer would notice as broken or unreadable. A `chars: false` slide legitimately has no characters; that is not a finding.
+NOT defects — never flag these:
 
-Read-only toward the deck: `npm run snap` writing `.snap/` is expected; never edit `script.json` or anything else.
+- **The subtitle overlapping the character sprites.** The subtitle is a video-style overlay drawn across the full stage by design; long lines legitimately run across the characters, and the text outline keeps them readable. Only content *hidden behind* sprites/subtitle counts (above).
+- Line length or wording — dialogue rules (the ≤60-char line limit) are the author's concern, not a layout finding.
+- Stylistic taste (colors, spacing preferences). A `chars: false` slide legitimately has no characters.
+
+Read-only toward the deck: `npm run snap` writing `.snap/` is expected; never edit `script.json` or anything else. If you need scratch files (crops, zoomed regions), write them inside `<deck dir>/.snap/` — not `/tmp` or anywhere else (project permission setups cover the deck dir; outside paths prompt the user).
 
 ## Output
 
