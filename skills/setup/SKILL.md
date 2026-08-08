@@ -75,6 +75,7 @@ Never change permission settings unprompted — offer this only when the user as
     "Bash(PRESENTER_DECK_DIR=* npm run readings *)",    "Bash(PRESENTER_DECK_DIR=* npm run readings)",
     "Bash(PRESENTER_DECK_DIR=* npm run check-deck *)",  "Bash(PRESENTER_DECK_DIR=* npm run check-deck)",
     "Bash(PRESENTER_DECK_DIR=* npm run view-deck *)",   "Bash(PRESENTER_DECK_DIR=* npm run view-deck)",
+    "Bash(PRESENTER_DECK_DIR=* npm run preflight *)",   "Bash(PRESENTER_DECK_DIR=* npm run preflight)",
     "Bash(PRESENTER_DECK_DIR=* npm run snap *)",        "Bash(PRESENTER_DECK_DIR=* npm run snap)",
     "Bash(PRESENTER_DECK_DIR=* npm run try-reading *)", "Bash(PRESENTER_DECK_DIR=* npm run try-reading)",
     "Bash(PRESENTER_DECK_DIR=* npm run check-dictionary *)", "Bash(PRESENTER_DECK_DIR=* npm run check-dictionary)"
