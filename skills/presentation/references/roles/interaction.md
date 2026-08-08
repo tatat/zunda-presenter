@@ -169,6 +169,42 @@ Prefer questions that expose structure:
 - what happens in a concrete scenario;
 - where the boundary of the rule lies.
 
+## Turn Necessity
+
+A listener turn must change the **direction** of the explanation — a new
+angle, an objection, a grounding request, an implication tested. A turn
+that merely advances it, asking for exactly what the explainer would say
+next anyway, is padding; a run of them turns the dialogue into
+質問→回答→質問→回答 ping-pong, which viewers report as cloying.
+
+- **Answer completeness.** When the follow-up is predictable from the
+  answer itself (the obvious どういうこと？/なぜ？), Metan answers it in
+  the same turn, as elaboration. 質問→回答＆補足 in one exchange beats
+  質問→回答→質問→回答 across two. The listener's next turn is reserved
+  for what a listener could not predict — or a reaction that carries
+  content of its own.
+- **The deletion test.** Delete the listener turn and join the two
+  explainer turns with at most a connective. If nothing is lost, the turn
+  was padding — cut it. Failed examples from validation: a listener asking
+  「触らずに済むのだ？」 right after the explainer said exactly that; a
+  「どういうことなのだ？」 wedged between a warning and the example that
+  was coming anyway.
+- **One story, one or two listener turns.** An anecdote — fact,
+  escalation, mechanism — is the explainer's to tell in one breath.
+  A four-turn relay through a single example (each listener line just
+  handing the baton: じゃあいらなかったのだ？／壊れてたのだ？) reduced to
+  the two turns that carried content: the stance before it and the lesson
+  after it.
+- **Confirmation is not an echo.** An understanding check earns its turn
+  by restating in the listener's own terms; the explainer then seals it
+  concisely (その通りよ) and moves on. Repeating the check's wording back
+  (まさにそれ。〜 — then the same sentence again) adds a turn with no
+  content.
+
+This section governs how often the Default Exchange Cycle's listener
+steps fire; it does not change the cycle itself. "Repeatedly return to
+the pattern" never meant every explanatory unit gets a listener turn.
+
 ## Listener Agency
 
 Every Zundamon line must be explainable from Zundamon's own current state —
@@ -492,6 +528,8 @@ Before emitting a dialogue segment, verify:
     misunderstands), never solely by what the exposition needs next?
 12. Are line-initial interjections rare, marked exceptions — each carrying
     emotion its clause cannot — rather than default reactions?
+13. Does every listener turn survive the deletion test — would removing it
+    and joining the neighboring explainer turns actually lose something?
 
 If any check fails, revise before emitting.
 
