@@ -70,6 +70,20 @@ reviewed and judged "not now", not "never".
   points at the Read tool. Cost: hook complexity and false positives on
   legitimate re-consultation greps — hence deferred.
 
+## Agents
+
+- **Pin cheaper/faster models on the review subagents.** The definitions in
+  `agents/` carry no `model:` frontmatter, so every reviewer inherits the
+  session model. The mechanical ones look like candidates for a smaller/faster
+  tier — reading-auditor (kana comparison backed by try-reading verification),
+  slide-checker (screenshot layout judgment), and outline-checker (which sits
+  on the critical path as a blocking gate) — which would directly shorten the
+  gate wait and the review tail that holds the script.json freeze open.
+  naive-reader stays on the session model: its value is judgment. Deferred
+  pending a side-by-side finding-quality comparison on a real deck; do it if
+  review latency keeps dominating the workflow after the cheap wins
+  (gate-overlapped reference reading, `npm run preflight`) land.
+
 ## Web Q&A
 
 - **Readings audit for Q&A answers.** qa.mjs synthesizes and plays its

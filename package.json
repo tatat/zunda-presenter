@@ -10,6 +10,7 @@
     "check-dictionary": "node scripts/reading-tools.mjs check-dict",
     "check-deck": "node scripts/check-deck.mjs",
     "view-deck": "node scripts/view-deck.mjs",
+    "preflight": "node scripts/preflight.mjs",
     "snap": "node scripts/snap-deck.mjs",
     "export": "node scripts/export-video.mjs",
     "test": "node --test"
