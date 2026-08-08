@@ -59,3 +59,28 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 ## Optional: video export prerequisites
 
 MP4 export needs `ffmpeg` and a headless Chromium download (the playwright package itself already came lockfile-pinned with `npm ci`) — the `export` skill covers the one-time steps. Skip during normal setup.
+
+## Optional: fewer permission prompts
+
+Never change permission settings unprompted — offer this only when the user asks for fewer prompts or complains about them, and let them pick the file (`.claude/settings.local.json` for personal/uncommitted, `.claude/settings.json` for shared). Two facts shape the advice:
+
+- `ctl.mjs` has a deliberately stable command surface so that **one prefix rule covers server lifecycle and all playback control**, and the tool can only ever reach this project's presenter server (it identity-checks via `/api/info`). Merge into the chosen settings file:
+  ```json
+  { "permissions": { "allow": ["Bash(node <abs plugin path>/scripts/ctl.mjs *)"] } }
+  ```
+- The deck-scoped npm commands prompt on **every** run: they start with a `PRESENTER_DECK_DIR=…` assignment, and an allow rule never matches past an assignment of an unknown variable (only a built-in known-safe list like `NODE_ENV` is stripped before matching), so even "don't ask again" can't produce a reusable rule from them. The fix is to put the assignment in the rule with a wildcard value — per script:
+  ```json
+  { "permissions": { "allow": [
+    "Bash(PRESENTER_DECK_DIR=* npm run synth *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run readings *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run check-deck *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run view-deck *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run snap *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run try-reading *)"
+  ] } }
+  ```
+  or, if the user prefers one broader line, `"Bash(PRESENTER_DECK_DIR=* npm run *)"`. (The `cd ${CLAUDE_PLUGIN_ROOT} && …` prefix is a separate subcommand under compound-command matching — `"Bash(cd <abs plugin path>)"` covers it exactly.)
+- If file reads/edits under `.zunda-presenter/` prompt in the user's setup, allow the decks dir for the file tools (leading `/` anchors to the project root; an `Edit` rule also covers `Write`/`NotebookEdit`, `Read` is a separate domain):
+  ```json
+  { "permissions": { "allow": ["Read(/.zunda-presenter/**)", "Edit(/.zunda-presenter/**)"] } }
+  ```
