@@ -13,7 +13,7 @@ If `${CLAUDE_PLUGIN_ROOT}/node_modules/` is missing, run `npm ci` in `${CLAUDE_P
 
 ## 2. VOICEVOX engine (port 50021)
 
-Check: `curl -s -m 2 http://127.0.0.1:50021/version` — if it responds, skip this step.
+Check: `node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs engine` — if it reports a version, skip this step. (ctl needs no npm deps, so this works before step 1 too.)
 
 - Install location: `~/.cache/voicevox-engine/macos-arm64/` (contains a `run` binary). Shared across projects; survives plugin updates.
 - If missing, download and extract the latest release (~1.8GB):
@@ -23,7 +23,7 @@ Check: `curl -s -m 2 http://127.0.0.1:50021/version` — if it responds, skip th
   ```
   cd ~/.cache/voicevox-engine/macos-arm64 && xattr -dr com.apple.quarantine . 2>/dev/null; nohup ./run --host 127.0.0.1 --port 50021 > ../engine.log 2>&1 &
   ```
-  Poll `/version` until it responds.
+  Poll `ctl.mjs engine` until it reports a version.
 
 ## 3. Project decks
 
@@ -64,7 +64,7 @@ MP4 export needs `ffmpeg` and a headless Chromium download (the playwright packa
 
 Never change permission settings unprompted — offer this only when the user asks for fewer prompts or complains about them, and let them pick the file (`.claude/settings.local.json` for personal/uncommitted, `.claude/settings.json` for shared). Two facts shape the advice:
 
-- `ctl.mjs` has a deliberately stable command surface so that **one prefix rule covers server lifecycle and all playback control**, and the tool can only ever reach this project's presenter server (it identity-checks via `/api/info`). Merge into the chosen settings file:
+- `ctl.mjs` has a deliberately stable command surface so that **one prefix rule covers server lifecycle, the VOICEVOX liveness check, and all playback control**, and the tool can only ever reach the local presenter/engine endpoints (the server side is identity-checked via `/api/info`). Merge into the chosen settings file:
   ```json
   { "permissions": { "allow": ["Bash(node <abs plugin path>/scripts/ctl.mjs *)"] } }
   ```

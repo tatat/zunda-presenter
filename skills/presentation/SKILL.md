@@ -12,7 +12,7 @@ Prerequisites: this project's server and VOICEVOX (port 50021) running, and `<pr
 **Server control**: use the `ctl.mjs` wrapper, run from the project dir — it discovers the port from `<project>/.zunda-presenter/server.json` itself and refuses another project's server, so the command never changes across ports/projects (stable enough to allowlist once — the setup skill's "fewer permission prompts" section has the settings snippet, offered on user request):
 
 ```
-node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs start | stop | info | state [deck] | open <deck> | play <deck> | pause <deck> | goto <deck> <lineId|index> | chars <deck> on|off
+node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs start | stop | engine | info | state [deck] | open <deck> | play <deck> | pause <deck> | goto <deck> <lineId|index> | chars <deck> on|off
 ```
 
 Browser-facing URLs still need the real port — read it from `server.json` (or `ctl.mjs info`). Examples below use `3939` — substitute your port.

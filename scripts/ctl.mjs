@@ -16,6 +16,8 @@
                                the running one; the server picks a free port
                                from 3939 itself and writes server.json)
      stop                      stop this project's server (never another's)
+     engine                    VOICEVOX liveness check (VOICEVOX_URL to
+                               override the default 127.0.0.1:50021)
      info                      server identity (decks root, port)
      state [deck]              playback state (most recent deck if omitted)
      open <deck>               switch connected tabs to the deck
@@ -35,7 +37,7 @@ const DECKS_ROOT = path.resolve(
 const DISCOVERY_FILE = path.join(DECKS_ROOT, "server.json");
 
 const USAGE =
-  "usage: ctl.mjs start | stop | info | state [deck] | open <deck> | play <deck> | pause <deck> | goto <deck> <lineId|index> | chars <deck> on|off";
+  "usage: ctl.mjs start | stop | engine | info | state [deck] | open <deck> | play <deck> | pause <deck> | goto <deck> <lineId|index> | chars <deck> on|off";
 
 function die(msg) {
   console.error(msg);
@@ -91,6 +93,17 @@ async function start() {
   return die(`サーバーが起動しませんでした。ログを確認してください: ${log}`);
 }
 
+// VOICEVOX liveness — here rather than in a raw curl so the check shares the
+// allowlistable ctl command surface (its URL is fixed, but curl wordings vary)
+async function engine() {
+  const url = process.env.VOICEVOX_URL || "http://127.0.0.1:50021";
+  try {
+    const res = await fetch(`${url}/version`, { signal: AbortSignal.timeout(2000) });
+    if (res.ok) return { engine: url, version: await res.json() };
+  } catch {}
+  return die(`VOICEVOX エンジンに接続できません (${url})。setup skill の手順で起動してください。`);
+}
+
 async function stop() {
   const info = await liveInfo();
   if (!info) {
@@ -144,5 +157,5 @@ async function apiCommand() {
   }
 }
 
-const result = await (cmd === "start" ? start() : cmd === "stop" ? stop() : apiCommand());
+const result = await (cmd === "start" ? start() : cmd === "stop" ? stop() : cmd === "engine" ? engine() : apiCommand());
 console.log(JSON.stringify(result, null, 2));
