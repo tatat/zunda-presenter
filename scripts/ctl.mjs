@@ -19,6 +19,7 @@
      engine                    VOICEVOX liveness check (VOICEVOX_URL to
                                override the default 127.0.0.1:50021)
      info                      server identity (decks root, port)
+     decks                     list decks the server currently serves
      state [deck]              playback state (most recent deck if omitted)
      open <deck>               switch connected tabs to the deck
      play <deck> | pause <deck>
@@ -37,7 +38,7 @@ const DECKS_ROOT = path.resolve(
 const DISCOVERY_FILE = path.join(DECKS_ROOT, "server.json");
 
 const USAGE =
-  "usage: ctl.mjs start | stop | engine | info | state [deck] | open <deck> | play <deck> | pause <deck> | goto <deck> <lineId|index> | chars <deck> on|off";
+  "usage: ctl.mjs start | stop | engine | info | decks | state [deck] | open <deck> | play <deck> | pause <deck> | goto <deck> <lineId|index> | chars <deck> on|off";
 
 function die(msg) {
   console.error(msg);
@@ -140,6 +141,8 @@ async function apiCommand() {
   switch (cmd) {
     case "info":
       return running;
+    case "decks":
+      return api("/api/decks");
     case "state":
       return api(`/api/state${deck ? `?deck=${encodeURIComponent(deck)}` : ""}`);
     case "open":
