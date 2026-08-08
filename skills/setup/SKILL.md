@@ -37,17 +37,13 @@ cp "${CLAUDE_PLUGIN_ROOT}/deck/dictionary.json" .zunda-presenter/demo/
 
 ## 4. presenter server
 
-Servers are per-project: each one serves a single decks root and writes a discovery file `<decks root>/server.json` (`{"port": N, "pid": N}`) on startup, removed on clean shutdown. Never kill or reuse a server that belongs to a different project.
+Servers are per-project: each serves a single decks root, discoverable via `<decks root>/server.json` (`{"port": N, "pid": N}`, removed on clean shutdown). Starting is one idempotent command, run from the project dir (needs `dangerouslyDisableSandbox` to bind a port):
 
-1. **Find this project's server**: if `<project>/.zunda-presenter/server.json` exists, read its `port` and check `curl -s -m 2 http://localhost:<port>/api/info`. If it responds and `decksRoot` equals `<abs project path>/.zunda-presenter`, the server is already running — use this port everywhere below and skip to step 5. Otherwise the file is stale; ignore it.
-2. **Pick a free port**: start at 3939; while the port answers `curl -s -m 2 http://localhost:<port>/api/info` (another project's server) or is otherwise in use (`lsof -nP -iTCP:<port> -sTCP:LISTEN`), try the next one (3940, 3941, …).
-3. **Start** pointed at this project's decks (absolute path; needs `dangerouslyDisableSandbox` to bind the port):
-   ```
-   cd ${CLAUDE_PLUGIN_ROOT} && mkdir -p runtime && PORT=<port> PRESENTER_DECKS_DIR="<abs project path>/.zunda-presenter" nohup npm start >| runtime/server-<port>.log 2>&1 &
-   ```
-   Confirm with `curl -s -m 2 http://localhost:<port>/api/info` (the server writes `server.json` itself).
+```
+cd "<abs project path>" && node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs start
+```
 
-Use the chosen port in every URL from here on.
+It prints the server's identity (`{decksRoot, port, pid}`): an already-running server for this project is reported instead of double-starting, another project's server is never touched (identity-checked via `/api/info`), and the server itself picks the first free port from 3939 upward and writes `server.json`. Use the printed `port` in every URL from here on. Logs land in `${CLAUDE_PLUGIN_ROOT}/runtime/`; `ctl.mjs stop` stops this project's server.
 
 ## 5. Synthesize deck audio
 

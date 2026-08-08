@@ -10,7 +10,10 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 // Decks root holds one directory per deck (<root>/<deck>/script.json) plus a
 // shared dictionary.json. Lives in the user's project when set via env.
 const DECKS_ROOT = process.env.PRESENTER_DECKS_DIR || path.join(ROOT, ".zunda-presenter");
-const PORT = Number(process.env.PORT || 3939);
+// An explicit PORT binds exactly there (fail loudly if taken); without one,
+// the server walks up from 3939 past ports other projects' servers hold
+const EXPLICIT_PORT = process.env.PORT != null;
+let port = Number(process.env.PORT || 3939);
 
 mkdirSync(DECKS_ROOT, { recursive: true });
 
@@ -30,7 +33,7 @@ app.get("/d/:deck", (req, res) => {
 // Identity endpoint: lets clients verify which decks root this server serves
 // (agents match it against a project's server.json — see below)
 app.get("/api/info", (req, res) => {
-  res.json({ decksRoot: DECKS_ROOT, port: PORT, pid: process.pid });
+  res.json({ decksRoot: DECKS_ROOT, port, pid: process.pid });
 });
 
 app.get("/api/decks", (req, res) => {
@@ -92,6 +95,9 @@ app.post("/api/question", (req, res) => {
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
+// ws re-emits the http server's errors here; the retry/exit policy lives in
+// the server "error" handler below — without this listener the re-emit throws
+wss.on("error", () => {});
 
 function broadcast(msg) {
   const data = JSON.stringify(msg);
@@ -137,7 +143,17 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
   process.on(signal, () => process.exit(0));
 }
 
-server.listen(PORT, () => {
-  writeFileSync(DISCOVERY_FILE, JSON.stringify({ port: PORT, pid: process.pid }) + "\n");
-  console.log(`presenter: http://localhost:${PORT} (decks: ${DECKS_ROOT})`);
+const BASE_PORT = port;
+server.on("error", (err) => {
+  if (!EXPLICIT_PORT && err.code === "EADDRINUSE" && port < BASE_PORT + 100) {
+    port += 1;
+    server.listen(port);
+    return;
+  }
+  console.error(err?.message ?? err);
+  process.exit(1);
+});
+server.listen(port, () => {
+  writeFileSync(DISCOVERY_FILE, JSON.stringify({ port, pid: process.pid }) + "\n");
+  console.log(`presenter: http://localhost:${port} (decks: ${DECKS_ROOT})`);
 });
