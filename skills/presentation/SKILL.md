@@ -23,6 +23,8 @@ Browser-facing URLs still need the real port — read it from `server.json` (or 
 cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run synth
 ```
 
+**Deck file access**: inspect and edit deck files with the tools this workflow already names — `view-deck` for playback order and ids, Read/Grep for content, Edit/Write for changes (including `dictionary.json`). Never reach for ad-hoc shell — `node -e` one-liners and `cat > … <<EOF` redirects cannot be allowlisted (each is a unique command, so every one prompts the user), and a redirect clobbers the file without reading it first.
+
 ## Workflow
 
 1. Create a new deck dir (or reuse an existing one for updates) and write `<deck-name>/outline.md` **before any dialogue** — spine (one-sentence takeaway), entry question, and beats (`holds/shows/claim/plants`; roughly one per content slide, but beats need not map 1:1 to slides). Read `references/structure.md` first: it defines the format, the question-chain arc, and the failure modes the outline exists to catch (source-order transcription, detail drowning the spine, topics instead of beats). **Read references with the Read tool, in full** — excerpting with sed/head/grep on a first read silently loses the tail, and the tail is where the load-bearing parts sit (the role docs end in the pre-emit Silent Checks); each reference ends with an end-marker line naming itself, so a read that never reached it was an excerpt (grep to re-consult a specific section later is fine). Structural problems cost one line to fix here and twenty after the dialogue exists; when the spine is uncertain, confirm it with the user.

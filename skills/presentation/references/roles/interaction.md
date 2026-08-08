@@ -396,6 +396,26 @@ Do not attach emotional reactions to every exchange.
 
 Do not let emotional performance displace the explanation.
 
+## Interjection Openers
+
+Line-initial interjections — Zundamon's えっ, Metan's ええ／ううん／あら —
+are a budget item, not a default reaction. Measured across six real decks
+they settled at one line in ten, which viewers report as cloying; the
+budget is a few per deck, and never on two consecutive beat boundaries
+(`check-deck` warns past the budget).
+
+- An interjection carries information only when the turn pivots on the
+  emotion itself — a genuine reversal, a real concession. When the clause
+  after it already states the surprise or the denial (「えっ、1枚ずつ
+  なのだ？」 — the question IS the surprise; 「ううん、逆よ」 — the content
+  IS the denial), the opener is redundant: cut it and let the content
+  react.
+- Every reaction function above stays legible without an interjection —
+  wording, word order, and the exchange itself carry it.
+- This is a writing budget, not a voice rule: when an interjection is
+  used, spell it for synthesis per SKILL.md's voice-tuning notes (えっ,
+  never bare え).
+
 ## Section Closure
 
 At the end of a conceptual section:
@@ -465,6 +485,9 @@ Before emitting a dialogue segment, verify:
 10. Is the dialogue more than a monologue divided between two speaker labels?
 11. Can each Zundamon line be motivated from Zundamon's own state (heard, wants,
     misunderstands), never solely by what the exposition needs next?
+12. Are line-initial interjections within the deck budget (a few per deck,
+    no consecutive boundaries), each carrying emotion the clause itself
+    does not?
 
 If any check fails, revise before emitting.
 
