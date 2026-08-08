@@ -6,6 +6,15 @@ reviewed and judged "not now", not "never".
 
 ## Setup
 
+- **Fold the deck-scoped npm commands into ctl.** `ctl.mjs synth <deck>`
+  etc. (resolving the deck path from cwd, setting PRESENTER_DECK_DIR
+  internally) would put every command under the single ctl allow rule —
+  no env-assignment rules, no cd rules, no quoting drift. Deferred
+  because the documented two-rules-per-script allowlist works and the
+  churn touches every command block in the skills. Do it if the
+  permission examples keep growing or a plugin-install user reports the
+  cd/env rules not matching there.
+
 - **Verify VOICEVOX engine downloads.** The npm side is pinned (committed
   lockfile + `.npmrc` proxy + release-age cooldown, docs fixed in #62), which
   leaves the engine as the largest supply-chain exposure: setup downloads the
