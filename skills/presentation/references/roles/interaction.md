@@ -396,6 +396,31 @@ Do not attach emotional reactions to every exchange.
 
 Do not let emotional performance displace the explanation.
 
+## Interjection Openers
+
+Avoid line-initial interjections — Zundamon's えっ／え, Metan's ええ／
+ううん／あら — by default. Measured across six real decks they settled at
+one line in ten and viewers report the effect as cloying; on the audio
+side they synthesize unreliably (near-silent heads, and ううん keeps
+sounding like an assenting うん even amplified — a meaning bug). The
+default is zero: a kept opener is a marked exception whose turn pivots on
+the emotion itself, carrying something the clause cannot. `check-deck`
+warns when a deck exceeds a small tolerance.
+
+Say it with content instead:
+
+- **Surprise (Zundamon)** — the echo question or a scale marker carries
+  it: 「1枚ずつなのだ？」「そんなに違うのだ？」「まさか全部やり直しなの
+  だ？」. The question IS the surprise; えっ adds nothing.
+- **Denial (Metan)** — reversal markers keep her softness in-register:
+  「それが、〜のよ」「そうじゃないの、〜」; the plain contradiction
+  「そっちは逆よ」; or partial credit 「惜しいわね、〜。ただ〜」.
+  ううん is out on semantics (hears as うん), いや on register.
+- **Assent (Metan)** — 「そうよ」「その通りよ」 instead of ええ.
+- A kept interjection still follows the voice rules: spell えっ, never
+  bare え (near-silent), and let the synth script's head-rescue carry its
+  volume.
+
 ## Section Closure
 
 At the end of a conceptual section:
@@ -465,6 +490,8 @@ Before emitting a dialogue segment, verify:
 10. Is the dialogue more than a monologue divided between two speaker labels?
 11. Can each Zundamon line be motivated from Zundamon's own state (heard, wants,
     misunderstands), never solely by what the exposition needs next?
+12. Are line-initial interjections rare, marked exceptions — each carrying
+    emotion its clause cannot — rather than default reactions?
 
 If any check fails, revise before emitting.
 

@@ -34,6 +34,12 @@ const TOP_FIELDS = new Set(["title", "voice", "slides", "lines"]);
 // SKILL.md dialogue rule: lines beyond this sound monotonous and seek coarsely
 const MAX_LINE_CHARS = 60;
 
+// interaction.md, Interjection Openers: a budget item, not a default reaction.
+// Measured decks settled at ~1 line in 10 and viewers reported it as cloying.
+// The delimiter lookahead keeps ordinary words out (あらゆる, ああいう, ええと).
+const INTERJECTION_OPENER = /^(えっ|ええ|え|ううん|うーん|うん|ああ|あら|はい)(?=[、。…！？!?]|$)/;
+const INTERJECTION_BUDGET = 3;
+
 const isStr = (v) => typeof v === "string" && v.length > 0;
 const isObj = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
 
@@ -148,6 +154,16 @@ export function checkScript(script) {
   }
 
   checkLines(script.lines, slideIds, "lines", err, warn);
+  const interjections = (Array.isArray(script.lines) ? script.lines : []).filter(
+    (l) => typeof l?.text === "string" && INTERJECTION_OPENER.test(l.text)
+  );
+  if (interjections.length > INTERJECTION_BUDGET) {
+    const kinds = [...new Set(interjections.map((l) => INTERJECTION_OPENER.exec(l.text)[1]))];
+    warn(
+      `lines: ${interjections.length} lines open with interjections (${kinds.join("/")}) — prefer zero: ` +
+        `say it with content (interaction.md, Interjection Openers)`
+    );
+  }
   const used = new Set((Array.isArray(script.lines) ? script.lines : []).map((l) => l?.slide));
   for (const id of slideIds) {
     if (!used.has(id)) warn(`slides (id "${id}"): no line references this slide — it will never be shown`);
