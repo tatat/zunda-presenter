@@ -16,7 +16,7 @@ Render a deck as an MP4 (1920×1080, 30fps). The render is offline and determini
   ```
   cd ${CLAUDE_PLUGIN_ROOT} && npx playwright install chromium
   ```
-  The playwright package itself is a devDependency, already installed lockfile-pinned by `npm install` (setup skill) — never `npm i -D playwright`, which would resolve a fresh version outside the lockfile.
+  The playwright package itself is a devDependency, already installed lockfile-pinned by `npm ci` (setup skill) — never `npm i -D playwright`, which would resolve a fresh version outside the lockfile.
 
 ## Synthesize first
 

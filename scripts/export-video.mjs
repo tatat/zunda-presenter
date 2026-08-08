@@ -54,7 +54,7 @@ let chromium;
 try {
   ({ chromium } = await import("playwright"));
 } catch {
-  console.error("playwright が必要です: npm install してから npx playwright install chromium");
+  console.error("playwright が必要です: npm ci してから npx playwright install chromium");
   process.exit(1);
 }
 
