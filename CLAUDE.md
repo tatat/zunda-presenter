@@ -18,6 +18,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 
 - `skills/setup` — install/start VOICEVOX engine (`~/.cache/voicevox-engine/`), npm deps, server, browser.
 - `skills/presentation` — deck construction guide, script format, control API, and the question/correction workflow. Read it before touching any `script.json`.
+- `skills/export` — MP4 export of a deck: prerequisites (ffmpeg, playwright), synth-first, font caveats.
 
 ## Conventions
 
