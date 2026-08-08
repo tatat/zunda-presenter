@@ -9,7 +9,7 @@ Plugin code lives at `${CLAUDE_PLUGIN_ROOT}`; decks live in the **current projec
 
 ## 1. npm dependencies
 
-If `${CLAUDE_PLUGIN_ROOT}/node_modules/` is missing, run `npm install` in `${CLAUDE_PLUGIN_ROOT}`.
+If `${CLAUDE_PLUGIN_ROOT}/node_modules/` is missing, run `npm ci` in `${CLAUDE_PLUGIN_ROOT}` — not `npm install`: `ci` reproduces the committed lockfile exactly (no version resolution, fails loudly on package.json/lockfile drift), which is the point of shipping the lockfile.
 
 ## 2. VOICEVOX engine (port 50021)
 
@@ -62,4 +62,4 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 ## Optional: video export prerequisites
 
-MP4 export needs `ffmpeg` and playwright + headless Chromium — the `export` skill covers installing them on first use. Skip during normal setup.
+MP4 export needs `ffmpeg` and a headless Chromium download (the playwright package itself already came lockfile-pinned with `npm ci`) — the `export` skill covers the one-time steps. Skip during normal setup.

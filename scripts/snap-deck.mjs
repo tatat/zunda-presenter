@@ -8,8 +8,9 @@
    fonts, sprites) instead of a fixed virtual-time budget. One slide is one
    screenshot of its first line, written to <deck>/.snap/<slide-id>.png.
 
-   Requires playwright (same one-time install as the video export):
-     npm i -D playwright && npx playwright install chromium */
+   Requires npm deps installed (playwright is a lockfile-pinned devDependency)
+   and the chromium download (same one-time step as the video export):
+     npx playwright install chromium */
 
 import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -31,7 +32,7 @@ let chromium;
 try {
   ({ chromium } = await import("playwright"));
 } catch {
-  console.error("playwright が必要です: npm i -D playwright && npx playwright install chromium");
+  console.error("playwright が必要です: npm ci してから npx playwright install chromium");
   process.exit(1);
 }
 

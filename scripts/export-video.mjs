@@ -16,8 +16,9 @@
    not reproduced. To add them, extend __render (public/app.js) to set
    opacity directly and screenshot ~8 stepped frames per transition.
 
-   Requires ffmpeg on PATH and playwright:
-     npm i -D playwright && npx playwright install chromium */
+   Requires ffmpeg on PATH, npm deps installed (playwright is a lockfile-pinned
+   devDependency), and the chromium download:
+     npx playwright install chromium */
 
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -53,7 +54,7 @@ let chromium;
 try {
   ({ chromium } = await import("playwright"));
 } catch {
-  console.error("playwright が必要です: npm i -D playwright && npx playwright install chromium");
+  console.error("playwright が必要です: npm ci してから npx playwright install chromium");
   process.exit(1);
 }
 
