@@ -122,7 +122,13 @@ async function synthesize(query, styleId, text) {
    Short context makes the model voice the head properly; keeping the planned
    prosody keeps the join natural. */
 
-const HEAD_RATIO_THRESHOLD = 0.2; // measured: broken renders sit at 0.03-0.07, healthy ones 0.23+
+/* Measured across six real decks: fully broken renders sit at 0.03-0.07, but
+   0.22-0.28 renders (ううん、/ええ。 heads) are still inaudible to viewers —
+   the original 0.2 cutoff passed them untreated. Rescue lands 0.6-0.8, and
+   clearly audible unrescued heads sit 0.5+, so rescue anything below that.
+   Grafting is try-and-compare (kept only when the ratio improves), so a
+   higher threshold costs synthesis calls, never quality. */
+const HEAD_RATIO_THRESHOLD = 0.5;
 const HEAD_MAX_MORAS = 4;
 
 function parseWav(buf) {
@@ -229,9 +235,10 @@ async function synthesizeLines(lines) {
       console.log(`  reading: ${readingOf(await audioQuery(text, p.styleId))}`);
       continue;
     }
-    // v2: head-rescue changed synthesis output; bump invalidates pre-rescue caches
+    // v3: head-rescue threshold 0.2 -> 0.5; bump re-renders wavs whose quiet
+    // heads the old cutoff let through (cache keys ignore the threshold)
     const hash = createHash("sha1")
-      .update(`v2|${p.styleId}|${p.speed}|${p.pitch}|${p.intonation}|${p.volume}|${p.postPause}|${text}`)
+      .update(`v3|${p.styleId}|${p.speed}|${p.pitch}|${p.intonation}|${p.volume}|${p.postPause}|${text}`)
       .digest("hex")
       .slice(0, 12);
     const rel = `audio/${hash}.wav`;
