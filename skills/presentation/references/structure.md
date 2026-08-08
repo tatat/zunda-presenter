@@ -243,22 +243,12 @@ outline is showing through and every exchange becomes predictable.
 
 ## Blind Flow Check
 
-Runs together with the naive-reader term review (SKILL.md workflow): the
-same blinded subagent, the same `npm run view-deck -- --dialogue` input
-(slide boundaries appear as blank lines), one extra question set appended
-to the prompt:
-
-> Additionally: (1) at each blank line, before reading further, write one
-> line — the question you expect the next section to answer. (2) After
-> finishing, state the script's single main claim in one sentence. (3) List
-> any sections that did not serve that claim. (4) As a listening
-> experience, does any repeated conversational device — e.g. every section
-> opening with the same move — make the dialogue feel like a filled-in
-> template rather than a conversation? And does the listener character
-> seem to speak from their own motivation, or only to prompt the
-> explainer? Point at concrete lines.
-
-Reading the result:
+Runs together with the naive-reader term review (SKILL.md workflow): both
+question sets are baked into the plugin's `naive-reader` agent definition
+(`agents/naive-reader.md`), which receives the bare
+`npm run view-deck -- --dialogue` output as its whole prompt (slide
+boundaries appear as blank lines). This section is the interpretation
+guide for its report:
 
 - **Main claim unrecoverable, or recovered as a topic** («it's about
   caching») rather than a claim — the spine didn't survive into the
