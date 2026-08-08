@@ -9,7 +9,13 @@ Explain content as a ゆっくり解説-style dialogue between ずんだもん a
 
 Prerequisites: this project's server and VOICEVOX (port 50021) running, and `<project>/.zunda-presenter/` seeded — if any are missing, run the `setup` skill first.
 
-**Server port**: read it from `<project>/.zunda-presenter/server.json` (written by the running server; verify with `GET /api/info` that `decksRoot` matches this project). Examples below use `3939` — substitute your port.
+**Server control**: use the `ctl.mjs` wrapper, run from the project dir — it discovers the port from `<project>/.zunda-presenter/server.json` itself and refuses another project's server, so the command never changes across ports/projects (stable enough to allowlist once — the setup skill's "fewer permission prompts" section has the settings snippet, offered on user request):
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs start | stop | engine | info | state [deck] | open <deck> | play <deck> | pause <deck> | goto <deck> <lineId|index> | chars <deck> on|off
+```
+
+Browser-facing URLs still need the real port — read it from `server.json` (or `ctl.mjs info`). Examples below use `3939` — substitute your port.
 
 **Paths**: each presentation is its own deck directory `<project>/.zunda-presenter/<deck-name>/` (kebab-case slug for the topic, e.g. `auth-refactor-plan`) containing `script.json`, `audio/`, and its own `dictionary.json`. (Legacy: a shared `dictionary.json` at the `.zunda-presenter/` root is still honored when a deck has no local one — deprecated. Resolution selects one file, it does not merge: the moment a deck gets a local dictionary, the shared one stops applying to that deck, so copy over any entries the deck still needs.) The player URL is `http://localhost:3939/d/<deck-name>`. Plugin code is at `${CLAUDE_PLUGIN_ROOT}`. Synthesis command (used throughout):
 
@@ -29,10 +35,10 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 6. Run the synth command above — synthesizes all lines and fills in `audio` fields. Cached by content hash, so only changed lines re-synthesize; iterate freely. Re-audit after any edit (see Readings).
 7. Point the user's tab at the deck and play:
    ```
-   curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"open","deck":"<deck-name>"}'
-   curl -s -X POST localhost:3939/api/control -H 'Content-Type: application/json' -d '{"action":"play","deck":"<deck-name>"}'
+   node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs open <deck-name>
+   node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs play <deck-name>
    ```
-   - `open` switches the tab in-page, so the audio unlock survives. If no tab is connected (`/api/state` shows `connected: 0`), run `open http://localhost:3939/d/<deck-name>` and ask the user to click the overlay once.
+   - `open` switches the tab in-page, so the audio unlock survives. If no tab is connected (`state` shows `connected: 0`), run `open http://localhost:3939/d/<deck-name>` and ask the user to click the overlay once.
 
 ## Building a deck
 
@@ -159,12 +165,14 @@ All params join the audio cache hash — tweaks re-synthesize only affected line
 
 Wrong readings are not a tuning problem — see Readings.
 
-## Playback control API
+## Playback control
 
-- State: `GET localhost:3939/api/state?deck=<deck-name>` → `{ deck, index, lineId, lineText, paused, finished, track, total, connected }`. Without `?deck` it returns the most recently active deck. `connected: 0` means no browser tab is open. `track` is `"main"` or a question id — when it isn't `"main"`, the viewer is inside a Q&A timeline and `lineId` refers to a `qa.json` line.
-- Control: `POST /api/control` with `{"action":"play","deck":"..."}` / `{"action":"pause",...}` / `{"action":"goto","deck":"...","lineId":"l5"}` (or `"index":4`). Always pass `deck` so only the right tab reacts.
-- `{"action":"open","deck":"..."}` — switch connected tabs to another deck (in-page; audio unlock survives).
-- `{"action":"chars","visible":false}` toggles characters at runtime, but prefer declaring it per slide via `slides[].chars`.
+All commands are `node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs …`, run from the project dir (they wrap the server's `/api/state` and `/api/control` HTTP API):
+
+- `state <deck-name>` → `{ deck, index, lineId, lineText, paused, finished, track, total, connected }`. Without the deck arg it returns the most recently active deck. `connected: 0` means no browser tab is open. `track` is `"main"` or a question id — when it isn't `"main"`, the viewer is inside a Q&A timeline and `lineId` refers to a `qa.json` line.
+- `play <deck>` / `pause <deck>` / `goto <deck> <lineId|index>` (numeric arg = index). The deck arg is required so only the right tab reacts.
+- `open <deck>` — switch connected tabs to another deck (in-page; audio unlock survives).
+- `chars <deck> on|off` toggles characters at runtime, but prefer declaring it per slide via `slides[].chars`.
 - User-side controls: click or Space = pause/resume, ←/→ = seek by line, C = toggle characters, click seekbar = jump. `http://localhost:3939/` lists all decks.
 
 ## Video export
@@ -175,11 +183,11 @@ Exporting a deck as an MP4 is the `export` skill's job — use it when the user 
 
 When the user pauses and asks a question in chat:
 
-1. `GET /api/state` → which line they stopped on.
+1. `ctl.mjs state <deck-name>` → which line they stopped on.
 2. Content-level questions: answer **in the deck, in character** — insert new lines (fresh ids) right after the current line; typically Zundamon voices the user's question, Metan answers. Add a slide if the answer needs visuals. Meta questions ("how do I pause?") get a plain chat reply.
-3. Run the synth command, then `{"action":"play"}`.
+3. Run the synth command, then `ctl.mjs play <deck-name>`.
 
-Corrections: edit `lines[].text` / slide html in place (keep ids) → synth → `{"action":"goto","lineId":"<first edited>"}` → `{"action":"play"}`.
+Corrections: edit `lines[].text` / slide html in place (keep ids) → synth → `ctl.mjs goto <deck-name> <first edited lineId>` → `ctl.mjs play <deck-name>`.
 
 - **A line edit isn't done until its neighbors still read coherently.** Fixing exactly the flagged line routinely breaks the line next to it — a transition word now points at content that moved, a callback gets answered twice. After every edit, reread the edited line together with its immediate neighbors and the first line of the following slide, as one exchange.
 - **Second rejection of the same line = stop word-swapping.** If a fix to a line gets rejected again, the problem is structural, not lexical: re-derive the sentence from scratch — tense/conditional agreement, and what each pronoun and connective actually refers to. Iterating surface synonyms on a structurally broken sentence converges on nothing.

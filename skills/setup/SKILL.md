@@ -13,7 +13,7 @@ If `${CLAUDE_PLUGIN_ROOT}/node_modules/` is missing, run `npm ci` in `${CLAUDE_P
 
 ## 2. VOICEVOX engine (port 50021)
 
-Check: `curl -s -m 2 http://127.0.0.1:50021/version` — if it responds, skip this step.
+Check: `node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs engine` — if it reports a version, skip this step. (ctl needs no npm deps, so this works before step 1 too.)
 
 - Install location: `~/.cache/voicevox-engine/macos-arm64/` (contains a `run` binary). Shared across projects; survives plugin updates.
 - If missing, download and extract the latest release (~1.8GB):
@@ -23,7 +23,7 @@ Check: `curl -s -m 2 http://127.0.0.1:50021/version` — if it responds, skip th
   ```
   cd ~/.cache/voicevox-engine/macos-arm64 && xattr -dr com.apple.quarantine . 2>/dev/null; nohup ./run --host 127.0.0.1 --port 50021 > ../engine.log 2>&1 &
   ```
-  Poll `/version` until it responds.
+  Poll `ctl.mjs engine` until it reports a version.
 
 ## 3. Project decks
 
@@ -37,17 +37,13 @@ cp "${CLAUDE_PLUGIN_ROOT}/deck/dictionary.json" .zunda-presenter/demo/
 
 ## 4. presenter server
 
-Servers are per-project: each one serves a single decks root and writes a discovery file `<decks root>/server.json` (`{"port": N, "pid": N}`) on startup, removed on clean shutdown. Never kill or reuse a server that belongs to a different project.
+Servers are per-project: each serves a single decks root, discoverable via `<decks root>/server.json` (`{"port": N, "pid": N}`, removed on clean shutdown). Starting is one idempotent command, run from the project dir (needs `dangerouslyDisableSandbox` to bind a port):
 
-1. **Find this project's server**: if `<project>/.zunda-presenter/server.json` exists, read its `port` and check `curl -s -m 2 http://localhost:<port>/api/info`. If it responds and `decksRoot` equals `<abs project path>/.zunda-presenter`, the server is already running — use this port everywhere below and skip to step 5. Otherwise the file is stale; ignore it.
-2. **Pick a free port**: start at 3939; while the port answers `curl -s -m 2 http://localhost:<port>/api/info` (another project's server) or is otherwise in use (`lsof -nP -iTCP:<port> -sTCP:LISTEN`), try the next one (3940, 3941, …).
-3. **Start** pointed at this project's decks (absolute path; needs `dangerouslyDisableSandbox` to bind the port):
-   ```
-   cd ${CLAUDE_PLUGIN_ROOT} && mkdir -p runtime && PORT=<port> PRESENTER_DECKS_DIR="<abs project path>/.zunda-presenter" nohup npm start >| runtime/server-<port>.log 2>&1 &
-   ```
-   Confirm with `curl -s -m 2 http://localhost:<port>/api/info` (the server writes `server.json` itself).
+```
+cd "<abs project path>" && node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs start
+```
 
-Use the chosen port in every URL from here on.
+It prints the server's identity (`{decksRoot, port, pid}`): an already-running server for this project is reported instead of double-starting, another project's server is never touched (identity-checked via `/api/info`), and the server itself picks the first free port from 3939 upward and writes `server.json`. Use the printed `port` in every URL from here on. Logs land in `${CLAUDE_PLUGIN_ROOT}/runtime/`; `ctl.mjs stop` stops this project's server.
 
 ## 5. Synthesize deck audio
 
@@ -63,3 +59,28 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 ## Optional: video export prerequisites
 
 MP4 export needs `ffmpeg` and a headless Chromium download (the playwright package itself already came lockfile-pinned with `npm ci`) — the `export` skill covers the one-time steps. Skip during normal setup.
+
+## Optional: fewer permission prompts
+
+Never change permission settings unprompted — offer this only when the user asks for fewer prompts or complains about them, and let them pick the file (`.claude/settings.local.json` for personal/uncommitted, `.claude/settings.json` for shared). Two facts shape the advice:
+
+- `ctl.mjs` has a deliberately stable command surface so that **one prefix rule covers server lifecycle, the VOICEVOX liveness check, and all playback control**, and the tool can only ever reach the local presenter/engine endpoints (the server side is identity-checked via `/api/info`). Merge into the chosen settings file:
+  ```json
+  { "permissions": { "allow": ["Bash(node <abs plugin path>/scripts/ctl.mjs *)"] } }
+  ```
+- The deck-scoped npm commands prompt on **every** run: they start with a `PRESENTER_DECK_DIR=…` assignment, and an allow rule never matches past an assignment of an unknown variable (only a built-in known-safe list like `NODE_ENV` is stripped before matching), so even "don't ask again" can't produce a reusable rule from them. The fix is to put the assignment in the rule with a wildcard value — per script:
+  ```json
+  { "permissions": { "allow": [
+    "Bash(PRESENTER_DECK_DIR=* npm run synth *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run readings *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run check-deck *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run view-deck *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run snap *)",
+    "Bash(PRESENTER_DECK_DIR=* npm run try-reading *)"
+  ] } }
+  ```
+  or, if the user prefers one broader line, `"Bash(PRESENTER_DECK_DIR=* npm run *)"`. (The `cd ${CLAUDE_PLUGIN_ROOT} && …` prefix is a separate subcommand under compound-command matching — `"Bash(cd <abs plugin path>)"` covers it exactly.)
+- If file reads/edits under `.zunda-presenter/` prompt in the user's setup, allow the decks dir for the file tools (leading `/` anchors to the project root; an `Edit` rule also covers `Write`/`NotebookEdit`, `Read` is a separate domain):
+  ```json
+  { "permissions": { "allow": ["Read(/.zunda-presenter/**)", "Edit(/.zunda-presenter/**)"] } }
+  ```
