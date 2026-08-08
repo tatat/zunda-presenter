@@ -68,18 +68,25 @@ Never change permission settings unprompted — offer this only when the user as
   ```json
   { "permissions": { "allow": ["Bash(node <abs plugin path>/scripts/ctl.mjs *)"] } }
   ```
-- The deck-scoped npm commands prompt on **every** run: they start with a `PRESENTER_DECK_DIR=…` assignment, and an allow rule never matches past an assignment of an unknown variable (only a built-in known-safe list like `NODE_ENV` is stripped before matching), so even "don't ask again" can't produce a reusable rule from them. The fix is to put the assignment in the rule with a wildcard value — per script:
+- The deck-scoped npm commands prompt on **every** run: they start with a `PRESENTER_DECK_DIR=…` assignment, and a rule that omits the assignment never matches past it (only a built-in known-safe list like `NODE_ENV` is stripped before matching), so "don't ask again" can't produce a reusable rule from them. The fix is to put the assignment in the rule with a wildcard value — **two rules per script**, because a trailing ` *` only matches when at least one argument follows, and redirections like `2>&1` don't count as arguments (measured: `… npm run view-deck 2>&1` fell through a ` *`-only rule):
   ```json
   { "permissions": { "allow": [
-    "Bash(PRESENTER_DECK_DIR=* npm run synth *)",
-    "Bash(PRESENTER_DECK_DIR=* npm run readings *)",
-    "Bash(PRESENTER_DECK_DIR=* npm run check-deck *)",
-    "Bash(PRESENTER_DECK_DIR=* npm run view-deck *)",
-    "Bash(PRESENTER_DECK_DIR=* npm run snap *)",
-    "Bash(PRESENTER_DECK_DIR=* npm run try-reading *)"
+    "Bash(PRESENTER_DECK_DIR=* npm run synth *)",       "Bash(PRESENTER_DECK_DIR=* npm run synth)",
+    "Bash(PRESENTER_DECK_DIR=* npm run readings *)",    "Bash(PRESENTER_DECK_DIR=* npm run readings)",
+    "Bash(PRESENTER_DECK_DIR=* npm run check-deck *)",  "Bash(PRESENTER_DECK_DIR=* npm run check-deck)",
+    "Bash(PRESENTER_DECK_DIR=* npm run view-deck *)",   "Bash(PRESENTER_DECK_DIR=* npm run view-deck)",
+    "Bash(PRESENTER_DECK_DIR=* npm run snap *)",        "Bash(PRESENTER_DECK_DIR=* npm run snap)",
+    "Bash(PRESENTER_DECK_DIR=* npm run try-reading *)", "Bash(PRESENTER_DECK_DIR=* npm run try-reading)"
   ] } }
   ```
-  or, if the user prefers one broader line, `"Bash(PRESENTER_DECK_DIR=* npm run *)"`. (The `cd ${CLAUDE_PLUGIN_ROOT} && …` prefix is a separate subcommand under compound-command matching — `"Bash(cd <abs plugin path>)"` covers it exactly.)
+  (The `cd ${CLAUDE_PLUGIN_ROOT} && …` prefix is a separate subcommand under compound-command matching — `"Bash(cd <abs plugin path>)"` covers it exactly.)
+- Deck-directory shell operations — creating a deck and stepping into one (e.g. `.snap/`) — cover with both the relative and absolute spellings:
+  ```json
+  { "permissions": { "allow": [
+    "Bash(mkdir -p .zunda-presenter/*)", "Bash(mkdir -p <abs project path>/.zunda-presenter/*)",
+    "Bash(cd .zunda-presenter/*)",       "Bash(cd <abs project path>/.zunda-presenter/*)"
+  ] } }
+  ```
 - If file reads/edits under `.zunda-presenter/` prompt in the user's setup, allow the decks dir for the file tools (leading `/` anchors to the project root; an `Edit` rule also covers `Write`/`NotebookEdit`, `Read` is a separate domain):
   ```json
   { "permissions": { "allow": ["Read(/.zunda-presenter/**)", "Edit(/.zunda-presenter/**)"] } }
