@@ -1,6 +1,6 @@
 # zunda-presenter
 
-Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing HTML presentation, voiced by ずんだもん × 四国めたん via VOICEVOX. Distributed as a Claude Code plugin (`.claude-plugin/`, skills in `skills/` — `.claude/skills/` symlinks to them for development in this repo).
+Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing HTML presentation, voiced by ずんだもん × 四国めたん via VOICEVOX. Distributed as a Claude Code plugin (`.claude-plugin/`, skills in `skills/`, subagents in `agents/` — `.claude/skills/` and `.claude/agents/` symlink to them for development in this repo).
 
 ## Architecture
 
@@ -11,6 +11,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 - `scripts/reading-tools.mjs` — reading audit without synthesis (honors `PRESENTER_DECK_DIR`): `npm run try-reading -- "<text>"` prints one string's reading raw vs dictionary-applied; `npm run check-dictionary` compares each dictionary entry's raw-key reading against its replacement's and flags no-effect entries.
 - `scripts/check-deck.mjs` — structural validation of a deck's `script.json`/`qa.json` (`npm run check-deck`, honors `PRESENTER_DECK_DIR`): JSON syntax, required fields, id uniqueness, slide refs, enum/param types. Errors exit 1, warnings don't. Exports `checkScript`/`checkQa` (unit-tested in `test/check-deck.test.mjs`).
 - `scripts/view-deck.mjs` — read-only playback-order view of a deck (`npm run view-deck`, honors `PRESENTER_DECK_DIR`): one row per line in lines-array order grouped under slide headers, flags same-speaker runs mid-slide; slide-id args restrict output. `-- --dialogue` prints bare `speaker: text` lines — the blinded input for the presentation skill's naive-reader review. Exports `formatDeck`/`formatDialogue` (tested in `test/view-deck.test.mjs`).
+- `scripts/snap-deck.mjs` — one-pass slide screenshots for the self-check (`npm run snap`, honors `PRESENTER_DECK_DIR`; needs playwright, not the server): drives the page's `#render` mode headlessly, one fully-painted shot per slide (first line) into `<deck>/.snap/<slide-id>.png`; slide-id args restrict.
 - `scripts/export-video.mjs` — MP4 export (`npm run export`, honors `PRESENTER_DECK_DIR`; needs ffmpeg + playwright). Deterministic offline render: drives the page's `#render` mode (`window.__render` in `public/app.js`) in headless Chromium, replays two screenshots per line on a timeline computed from the wav durations, stitches audio sample-exactly in Node, muxes with ffmpeg.
 - `assets/raw/` — character sprite source PSDs (坂本アヒル's 立ち絵素材, free-use per zunko.jp/guideline.html; not committed — see README links). `tools/export_sprites.py` (run with `tools/pyenv/bin/python`) composites expression × mouth pairs into `public/assets/`; edit its `CHARS` config to change expressions/outfits.
 
@@ -19,6 +20,7 @@ Explains agent plans (or any topic) as a ゆっくり解説-style auto-playing H
 - `skills/setup` — install/start VOICEVOX engine (`~/.cache/voicevox-engine/`), npm deps, server, browser.
 - `skills/presentation` — deck construction guide, script format, control API, and the question/correction workflow. Read it before touching any `script.json`.
 - `skills/export` — MP4 export of a deck: prerequisites (ffmpeg, playwright), synth-first, font caveats.
+- `agents/` — subagents the presentation skill spawns in parallel with the rest of the workflow: `naive-reader` (blind first-viewer review of the dialogue; question sets baked into the definition), `reading-auditor` (range-assigned VOICEVOX reading audit; full-deck context, try-reading-verified findings), `slide-checker` (runs `npm run snap` and judges every shot against the script's intent).
 
 ## Conventions
 

@@ -8,6 +8,7 @@ assets/raw/
 deck/audio/
 deck/export.mp4
 .export-tmp/
+.snap/
 *.log
 .DS_Store
 .zunda-presenter/

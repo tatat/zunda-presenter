@@ -25,6 +25,7 @@ Requirements: macOS, Node.js, Homebrew (for `sevenzip`). The first `/zunda-prese
 
 - `.claude-plugin/` — plugin + marketplace manifests
 - `skills/` — `setup`, `presentation`, and `export` skills (symlinked into `.claude/skills/` for development in this repo)
+- `agents/` — subagents the presentation skill spawns in parallel: `naive-reader` (blind first-viewer review of the dialogue), `reading-auditor` (VOICEVOX reading audit), and `slide-checker` (visual layout check of the rendered slides); symlinked into `.claude/agents/`
 - `server/` — express + ws (port 3939 by default, `PORT` to override; one server per project, discoverable via `<project>/.zunda-presenter/server.json`): static serving, live reload of decks, playback state/control API
 - `public/` — player UI (slides, sprites, subtitles, seekbar)
 - `deck/` — bundled sample deck; per-project decks live at `<project>/.zunda-presenter/<deck-name>/` (shared `dictionary.json` at the root), selected via `PRESENTER_DECKS_DIR` / `PRESENTER_DECK_DIR` env vars
