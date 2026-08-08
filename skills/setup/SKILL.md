@@ -7,8 +7,6 @@ description: Set up and start the zunda-presenter environment — VOICEVOX engin
 
 Plugin code lives at `${CLAUDE_PLUGIN_ROOT}`; decks live in the **current project** under `.zunda-presenter/<deck-name>/`. Every step is idempotent — check before acting.
 
-`${CLAUDE_PLUGIN_ROOT}` in this skill is a placeholder: **substitute the resolved absolute path when composing commands**. Never emit `$CLAUDE_PLUGIN_ROOT` as a live shell variable (or a `VAR="${VAR:-…}"` fallback assignment) inside a command — permission rules match the literal command text, so an unexpanded variable can never match an allowlist entry and every such command prompts.
-
 ## 1. npm dependencies
 
 If `${CLAUDE_PLUGIN_ROOT}/node_modules/` is missing, run `npm ci` in `${CLAUDE_PLUGIN_ROOT}` — not `npm install`: `ci` reproduces the committed lockfile exactly (no version resolution, fails loudly on package.json/lockfile drift), which is the point of shipping the lockfile.
