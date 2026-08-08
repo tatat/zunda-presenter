@@ -4,6 +4,19 @@ Items considered during development and deliberately deferred — with the
 trigger that would make them worth doing. Not a wishlist: each entry was
 reviewed and judged "not now", not "never".
 
+## Setup
+
+- **Verify VOICEVOX engine downloads.** The npm side is pinned (committed
+  lockfile + `.npmrc` proxy + release-age cooldown, docs fixed in #62), which
+  leaves the engine as the largest supply-chain exposure: setup downloads the
+  *latest* GitHub release, strips the quarantine attribute, and runs the
+  binary with no digest check — a compromised upstream release would execute
+  arbitrary code. If hardening is wanted: pin a known-good engine version in
+  the setup skill (bump deliberately) and compare the sha256 digest the
+  GitHub releases API reports per asset before extracting. Deferred: costs
+  staleness and skill-maintenance for a threat model (compromise of
+  VOICEVOX's official releases) judged unlikely enough for now.
+
 ## Synthesis
 
 - **Remove the decks-root dictionary fallback.** Per-deck `dictionary.json`
