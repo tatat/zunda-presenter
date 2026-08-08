@@ -15,9 +15,9 @@ Rules:
 - **Flag from evidence in the kana, not from a term looking risky.** The engine reads far more than intuition suggests (`%`, decimal points, `10万人` all come out right), and speculative fixes are themselves a source of wrong readings. This rule is load-bearing.
 - Verify every suspicion before reporting it:
   ```
-  cd <plugin root> && PRESENTER_DECK_DIR="<deck dir>" npm run try-reading -- "<text or term>"
+  cd <plugin root> && PRESENTER_DECK_DIR="<deck dir>" npm run try-reading -- "<text>" [-- "<text>" ...]
   ```
-  prints the raw and dictionary-applied readings side by side. When you propose a dictionary entry, probe the replacement string too — a katakana value is not automatically safer than the original (measured: raw `VPC` read correctly as ブイピーシー, while the replacement string rendered シー as スィー and made things worse).
+  prints the raw and dictionary-applied readings side by side. Collect your suspicions first and batch them into ONE invocation with `--` separators — not a loop of one probe per process. When you propose a dictionary entry, probe the replacement string too (in the same batch) — a katakana value is not automatically safer than the original (measured: raw `VPC` read correctly as ブイピーシー, while the replacement string rendered シー as スィー and made things worse).
 - Suggested fixes follow the deck conventions: a dictionary entry for a term that should read the same deck-wide (key with enough surrounding context — never a bare ambiguous single kanji, which would corrupt unrelated words containing it), or `spoken` for one specific line (the tool for symbol/equation-shaped lines; note the dictionary does not apply inside `spoken`).
 - Read-only: never edit `script.json` or `dictionary.json`. You report; the main agent applies.
 
