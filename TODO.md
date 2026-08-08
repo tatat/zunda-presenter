@@ -72,6 +72,16 @@ reviewed and judged "not now", not "never".
 
 ## Web Q&A
 
+- **Readings audit for Q&A answers.** qa.mjs synthesizes and plays its
+  answers immediately; the synth log's readings scroll by unread, so a
+  misread term in an answer reaches the viewer unaudited (the headless
+  agent registers dictionary entries, but nobody verifies them).
+  `npm run readings` already covers qa.json lines — the cheap mitigation
+  is one workflow line: run the audit when picking up questions.log.
+  Deferred for playback-latency reasons (a pre-play audit needs an agent
+  judgment in the answer path). Revisit if misread Q&A audio actually
+  gets reported.
+
 - **Shared VOICEVOX client module.** `scripts/synthesize.mjs` and
   `server/qa.mjs` (`fillerAudio`) each speak the engine protocol
   (`audio_query` → `synthesis`, content-hash cache) and duplicate the engine
