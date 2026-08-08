@@ -62,4 +62,4 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 ## Optional: video export prerequisites
 
-MP4 export needs `ffmpeg` and playwright + headless Chromium — the `export` skill covers installing them on first use. Skip during normal setup.
+MP4 export needs `ffmpeg` and a headless Chromium download (the playwright package itself already came lockfile-pinned with `npm install`) — the `export` skill covers the one-time steps. Skip during normal setup.
