@@ -159,3 +159,20 @@ test("qa.json questions validate against the script's slides", () => {
   assert.ok(errors.some((e) => e.includes("questions[1]") && e.includes("missing question")));
   assert.ok(errors.some((e) => e.includes('unknown slide "s9"')));
 });
+
+test("interjection-opener budget: warns past the budget, silent within it", () => {
+  const s = valid();
+  for (let i = 0; i < 3; i++) {
+    s.lines.push({ id: `li${i}`, speaker: "metan", slide: "s1", text: `ええ、そうなの${i}` });
+  }
+  // Ordinary words sharing a prefix with an interjection do not count
+  s.lines.push(
+    { id: "lw0", speaker: "metan", slide: "s1", text: "あらゆる場合に効くわ" },
+    { id: "lw1", speaker: "zundamon", slide: "s1", text: "ええと、つまりこういうことなのだ" }
+  );
+  // 3 openers (+ base line + non-opener words) is within budget
+  assert.ok(!checkScript(s).warnings.some((w) => w.includes("interjections")));
+  s.lines.push({ id: "li3", speaker: "zundamon", slide: "s1", text: "えっ、本当なのだ？" });
+  const { warnings } = checkScript(s);
+  assert.ok(warnings.some((w) => w.includes("4 lines open with interjections") && w.includes("ええ/えっ")));
+});
