@@ -70,6 +70,25 @@ reviewed and judged "not now", not "never".
   points at the Read tool. Cost: hook complexity and false positives on
   legitimate re-consultation greps — hence deferred.
 
+## Skills
+
+- **Fully automated PR videos (CI).** The pr-video skill is deliberately
+  semi-automatic: build + export locally, then the user drags `export.mp4`
+  into the PR. The blocking piece is attachment — GitHub accepts
+  inline-playable video only via the web UI's drag-and-drop; there is no
+  public API and `gh` cannot upload comment attachments, so a CI pipeline
+  (claude-code-action + VOICEVOX Linux engine + ffmpeg) could only link an
+  artifact/release asset, which doesn't play inline. Revisit if GitHub
+  ships a user-attachments API, or if link-not-inline becomes acceptable.
+
+- **Generalize profiles into a mechanism.** The presentation skill's
+  profiles (full/light/draft) are fixed, named gate sets — deliberately
+  not a per-use-case tuning knob, so the run-or-skip decision stays out
+  of session judgment. Three enumerated prose blocks are fine at this
+  count; replace them with a real mechanism (e.g. a gate × profile
+  matrix) only if a fourth profile appears or the gate list itself
+  starts churning, not speculatively.
+
 ## Agents
 
 - **Pin cheaper/faster models on the review subagents.** The definitions in

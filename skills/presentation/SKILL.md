@@ -46,6 +46,21 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
    ```
    - `open` switches the tab in-page, so the audio unlock survives. If no tab is connected (`state` shows `connected: 0`), run `open http://localhost:3939/d/<deck-name>`, ask the user to click the overlay once, and end your turn — **the unlock click itself starts playback**, so a follow-up `play`, a did-you-click question, or polling `state` for the click is redundant. `ctl.mjs play` is for tabs that are already unlocked.
 
+## Profiles
+
+The workflow above is the **full** profile — the default whenever a person will watch the deck as a presentation. Two reduced profiles exist; each is a **fixed subset**, named by the caller (another skill, or the user explicitly) — never a per-deck license to pick gates case by case. When the request hints at a reduced profile without naming one (urgency, a throwaway purpose, an audience that may already know the material), **ask the user which profile before writing the outline** — the profiles differ in what can reach the viewer unreviewed, and that trade-off is the user's call, not a guess. If neither reduced profile's premise holds, that's a full deck; switch rather than stretch. Sizing always follows the normal guidance below — profiles change which gates run, never how long the deck may be.
+
+**light** — for decks whose audience already shares context with the material (e.g. a PR explainer video for reviewers of the same repo). Full minus exactly two things:
+
+- **No naive-reader review** (step 3). The gate simulates a viewer without the source knowledge; this audience has it by definition. Step 3's freeze/batching discipline still applies to the reviews that do run.
+- **No `context.md` / Web Q&A prep** (step 4). Light decks are built to be exported, not served. If the deck is later opened in the live player, write `context.md` then.
+
+Every other gate runs as written (the readings audit's delegation rule already scales with deck length — see Readings).
+
+**draft** — for quick, ephemeral alignment decks, where a misread term or a minor layout blemish costs the viewer less than the review latency would. Skip everything with a review cost: the outline-checker gate, the naive-reader review, the readings audit, the slide-checker, preflight, and `context.md` (the Q&A agent still sees the deck and the repo). Fix a misreading or a broken slide only when the viewer actually reports it. What draft does **not** relax is the zero-latency craft: `outline.md` before dialogue (unreviewed, but still what keeps the deck off source order), the role references and Dialogue rules (the characters are the product at any speed), defensive writing from Readings, and check-deck / view-deck (instant; errors break playback).
+
+A draft deck that graduates — someone wants to keep it, export it, or show it wider — goes back through light or full first.
+
 ## Building a deck
 
 Work top-down: `outline.md` first (spine + beats — see `references/structure.md`), then slides and dialogue per beat. Cut details that serve no beat's question into `context.md` — the Web Q&A agent serves them to whoever actually asks, so cutting is relocation, not loss.
