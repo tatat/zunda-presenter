@@ -34,8 +34,10 @@ const DICT_PATH = [
 const dict = DICT_PATH ? JSON.parse(readFileSync(DICT_PATH, "utf8")) : {};
 const dictTerms = Object.keys(dict).sort((a, b) => b.length - a.length);
 
+// Keep in sync with synthesize.mjs cleanSpaces (the space-before-Latin guard
+// is load-bearing: gluing katakana to a Latin word can change its reading).
 function cleanSpaces(text) {
-  return text.replace(/([^\x00-\x7F]) +/g, "$1").replace(/ +([^\x00-\x7F])/g, "$1");
+  return text.replace(/([^\x00-\x7F]) +(?![A-Za-z])/g, "$1").replace(/ +([^\x00-\x7F])/g, "$1");
 }
 
 function applyDict(text) {
