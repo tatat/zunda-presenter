@@ -62,17 +62,18 @@ reviewed and judged "not now", not "never".
 ## Skill docs
 
 - **Split rationale out of SKILL.md into a reference file.** Considered
-  as SKILL.md grew past 240 lines; rejected for now. The whys attached
-  to rules are post-incident deterrents that work by sitting next to
-  the rule at the decision point; an optional rationale file goes
-  unread exactly when it's needed (same failure family as the skipped
-  reference tails above), and a mandatory one moves the context cost
-  without reducing it. The working alternative is compressing each why
-  to one clause in place (done in #92). If SKILL.md keeps growing, the
-  viable split is the existing pattern instead: move the Readings
-  section to `references/readings.md` with an enforced full read at
-  workflow step 5 — viable only if its content stops being needed at
-  steps 2 and 7 too, which is what blocks it today.
+  as SKILL.md grew past 240 lines; resolved without a new file. The
+  criterion: a why that changes behavior (defines a rule's boundary,
+  or deters a predictable wrong shortcut) is part of the instruction —
+  keep it adjacent to its rule, compressed to a clause (#92). A why
+  that doesn't change behavior is not worth a file of its own: delete
+  it — git/PR history keeps the story, TODO.md keeps rejected
+  alternatives. After #92 essentially nothing in SKILL.md falls in the
+  second class, so there is nothing to split. If SKILL.md keeps
+  growing anyway, the viable split is the existing enforced-read
+  pattern: move the Readings section to `references/readings.md` read
+  in full at workflow step 5 — blocked today because its content is
+  also needed at steps 2 and 7.
 
 - **Hook-enforced full reads of references.** SKILL.md instructs full
   Read-tool reads of `references/` (end-marker lines make partial reads
