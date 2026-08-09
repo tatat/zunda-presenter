@@ -44,7 +44,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
    node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs open <deck-name>
    node ${CLAUDE_PLUGIN_ROOT}/scripts/ctl.mjs play <deck-name>
    ```
-   - `open` switches the tab in-page, so the audio unlock survives. If no tab is connected (`state` shows `connected: 0`), run `open http://localhost:3939/d/<deck-name>` and ask the user to click the overlay once.
+   - `open` switches the tab in-page, so the audio unlock survives. If no tab is connected (`state` shows `connected: 0`), run `open http://localhost:3939/d/<deck-name>`, ask the user to click the overlay once, and end your turn — **the unlock click itself starts playback**, so a follow-up `play`, a did-you-click question, or polling `state` for the click is redundant. `ctl.mjs play` is for tabs that are already unlocked.
 
 ## Building a deck
 
@@ -143,7 +143,7 @@ The engine misreads Japanese sometimes — a flaw of its morphological analysis,
 - A number immediately followed by 割 breaks: 割 is parsed as the tenths counter and る is left stranded (`99割る1098` → …ワリル…, digits and kanji numerals alike). Write `99÷1098` (reads correctly as ワル, subtitle looks like math) or `99を1098で割る` — not `99わる1098`, which fixes the reading at the subtitle's expense.
 - A kanji verb contracted to `〜ててる` can gain a spurious mora for some verbs (捨ててる → ステテテル, likewise 立ててる/育ててる — yet 建ててる is fine, so it's lexical and not predictable). Write the uncontracted 〜ている or the verb in kana.
 
-**Audit:** the synth log prints the engine's actual reading (`reading: …`) for each **newly synthesized** line — scan it on every run. Cached lines pass silently, so audit every line with `npm run readings` (below): it prints each line's reading with dictionary and `spoken` applied, synthesizing nothing. Run it after writing the script, before declaring the deck ready, and again at the end of any editing session — at these checkpoints `npm run preflight` bundles it with check-deck and view-deck:
+**Audit:** the synth log prints the engine's actual reading (`reading: …`) for each **newly synthesized** line — scan it on every run. Cached lines pass silently, so audit every line with `npm run readings` (below): it prints each line's reading with dictionary and `spoken` applied, synthesizing nothing. Judge by deriving each line's reading from its grammar and meaning and diffing against the kana — not by checking that the kana is a plausible reading of the characters; the misses that shipped were all plausible at the character level (a particle absorbed into a neighboring word, a multi-reading word given the character's commoner reading instead of the word's). Run it after writing the script, before declaring the deck ready, and again at the end of any editing session — at these checkpoints `npm run preflight` bundles it with check-deck and view-deck:
 
 ```
 cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run readings
