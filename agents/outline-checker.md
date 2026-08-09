@@ -1,6 +1,6 @@
 ---
 name: outline-checker
-description: Structure review of a deck outline BEFORE any dialogue exists. Spawn with the outline.md path, the structure.md reference path, and a one-paragraph framing of what the deck explains (audience and goal) — never the source material itself. Returns per-beat structural findings plus coverage questions derived from the outline's own promises. Spawn in the background like any subagent and do outline-independent prep (the role-reference reading) while it runs — but it gates dialogue: no dialogue until its findings are handled, because outline fixes cost one line and post-dialogue fixes cost twenty.
+description: Structure review of a deck outline BEFORE any dialogue exists. Spawn with the outline.md path, the structure.md reference path, and a one-paragraph framing of what the deck explains (audience and goal) — never the source material itself. Returns per-beat structural findings plus coverage questions derived from the outline's own promises. Spawn in the background like any subagent and do outline-independent prep (the role-reference reading) while it runs — but it gates dialogue, so no dialogue until its findings are handled; outline fixes cost one line, post-dialogue fixes cost twenty.
 tools: Read, Grep, Glob
 ---
 
