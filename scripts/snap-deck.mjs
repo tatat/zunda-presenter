@@ -8,6 +8,12 @@
    fonts, sprites) instead of a fixed virtual-time budget. One slide is one
    screenshot of its first line, written to <deck>/.snap/<slide-id>.png.
 
+   --clip x,y,w,h re-shoots only that region (coordinates in the same
+   1600x900 space as the full shots) at 2x pixel density, written to
+   <deck>/.snap/<slide-id>.clip.png — the zoom tool for judging a suspect
+   area, replacing improvised sips/PIL cropping (which permission setups
+   can never allowlist). Clip runs leave existing full shots in place.
+
    Requires npm deps installed (playwright is a lockfile-pinned devDependency)
    and the chromium download (same one-time step as the video export):
      npx playwright install chromium */
@@ -48,7 +54,26 @@ lines.forEach((line, i) => {
   if (line?.slide != null && !firstLineIdx.has(line.slide)) firstLineIdx.set(line.slide, i);
 });
 
-const onlySlides = process.argv.slice(2).filter((a) => !a.startsWith("-"));
+const argv = process.argv.slice(2);
+const onlySlides = [];
+let clipRaw = null;
+for (let i = 0; i < argv.length; i++) {
+  if (argv[i] === "--clip") clipRaw = argv[++i] ?? "";
+  else if (!argv[i].startsWith("-")) onlySlides.push(argv[i]);
+}
+let clip = null;
+if (clipRaw != null) {
+  const [x, y, width, height] = clipRaw.split(",").map(Number);
+  const ok =
+    [x, y, width, height].every(Number.isFinite) &&
+    x >= 0 && y >= 0 && width > 0 && height > 0 &&
+    x + width <= WIDTH && y + height <= HEIGHT;
+  if (!ok) {
+    console.error(`usage: npm run snap -- <slide-id ...> --clip x,y,w,h  (region within ${WIDTH}x${HEIGHT})`);
+    process.exit(1);
+  }
+  clip = { x, y, width, height };
+}
 const targets = [];
 for (const s of slides) {
   if (onlySlides.length && !onlySlides.includes(s.id)) continue;
@@ -79,20 +104,24 @@ const server = app.listen(0, "127.0.0.1");
 await new Promise((resolve) => server.once("listening", resolve));
 const port = server.address().port;
 
-// Stale shots from a previous script revision would masquerade as current
-rmSync(OUT_DIR, { recursive: true, force: true });
+// Stale shots from a previous script revision would masquerade as current.
+// Clip runs are follow-up probes on shots just taken — keep those in place.
+if (!clip) rmSync(OUT_DIR, { recursive: true, force: true });
 mkdirSync(OUT_DIR, { recursive: true });
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } });
+const page = await browser.newPage({
+  viewport: { width: WIDTH, height: HEIGHT },
+  ...(clip ? { deviceScaleFactor: 2 } : {}),
+});
 await page.goto(`http://127.0.0.1:${port}/d/snap#render`);
 await page.waitForFunction(() => window.__render && window.renderMermaid);
 await page.evaluate(() => window.__render.load());
 
 for (const t of targets) {
   await page.evaluate((i) => window.__render.frame(i, false), t.idx);
-  const out = path.join(OUT_DIR, `${t.id}.png`);
-  await page.screenshot({ path: out });
+  const out = path.join(OUT_DIR, `${t.id}${clip ? ".clip" : ""}.png`);
+  await page.screenshot({ path: out, ...(clip ? { clip } : {}) });
   console.log(out);
 }
 await browser.close();
