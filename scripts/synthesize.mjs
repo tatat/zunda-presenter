@@ -65,9 +65,13 @@ const dict = DICT_PATH ? JSON.parse(readFileSync(DICT_PATH, "utf8")) : {};
 const dictTerms = Object.keys(dict).sort((a, b) => b.length - a.length);
 
 // Drop spaces touching Japanese characters (left over from "agent の plan"-style
-// spacing after dictionary replacement) so they don't become awkward pauses
+// spacing after dictionary replacement) so they don't become awkward pauses —
+// except before Latin letters: gluing katakana to a following Latin word can
+// change how the engine segments it (measured: ファイアベースHosting →
+// エイチ オスティング, while ファイアベース Hosting reads ホスティング), and
+// which words break is lexical, so the residual pause is the lesser harm.
 function cleanSpaces(text) {
-  return text.replace(/([^\x00-\x7F]) +/g, "$1").replace(/ +([^\x00-\x7F])/g, "$1");
+  return text.replace(/([^\x00-\x7F]) +(?![A-Za-z])/g, "$1").replace(/ +([^\x00-\x7F])/g, "$1");
 }
 
 function spokenText(line) {
