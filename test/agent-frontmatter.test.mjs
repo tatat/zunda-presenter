@@ -1,16 +1,16 @@
-/* The plugin host parses each agents/*.md frontmatter as YAML. The values are
-   written as plain (unquoted) scalars, and a plain scalar must not contain
-   ": " — YAML reads it as the start of a nested mapping and the whole agent
-   fails to load ("mapping values are not allowed in this context"). That
-   exact break shipped in 0.12.2: a reworded outline-checker description
-   gained a colon and the agent was unusable until 0.13.1. No YAML parser is
-   bundled, so this checks the shape directly. */
+/* The plugin host parses each agents/*.md frontmatter as YAML, so the test
+   does the same — a shape heuristic would only catch known hazard classes,
+   while a real parse fails on everything the host would fail on. Motivating
+   break (shipped in 0.12.2): a reworded description gained ": " inside its
+   plain scalar, which YAML reads as a nested mapping — the agent failed to
+   load ("mapping values are not allowed in this context") until 0.13.1. */
 
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { load as yamlLoad } from "js-yaml";
 
 const AGENTS_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "agents");
 const KNOWN_KEYS = new Set(["name", "description", "tools"]);
@@ -21,22 +21,15 @@ for (const file of readdirSync(AGENTS_DIR).filter((f) => f.endsWith(".md"))) {
     assert.ok(text.startsWith("---\n"), "must open with a --- fence");
     const end = text.indexOf("\n---", 4);
     assert.ok(end !== -1, "must close the --- fence");
-    const lines = text.slice(4, end).split("\n").filter((l) => l.trim());
 
-    const keys = new Set();
-    for (const line of lines) {
-      const m = /^([a-z-]+): (.*)$/.exec(line);
-      assert.ok(m, `not a top-level "key: value" line: ${line.slice(0, 60)}`);
-      const [, key, value] = m;
+    const fm = yamlLoad(text.slice(4, end)); // throws on anything the host would reject
+    assert.ok(fm && typeof fm === "object" && !Array.isArray(fm), "frontmatter must be a mapping");
+    for (const [key, value] of Object.entries(fm)) {
       assert.ok(KNOWN_KEYS.has(key), `unknown key "${key}" — typo?`);
-      keys.add(key);
-      assert.ok(
-        !value.includes(": "),
-        `${key} contains ": " — a plain YAML scalar can't hold it; reword or the agent fails to load`
-      );
-      assert.ok(!/^['"&*|>]/.test(value), `${key} starts with a YAML special character`);
+      assert.equal(typeof value, "string", `${key} must parse as a plain string, got ${typeof value}`);
     }
-    assert.ok(keys.has("name"), "missing name");
-    assert.ok(keys.has("description"), "missing description");
+    assert.equal(typeof fm.name, "string", "missing name");
+    assert.equal(typeof fm.description, "string", "missing description");
+    assert.equal(fm.name, file.replace(/\.md$/, ""), "name must match the filename");
   });
 }
