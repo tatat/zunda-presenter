@@ -114,6 +114,17 @@ reviewed and judged "not now", not "never".
   output today. Do it if plausible-but-wrong readings keep slipping
   past derive-then-diff.
 
+## Player
+
+- **WS auto-reconnect for stale tabs.** Observed failure: a tab left open
+  across a mid-session deck edit held the old script with `finished:true`,
+  the reload push never reached it, and `ctl.mjs goto`/`play` returned
+  `clients: 0` until the tab was manually reopened — costing several retry
+  rounds and a second audio-unlock click. The player's ws connection dies
+  silently (sleep/idle) and never reconnects. Fix shape: reconnect with
+  backoff plus a full state resync on `visibilitychange`/`online`, keeping
+  the audio-unlock state. Do it when stale-tab reports recur.
+
 ## Web Q&A
 
 - **Readings audit for Q&A answers.** qa.mjs synthesizes and plays its
