@@ -52,19 +52,12 @@ The workflow above is the **full** profile — the default whenever a person wil
 
 **light** — for decks whose audience already shares context with the material (e.g. a PR explainer video for reviewers of the same repo). Full minus exactly two things:
 
-- **No naive-reader review** (step 3). The gate exists to simulate a viewer without the source knowledge; a light deck's audience has that knowledge by definition. Everything else in step 3 still applies to the reviews that do run (freeze during audits, batch findings, apply together).
-- **No `context.md` / Web Q&A prep** (step 4). Light decks are built to be exported, not served — there is no live Q&A agent to feed. If the deck is later opened in the live player, write `context.md` then.
+- **No naive-reader review** (step 3). The gate simulates a viewer without the source knowledge; this audience has it by definition. Step 3's freeze/batching discipline still applies to the reviews that do run.
+- **No `context.md` / Web Q&A prep** (step 4). Light decks are built to be exported, not served. If the deck is later opened in the live player, write `context.md` then.
 
-Everything else stays: the outline and its outline-checker gate, the role references, check-deck/view-deck, the readings audit (its delegation rule already scales with deck length — see Readings), the slide-checker self-check, and the closing preflight.
+Every other gate runs as written (the readings audit's delegation rule already scales with deck length — see Readings).
 
-**draft** — for quick, ephemeral alignment decks ("さっと認識合わせ"), where a misread term or a minor layout blemish costs the viewer less than the review latency would. No subagents and no audits: skip the outline-checker gate, the naive-reader review, the readings audit and its auditors, the slide-checker, the preflight checkpoint, and `context.md` (the Q&A agent still sees the deck and the repo — answers just get less background). Fix a misreading or a broken slide only when the viewer actually reports it.
-
-What draft does **not** relax — none of it costs wall-clock review time:
-
-- `outline.md` before dialogue (unreviewed, but it is still what keeps the deck off source order and details off the spine).
-- The role references and all Dialogue rules — the characters are the product at any speed.
-- Defensive writing from Readings (numerals, `spoken` for equation-shaped lines) — free at write time, and the synth log still shows new lines' readings as they scroll by.
-- `npm run check-deck`, and `npm run view-deck` after structural edits — mechanical and instant; errors break playback.
+**draft** — for quick, ephemeral alignment decks ("さっと認識合わせ"), where a misread term or a minor layout blemish costs the viewer less than the review latency would. Skip everything with a review cost: the outline-checker gate, the naive-reader review, the readings audit, the slide-checker, preflight, and `context.md` (the Q&A agent still sees the deck and the repo). Fix a misreading or a broken slide only when the viewer actually reports it. What draft does **not** relax is the zero-latency craft: `outline.md` before dialogue (unreviewed, but still what keeps the deck off source order), the role references and Dialogue rules (the characters are the product at any speed), defensive writing from Readings, and check-deck / view-deck (instant; errors break playback).
 
 A draft deck that graduates — someone wants to keep it, export it, or show it wider — goes back through light or full first.
 
