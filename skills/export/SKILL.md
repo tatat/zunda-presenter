@@ -34,6 +34,8 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 Writes `<deck dir>/export.mp4`. Overrides: `PRESENTER_VIDEO_OUT` (output path), `PRESENTER_VIDEO_HEIGHT` (default 1080).
 
+After a successful export, reveal the file in the OS file manager so it's one drag away from wherever it's headed: `open -R "<output path>"` on macOS, `explorer /select,"<output path>"` on Windows, `xdg-open "<containing dir>"` on Linux.
+
 ## Fonts
 
 Fonts come from the exporting machine: the UI stack is `"Hiragino Sans", "Noto Sans JP", sans-serif` (code: `Menlo, "SF Mono", monospace`), so on Windows text falls back to Yu Gothic / MS Gothic and the video looks different from the player on macOS. If the user cares about the look, install Noto Sans JP first (e.g. from Google Fonts) and re-export; a system-wide install is enough — no config needed.
