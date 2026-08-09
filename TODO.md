@@ -84,6 +84,17 @@ reviewed and judged "not now", not "never".
   review latency keeps dominating the workflow after the cheap wins
   (gate-overlapped reference reading, `npm run preflight`) land.
 
+- **Blind derivation pass for the reading audit.** Derive-then-diff (the
+  auditor derives each line's reading and diffs against the engine kana)
+  still happens with the engine's kana in view, so the derivation can
+  anchor on it. The anchor-free version: auditors first receive only the
+  dialogue text and return derived readings, with the engine kana
+  compared afterwards. Costs a second pass and drowns in benign
+  normalization noise (hand kana vs engine kana differ everywhere:
+  エエ/エイ, spacing, accent) — which is why auditors get the engine
+  output today. Do it if plausible-but-wrong readings keep slipping
+  past derive-then-diff.
+
 ## Web Q&A
 
 - **Readings audit for Q&A answers.** qa.mjs synthesizes and plays its
