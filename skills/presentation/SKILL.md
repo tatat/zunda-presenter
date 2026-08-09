@@ -48,7 +48,7 @@ cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presen
 
 ## Profiles
 
-The workflow above is the **full** profile — the default whenever a person will watch the deck as a presentation. Two reduced profiles exist; each is a **fixed subset**, named by the caller (another skill, or the user explicitly) — never a per-deck license to pick gates case by case. If neither reduced profile's premise holds, that's a full deck; switch rather than stretch. Sizing always follows the normal guidance below — profiles change which gates run, never how long the deck may be.
+The workflow above is the **full** profile — the default whenever a person will watch the deck as a presentation. Two reduced profiles exist; each is a **fixed subset**, named by the caller (another skill, or the user explicitly) — never a per-deck license to pick gates case by case. When the request hints at a reduced profile without naming one (urgency, a throwaway purpose, an audience that may already know the material), **ask the user which profile before writing the outline** — the profiles differ in what can reach the viewer unreviewed, and that trade-off is the user's call, not a guess. If neither reduced profile's premise holds, that's a full deck; switch rather than stretch. Sizing always follows the normal guidance below — profiles change which gates run, never how long the deck may be.
 
 **light** — for decks whose audience already shares context with the material (e.g. a PR explainer video for reviewers of the same repo). Full minus exactly two things:
 
