@@ -86,14 +86,16 @@ reviewed and judged "not now", not "never".
 
 ## Skills
 
-- **Fully automated PR videos (CI).** The pr-video skill is deliberately
-  semi-automatic: build + export locally, then the user drags `export.mp4`
-  into the PR. The blocking piece is attachment — GitHub accepts
-  inline-playable video only via the web UI's drag-and-drop; there is no
-  public API and `gh` cannot upload comment attachments, so a CI pipeline
-  (claude-code-action + VOICEVOX Linux engine + ffmpeg) could only link an
-  artifact/release asset, which doesn't play inline. Revisit if GitHub
-  ships a user-attachments API, or if link-not-inline becomes acceptable.
+- **Fully automated PR videos (CI).** The pr-video skill is
+  semi-automatic: build + export locally, then attach with `gh pr comment
+  --attach`. Attachment is no longer the blocker (that flag landed in gh
+  v2.99.0, so an inline player can be posted non-interactively), but the
+  render still is not cheap to move: a CI pipeline needs
+  claude-code-action plus a VOICEVOX Linux engine and ffmpeg in the
+  runner, and a deck worth watching needs the author's judgement about
+  what reviewers should look at. Revisit the first time a PR video is
+  wanted from a machine that has no local setup (VOICEVOX engine, ffmpeg,
+  playwright) — that is the case CI would actually unlock.
 
 - **Generalize profiles into a mechanism.** The presentation skill's
   profiles (full/light/draft) are fixed, named gate sets — deliberately
