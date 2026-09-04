@@ -25,12 +25,9 @@ leave with.
   fixed by the request before the outline exists (SKILL.md, "Before the
   workflow"); the spine says something contestable *about* it. The rules
   below — claim not topic, do not transcribe the source, a summary is not an
-  outline — all operate inside that boundary. They forbid reproducing the
-  source's shape; none of them licenses changing what the deck is about, and
-  read as such they are how a requested subject quietly becomes the author's
-  own. Test: strike the spine's verb and see what is left. If the remaining
-  subject is not the requested one, the deck is already off, however good the
-  claim is.
+  outline — operate inside that boundary and never license changing what the
+  deck is about. Test: strike the spine's verb. If the remaining subject is
+  not the requested one, the deck is off however good the claim is.
 - It is a **claim, not a topic**. 「本体はキャッシュ鍵の設計判断」 is a spine;
   「キャッシュを導入する」 is a label. If it has no verb-argument structure —
   nothing a viewer could agree or disagree with — it is not yet a spine.
@@ -39,6 +36,9 @@ leave with.
 - Line-count weighting follows the spine: the slide that carries the spine's
   core argument gets the lines; peripheral slides shrink. Uniform weight
   across slides is a structure smell — it means nothing was prioritized.
+  Between parallel chapters it is not a smell: weight inside a chapter, and
+  weight chapters against each other only where the material itself makes
+  one heavier.
 
 ## Beats, Not Topics
 
@@ -74,15 +74,14 @@ Rules that fall out of the form:
 - **Beats come from the chain, never from the slot list.** A beat exists
   because the previous beat planted a question this Subject must answer for
   this Reader, and its `claim` is the answer; a slot in SKILL.md's standard
-  structure with no such question behind it produces no beat. That is also
-  what fixes granularity — which of the endlessly many claims a subject
-  could support are this deck's is decided by what the chain actually
-  planted, not by the author's sense of what is interesting. The deck ends
-  where nothing further is planted that the Subject owes, and its length is
-  whatever that yields. Filling a slot to complete the
-  shape is how a subject supporting three claims becomes a seven-beat deck,
-  and every invented beat then needs material, which is where padding and
-  work-history narration get in.
+  structure with no such question behind it produces no beat. The chain also
+  fixes granularity: which of the many claims a subject could support are
+  this deck's is decided by what was planted, not by what the author finds
+  interesting. The chapter is what the chain runs inside: chapters come from
+  the Subject's parallel items, beats from the chain within each, and a
+  chapter's first beat is planted by its chapter question rather than by the
+  chapter before. The deck ends where nothing further is planted, and its
+  length is whatever that yields.
 - Title and closing slides take a one-line entry (hook / recap+オチ); the
   four-field form is for content beats only.
 
@@ -92,12 +91,19 @@ A summary flattens: every point at the source's middle depth, nothing dug
 into, nothing skipped — and a viewer who is never told where to lean in
 retains nothing. Declare the profile in the outline, per beat:
 
-- **`depth: peak`** — exactly one per deck (per chapter in long decks). The
-  beat the spine exists for. Requires a `dig:` naming the concrete material
+- **`depth: peak`** — at most one per chapter (so at most one per deck when
+  there are no chapters): the beat its chapter's question exists for. Test
+  by removal, holding prerequisites constant — assume the other beats still
+  supply their setup, and ask which beat's absence costs the chapter's
+  takeaway most, not which one later beats depend on. That beat is the peak;
+  where no beat stands out, the chapter has none. Requires a `dig:` naming
+  the concrete material
   the dialogue goes deeper into than a summary would: a worked example, the
   rejected alternative and its reason, the failure case, the number that
   contradicts intuition. 「詳しく話す」 is not a dig; `dig` names a thing.
-  The recap/オチ should land back on this beat.
+  The recap/オチ lands back on this beat — on the deck's spine where there
+  is no peak. A chaptered deck closes on its spine — any peaks belong to
+  their chapters, and the close belongs to the whole.
 - **`depth: ridge`** — zero to two. Explained properly: a why plus one
   concrete grounding, at standard budget.
 - **unmarked** — standard: explain, don't dig.
@@ -143,6 +149,11 @@ order — a postmortem may open on the incident, a comparison on the decision
 to be made. The invariant is the chain (each beat answers a live question
 and plants the next), not this particular slot order.
 
+The chain runs inside a chapter, not between chapters. Parallel chapters do
+not plant each other; what makes the next one wanted is the count stated at
+the top. A seam written as though a chapter planted the next produces the
+「他には？」 connector — a question about how much of the list is left.
+
 ## Do Not Transcribe the Source
 
 Reference documents are organized for lookup: background → requirements →
@@ -171,17 +182,20 @@ answer moves out.
   (SKILL.md, Sizing). This document forbids shapelessness — no statable spine,
   unchained beats, unattached detail — never length. There are no size
   thresholds here.
-- **Length is derived, in both directions.** It falls out of how many claims
-  the Subject supports (Beats, Not Topics), so it is never a target and never
-  a defect on its own. A deck is not too long because it is long; it is too
-  long when beats were invented to complete a shape, and too short when real
+- **Length is derived, in both directions.** It falls out of what the chain
+  plants, so it is never a target and never a defect on its own. A deck is
+  too long when beats were invented to complete a shape, too short when real
   claims were compressed out to hit a size. Diagnose by asking which beat
   names a claim the Subject does not support — not by counting lines.
-- **Depth orders get chapters.** For long decks, group beats into chapters,
-  each with a one-line chapter question. Spine → chapter question → beat is
-  a two-level backbone; details then live inside chapters as evidence for
-  the chapter's question. The outline's value rises with deck length,
-  because long decks are where structure fails hardest.
+- **Chapters come from parallel shape, not from length.** Test by
+  reordering: if the items can be presented in any order and each still
+  answers its own question, they are parallel and take chapters — at any
+  length. If reordering breaks an explanation, they are one chain and take
+  beats, however long the deck runs. Group parallel beats into chapters,
+  each with a one-line chapter question; spine → chapter question → beat is
+  a two-level backbone, and everything in Weighting the Beats is then read
+  per chapter. Long decks are where this most often applies, and where
+  structure fails hardest without it.
 
 ## outline.md
 
@@ -215,15 +229,41 @@ n. `sN` まとめ — recap + オチ: <one line>
 - <detail that serves no question in the chain>
 ```
 
+Chaptered decks group the beats, one question per chapter, and keep the
+four-field form inside a chapter. Two fields change at the edges: a
+chapter's last beat has no `plants` (nothing downstream for it to plant),
+and its first beat's `holds` is the chapter question. The count and the
+ordered items go at the top and are voiced by the opening beat — that is
+what makes each next chapter wanted, and the only thing a gate can check a
+chapter transition against:
+
+```markdown
+**Chapters**: <N, and what they are, in the deck's order>
+
+1. `s1` タイトル — hook: <one line>
+2. `s2` 見取り図
+   - holds:  <what the viewer holds before the list>
+   - shows:  the N items in order
+   - claim:  they are independent; here is the order
+   - plants: <the first chapter's question>
+   - depth:  transit
+
+## 1. <chapter name> — question: <one line>
+3. `s3` <four-field form; `holds` is the chapter question, `claim` the
+   answer; the chapter's last beat carries no `plants`>
+
+## 2. <chapter name> — question: <one line>
+4. `s4` …
+```
+
 Lifecycle: on any rewrite, update the outline first, then the script — the
 outline is the record of the spine, and editing it first keeps structural
 decisions explicit instead of emergent (same ordering discipline as
 SKILL.md's rewrite section: the deck presents the artifact's current state).
-An outline whose structure moved is then re-gated through outline-checker
-before the script follows it (SKILL.md workflow step 1). Skipping that is
-how the deck ends up shaped by an outline no gate ever read — and skipping
-the update itself is worse, because the outline then records a deck that no
-longer exists and the next rewrite is planned against fiction.
+An outline whose structure moved is re-gated through outline-checker before
+the script follows it (SKILL.md workflow step 1). An outline left un-updated
+records a deck that no longer exists, and the next rewrite is planned
+against it.
 
 ## Worked Contrast
 
@@ -337,24 +377,30 @@ interpretation guide for its report:
 - **Main claim unrecoverable, or recovered as a topic** («it's about
   caching») rather than a claim — the spine didn't survive into the
   dialogue. Fix the outline, not individual lines.
-- **Main claim recovered cleanly, but it is not the Subject's** — the deck
-  is coherently about the wrong thing, and this report is where that shows,
-  because the blinded reviewer is the one gate the author never briefs. Fix
-  the spine. A report naming two competing claims is the same finding
-  arriving early: keep the one matching the Subject and rebuild the other's
-  sections — never the reverse. The reverse is the natural move and the
-  trap: the drifted spine is the one already written down, so an author
-  shown two claims tends to delete the requested one to make the deck
-  internally consistent.
+- **Main claim recovered cleanly, but it is not the Subject's** — fix the
+  spine, not the lines. This is the only gate that can report it, being the
+  one the author does not brief. Two competing claims are the same finding
+  arriving early: keep the one matching the Subject, rebuild the other's
+  sections. Never the reverse, however consistent it would make the deck.
+- **A deck-level claim plus one per chapter** — the expected report for a
+  chaptered deck. Compare the first against the Subject, the rest against
+  the chapters. Competition inside one chapter is the finding; a claim per
+  chapter is not. A report giving only per-chapter claims means the deck
+  never voiced what it is as a whole.
 - **Boundary expectations repeatedly violated** — the chain is broken where
   the reviewer's expected question and the next section's actual content
   diverge. Each violation points at a seam; fix `plants`/`holds` there.
+  At a chapter boundary the expectation to look for is "the next item": if
+  the opening map landed, the reviewer expected one and reports no
+  divergence. A divergence reported there means the map did not land — fix
+  the opening, not the seam.
 - Claim recovery alone is not a pass: it is necessary, not sufficient — the
   boundary expectations exist to catch monotone-but-summarizable decks.
 - **Sections flagged as "not serving the claim"** are either cut candidates
   or evidence the spine sentence is too narrow for what the deck actually
   is (e.g. a deliberate feature tour). Decide against the outline's spine,
-  not the reviewer's reconstruction.
+  not the reviewer's reconstruction. In a chaptered deck, judge each section
+  against its own chapter's question.
 - **Template rhythm flagged** — the outline is showing through. Don't patch
   individual lines: re-vary how each beat's `holds` surfaces (see From
   Outline to Dialogue) and re-run.
@@ -363,7 +409,10 @@ interpretation guide for its report:
   `depth` markings means the dialogue didn't realize the declared profile
   (rewrite the peak's dig / compress the transits) — or the peak was chosen
   wrong (outline fix). "I cannot rank them, they all feel the same" is the
-  flatness finding, not a pass.
+  flatness finding wherever the chapter declared any depth at all — a peak,
+  a ridge, a transit. Only a chapter whose beats are all unmarked is
+  realized by an equal ranking. Across parallel chapters equal weight is
+  likewise expected — read the ranking inside each group.
 - **Time-to-purpose late** — if the reviewer couldn't say what the deck
   wanted until deep into the middle, the promise wasn't voiced (Question
   Chain, Stakes): fix the opening beats, not the middle.

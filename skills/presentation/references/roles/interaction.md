@@ -201,29 +201,22 @@ next anyway, is padding; a run of them turns the dialogue into
   seal is concise (その通りよ) and moves on. Repeating the check's wording back
   (まさにそれ。〜 — then the same sentence again) adds a turn with no
   content.
-- **Say it once.** Three of this document's templates — the Default
-  Exchange Cycle, the Correction Pattern, Section Closure — end in
-  restate-then-confirm. Run them all as written and every point is spoken
-  twice, three times at a section's end, which viewers report as くどい even
-  though no line is padding by the deletion test. At most one
-  restate-and-confirm per section, and only where the restatement **changes
-  the formulation** — makes it concrete, compresses it, or exposes an
-  implication. A paraphrase in the same shape as the line before it is
-  padding that happens to carry content. The shape to watch for: explainer
-  states it, listener says it back unchanged, explainer confirms and says it
-  a third time — three turns, one fact. Budget **both halves**: the
-  listener's restatement and the explainer's confirmation. Cutting only the
-  restatement leaves a two-turn version of the same redundancy, since a
-  correct inference does not need blessing to stand (see Metan's Response
+- **Say it once.** Three templates here — the Default Exchange Cycle, the
+  Correction Pattern, Section Closure — end in restate-then-confirm, so
+  running them all as written speaks every point twice, three times at a
+  section's end. The deletion test does not catch it: those turns carry
+  content. At most one restate-and-confirm per section, and only where the
+  restatement **changes the formulation** — makes it concrete, compresses
+  it, or exposes an implication. Budget **both halves**, the listener's
+  restatement and the explainer's confirmation; cutting only the first
+  leaves a two-turn version of the same redundancy (see Metan's Response
   Discipline).
-- **Leave air.** The deletion test asks whether a turn carries the
-  explanation; some turns are there to carry the *listening* instead — a
-  two-word reaction, a joke that lands and stops, a `postPause`. These are
-  structural, not padding, and the deletion test does not apply to them.
-  A dialogue in which every single line advances the argument is as tiring
-  as one that pads: the fatigue comes from having nowhere to rest, not from
-  wasted words. Budget them the way you budget any repeated device — a few
-  across a deck, placed after the parts that ask the most of the viewer.
+- **Leave air.** Some turns carry the listening rather than the explanation
+  — a two-word reaction, a joke that lands and stops, a `postPause`. These
+  are structural, and the deletion test does not apply to them. A dialogue
+  where every line advances the argument tires the viewer as much as one
+  that pads. Budget them like any repeated device: a few across a deck,
+  after the parts that ask the most.
 
 This section governs how often the Default Exchange Cycle's listener
 steps fire; it does not change the cycle itself. "Repeatedly return to
@@ -282,7 +275,7 @@ When Zundamon's interpretation is partly correct:
 3. provide the corrected formulation;
 4. give a brief reason or example when needed.
 
-When Zundamon is fully correct, advancing the explanation **is** the confirmation — moving to the next unit ratifies the inference, and in conversation going on without objection already reads as agreement. Spend an explicit そうよ only where it does work: the inference carries enough weight that a viewer would want it stamped, it needs a qualification attached, or the section ends there (see Section Closure). A confirming turn after every correct inference is the explainer's half of the redundancy "Say it once" governs.
+When Zundamon is fully correct, advancing the explanation **is** the confirmation: moving to the next unit ratifies the inference. Spend an explicit そうよ only where it does work — the inference is heavy enough that a viewer would want it stamped, it needs a qualification attached, or the section ends there (see Section Closure). A confirming turn after every correct inference is the explainer's half of the redundancy "Say it once" governs.
 
 Do not restate the entire preceding explanation after every question.
 

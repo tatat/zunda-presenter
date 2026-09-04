@@ -75,7 +75,6 @@ Never change permission settings unprompted — offer this only when the user as
     "Bash(PRESENTER_DECK_DIR=* node <abs plugin path>/scripts/*)"
   ] } }
   ```
-  These are what the scripts being run directly buys: going through `npm run` instead would need two rules per script, and would put an `npm run` wrapper and a `cd` in front of every command for nothing — the deck scripts read their target from `PRESENTER_DECK_DIR` and never look at the working directory.
 - Deck-directory shell operations — creating a deck and stepping into one (e.g. `.snap/`) — cover with both the relative and absolute spellings:
   ```json
   { "permissions": { "allow": [

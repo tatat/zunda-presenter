@@ -22,7 +22,7 @@ Subject: この PR の変更内容 — 何をして、なぜその形なのか
 Reader: このリポジトリのレビュアー。コードベース・言語・ツールには通じているが、この変更は見ていない
 ```
 
-What the Subject excludes is where it gets crossed, and the worst of it is **review history** — what a reviewer objected to and how it was fixed. It describes the process that produced the change rather than the change: the fix is already in the diff the viewer is about to read, and nothing they have to decide turns on how it got there. If the correction matters, the current design carries it without the story. Same for how the branch was developed and dead ends hit on the way. All of it is the freshest material in mind, which is why it gets mistaken for the change; it belongs in `context.md` or nowhere. A **rejected design option is not that** — it belongs in the deck whenever it explains why the change has the shape it has. The test is what the option is doing in the sentence: explaining the current design (in), or recounting the order events happened in (out).
+The Subject excludes the process that produced the change: **review history** above all — what a reviewer objected to and how it was fixed — and equally how the branch was developed and dead ends hit on the way. It goes in `context.md` or nowhere. A **rejected design option is not that**: it belongs in the deck whenever it explains why the change has the shape it has. Test by what the option does in the sentence — explaining the current design (in), or recounting the order events happened in (out).
 
 The outline-checker's audience+goal framing derives from these two. Go back to the user only when the request contradicts them — someone asking for a video about how the change was arrived at is asking for a different subject, not for this one.
 
