@@ -1,4 +1,4 @@
-/* Export a deck as an MP4 video (npm run export, honors PRESENTER_DECK_DIR).
+/* Export a deck as an MP4 video (node scripts/export-video.mjs, honors PRESENTER_DECK_DIR).
 
    Deterministic offline render — no realtime capture:
    - The timeline is computed from the wav durations (parsed from the RIFF
@@ -121,7 +121,7 @@ const refFmt = clips.find((c) => c.fmt)?.fmt ?? {
 };
 for (const c of clips) {
   if (c.fmt && JSON.stringify(c.fmt) !== JSON.stringify(refFmt)) {
-    console.error("音声フォーマットが混在しています。npm run synth で全行を再合成してください。");
+    console.error(`音声フォーマットが混在しています。PRESENTER_DECK_DIR="${DECK_DIR}" node ${path.join(ROOT, "scripts", "synthesize.mjs")} で全行を再合成してください。`);
     process.exit(1);
   }
 }

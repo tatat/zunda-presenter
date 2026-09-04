@@ -5,7 +5,7 @@
    required fields, id uniqueness, slide references, enum values, voice param
    types. No engine needed.
 
-   npm run check-deck   (honors PRESENTER_DECK_DIR, default <repo>/deck)
+   node scripts/check-deck.mjs   (honors PRESENTER_DECK_DIR, default <repo>/deck)
 
    Errors (invalid deck structure or values — fix them; some break playback
    or synthesis outright, others the runtime tolerates via fallbacks) exit 1;

@@ -96,7 +96,9 @@ n. `sN` まとめ + オチ — <one line>
 
 - `holds`/`plants` chaining is the pre-writing flow check: if slide k's
   `plants` doesn't match slide k+1's `holds`, the seam is broken before any
-  dialogue exists. A slide whose `holds` cannot be stated is reference
+  dialogue exists. The chain stops at a parallel-chapter boundary: such a
+  chapter's last beat carries no `plants`, and its first beat's `holds` is
+  the chapter question. Sequential boundaries chain normally. A slide whose `holds` cannot be stated is reference
   material, not a beat — cut or merge it.
 - `shows` plans the slide/dialogue division of labor up front: the dialogue
   points at what the slide shows and adds the why — it never re-derives it
@@ -105,10 +107,12 @@ n. `sN` まとめ + オチ — <one line>
   the moment to decide `chars: false`.
 - Title and closing slides take a one-line entry; the four-field form is for
   content beats only.
-- **Long decks add a chapter layer**: beats grouped into chapters, each with
-  a one-line chapter question. Spine → chapter question → beat is a two-level
-  backbone; the outline's value rises with deck length, because long decks
-  are where structure fails hardest.
+- **A chapter layer** groups beats under one-line chapter questions; spine →
+  chapter question → beat is a two-level backbone. Length calls for it, and
+  so does parallel shape at any length. Which kind matters more than whether
+  to use it: chapters that can be reordered without breaking any of them are
+  parallel, and the chain stops at their boundaries; chapters that cannot are
+  grouping over a single chain.
 - Lifecycle: on rewrites, update the outline first, then the script — the
   outline is the record of the spine, and editing it first keeps the
   structure decision explicit (same ordering discipline as "the deck presents
@@ -120,8 +124,8 @@ Cut details move to `context.md`, which the Web Q&A agent reads — so a
 viewer who actually cares about a cut detail can ask and get it answered.
 The deck carries the spine; the long tail is served on demand. This removes
 the completeness anxiety that drives detail fixation: nothing is lost,
-things are placed. (In depth-ordered decks, details live in chapters as
-evidence; only detail serving no question at all moves out.)
+things are placed. (In a chaptered deck, details live in the chapter whose
+question they answer; only detail serving no question at all moves out.)
 
 ### 4. Blind flow check
 
@@ -131,8 +135,9 @@ Extends the #44 naive-reader review, reusing its blinded input:
   minimal, acceptable leak — grouping but no titles/ids).
 - The blinded reviewer additionally answers: at each blank line, "what
   question do you expect the next section to answer?" — and at the end,
-  "state the script's single main claim in one sentence; list any sections
-  that did not serve it."
+  "state the script's main claim in one sentence; list any sections that did
+  not serve it." For a chaptered deck it gives the deck-level claim and then
+  one per parallel item, never one in place of the other.
 - Failure signals: the main claim cannot be stated, or stated-expectations
   are repeatedly violated at boundaries. Claim recovery alone is not a pass —
   it is a necessary condition, not a sufficient one; the boundary

@@ -49,7 +49,7 @@ It prints the server's identity (`{decksRoot, port, pid}`): an already-running s
 
 For each deck that has lines without audio (at minimum the demo):
 ```
-cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/demo" npm run synth
+PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/demo" node ${CLAUDE_PLUGIN_ROOT}/scripts/synthesize.mjs
 ```
 
 ## 6. Open the browser
@@ -68,20 +68,13 @@ Never change permission settings unprompted — offer this only when the user as
   ```json
   { "permissions": { "allow": ["Bash(node <abs plugin path>/scripts/ctl.mjs *)"] } }
   ```
-- The deck-scoped npm commands prompt on **every** run: they start with a `PRESENTER_DECK_DIR=…` assignment, and a rule that omits the assignment never matches past it (only a built-in known-safe list like `NODE_ENV` is stripped before matching), so "don't ask again" can't produce a reusable rule from them. The fix is to put the assignment in the rule with a wildcard value — **two rules per script**, because a trailing ` *` only matches when at least one argument follows, and redirections like `2>&1` don't count as arguments (measured: `… npm run view-deck 2>&1` fell through a ` *`-only rule):
+- The deck-scoped scripts prompt on **every** run: they start with a `PRESENTER_DECK_DIR=…` assignment, and a rule that omits the assignment never matches past it (only a built-in known-safe list like `NODE_ENV` is stripped before matching), so "don't ask again" can't produce a reusable rule from them. Put the assignment in the rule with a wildcard value. Because every deck script is invoked the same way — one `node <plugin path>/scripts/<name>.mjs` call, no `cd`, no wrapper — **two rules cover all of them**; two rather than one because a trailing ` *` only matches when at least one argument follows, and redirections like `2>&1` don't count as arguments (measured: a `… view-deck.mjs 2>&1` invocation fell through a ` *`-only rule):
   ```json
   { "permissions": { "allow": [
-    "Bash(PRESENTER_DECK_DIR=* npm run synth *)",       "Bash(PRESENTER_DECK_DIR=* npm run synth)",
-    "Bash(PRESENTER_DECK_DIR=* npm run readings *)",    "Bash(PRESENTER_DECK_DIR=* npm run readings)",
-    "Bash(PRESENTER_DECK_DIR=* npm run check-deck *)",  "Bash(PRESENTER_DECK_DIR=* npm run check-deck)",
-    "Bash(PRESENTER_DECK_DIR=* npm run view-deck *)",   "Bash(PRESENTER_DECK_DIR=* npm run view-deck)",
-    "Bash(PRESENTER_DECK_DIR=* npm run preflight *)",   "Bash(PRESENTER_DECK_DIR=* npm run preflight)",
-    "Bash(PRESENTER_DECK_DIR=* npm run snap *)",        "Bash(PRESENTER_DECK_DIR=* npm run snap)",
-    "Bash(PRESENTER_DECK_DIR=* npm run try-reading *)", "Bash(PRESENTER_DECK_DIR=* npm run try-reading)",
-    "Bash(PRESENTER_DECK_DIR=* npm run check-dictionary *)", "Bash(PRESENTER_DECK_DIR=* npm run check-dictionary)"
+    "Bash(PRESENTER_DECK_DIR=* node <abs plugin path>/scripts/* *)",
+    "Bash(PRESENTER_DECK_DIR=* node <abs plugin path>/scripts/*)"
   ] } }
   ```
-  (The `cd ${CLAUDE_PLUGIN_ROOT} && …` prefix is a separate subcommand under compound-command matching — `"Bash(cd <abs plugin path>)"` covers it exactly.)
 - Deck-directory shell operations — creating a deck and stepping into one (e.g. `.snap/`) — cover with both the relative and absolute spellings:
   ```json
   { "permissions": { "allow": [

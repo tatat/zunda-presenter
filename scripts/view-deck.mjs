@@ -6,11 +6,11 @@
    same-speaker runs within a slide (legitimate across a slide transition,
    often a mis-ordered insert mid-scene).
 
-   npm run view-deck [-- <slide-id>...]   (honors PRESENTER_DECK_DIR,
+   node scripts/view-deck.mjs [<slide-id>...]   (honors PRESENTER_DECK_DIR,
    default <repo>/deck; slide ids restrict output to those slides, with
    line indices kept absolute so they stay valid for goto-by-index)
 
-   npm run view-deck -- --dialogue prints only `speaker: text` per line,
+   node scripts/view-deck.mjs --dialogue prints only `speaker: text` per line,
    untruncated, with no title/ids/slide headers — the blinded input for the
    naive-reader review (the reviewing subagent must not learn the deck's
    topic from framing). Slide boundaries appear as blank lines: grouping

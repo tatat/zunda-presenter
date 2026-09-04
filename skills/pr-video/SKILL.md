@@ -13,7 +13,18 @@ Turn a pull request (or the current branch's changes) into a short exported MP4 
 - No PR yet: the branch — `git log --oneline <base>..HEAD` and `git diff <base>...HEAD` (merge-base diff).
 - Commit messages either way — they often carry the why that the diff doesn't.
 
-The **viewer is a reviewer**: they know the codebase, they will read the diff themselves, and they don't know this change yet. Adapt that sentence into the audience+goal framing given to the outline-checker.
+## Subject and reader
+
+The `presentation` skill has both agreed with the user before the outline exists. For a PR video they are fixed by the format, so take them from here instead of asking. These two lines are the field values — copy them into `outline.md` as they stand:
+
+```
+Subject: この PR の変更内容 — 何をして、なぜその形なのか
+Reader: このリポジトリのレビュアー。コードベース・言語・ツールには通じているが、この変更は見ていない
+```
+
+The Subject excludes the process that produced the change: **review history** above all — what a reviewer objected to and how it was fixed — and equally how the branch was developed and dead ends hit on the way. It goes in `context.md` or nowhere. A **rejected design option is not that**: it belongs in the deck whenever it explains why the change has the shape it has. Test by what the option does in the sentence — explaining the current design (in), or recounting the order events happened in (out).
+
+The outline-checker's audience+goal framing derives from these two. Go back to the user only when the request contradicts them — someone asking for a video about how the change was arrived at is asking for a different subject, not for this one.
 
 ## Deck
 
@@ -26,6 +37,6 @@ The **viewer is a reviewer**: they know the codebase, they will read the diff th
 
 Synthesize and export per the `export` skill (output: `<deck>/export.mp4`). Then:
 
-1. Check the size (`ls -lh`). GitHub's attachment limits for video are 10MB on free plans and 100MB on paid plans (docs.github.com, "Attaching files"); if the file exceeds the repo's limit, re-export smaller: `PRESENTER_VIDEO_HEIGHT=720 npm run export`.
+1. Check the size (`ls -lh`). GitHub's attachment limits for video are 10MB on free plans and 100MB on paid plans (docs.github.com, "Attaching files"); if the file exceeds the repo's limit, re-export smaller: `PRESENTER_DECK_DIR="<deck dir>" PRESENTER_VIDEO_HEIGHT=720 node ${CLAUDE_PLUGIN_ROOT}/scripts/export-video.mjs` — keep the deck dir on it, since without that variable the script exports the bundled sample deck instead.
 2. Posting is public and on the user's account: show them the comment body and ask before running it. Then attach with `gh pr comment <number> --body "<one line saying what the video is and how long it runs>" --attach <path to export.mp4>`; the upload renders as an inline player (video takes no alt text, so the `#alt` suffix is images-only). Default to a comment — `gh pr edit <number> --attach ...` puts the player at the end of the description instead, but only use it if the user asks for the description.
 3. If the attach is unavailable or fails — a `gh` too old for `--attach` (check `gh pr comment --help`), GitHub Enterprise Server, or no push access to the repo — fall back to the manual path: give the user the absolute path to `export.mp4` and tell them to drag it into the PR description or a comment. Do not commit the mp4 to the repo, and do not upload it anywhere else as a workaround.

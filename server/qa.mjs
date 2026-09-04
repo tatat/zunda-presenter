@@ -279,7 +279,7 @@ function buildPrompt({ script, qa, decksRoot, deckDir, playState, question, fres
     const dictPath = [path.join(deckDir, "dictionary.json"), path.join(decksRoot, "dictionary.json")].find(existsSync);
     const dictionary = dictPath ? readJSON(dictPath, {}) : {};
     parts.push(
-      `# Pronunciation dictionary (already registered)\n${JSON.stringify(dictionary, null, 2)}\n\nAny English/technical term you use in "lines" that is NOT in this dictionary — including tool names, file names, and identifiers (e.g. Read, ffmpeg, npm run export) — MUST get a katakana reading in your "dictionary" output.`
+      `# Pronunciation dictionary (already registered)\n${JSON.stringify(dictionary, null, 2)}\n\nAny English/technical term you use in "lines" that is NOT in this dictionary — including tool names, file names, and identifiers (e.g. Read, ffmpeg, export-video.mjs) — MUST get a katakana reading in your "dictionary" output.`
     );
     // A fresh session should know what viewers already asked
     if (qa.questions?.length) {

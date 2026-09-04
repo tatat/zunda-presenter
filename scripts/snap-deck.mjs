@@ -1,4 +1,4 @@
-/* Screenshot a deck's slides in one headless browser pass (npm run snap,
+/* Screenshot a deck's slides in one headless browser pass (node scripts/snap-deck.mjs,
    honors PRESENTER_DECK_DIR; slide-id args restrict which slides are shot).
 
    Replaces the one-Chrome-process-per-slide self-check loop: a single
@@ -69,7 +69,7 @@ if (clipRaw != null) {
     x >= 0 && y >= 0 && width > 0 && height > 0 &&
     x + width <= WIDTH && y + height <= HEIGHT;
   if (!ok) {
-    console.error(`usage: npm run snap -- <slide-id ...> --clip x,y,w,h  (region within ${WIDTH}x${HEIGHT})`);
+    console.error(`usage: PRESENTER_DECK_DIR=<deck> node ${process.argv[1]} <slide-id ...> --clip x,y,w,h  (region within ${WIDTH}x${HEIGHT})`);
     process.exit(1);
   }
   clip = { x, y, width, height };

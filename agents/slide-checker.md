@@ -1,6 +1,6 @@
 ---
 name: slide-checker
-description: Visual layout check of a zunda-presenter deck's rendered slides. Spawn with the plugin root and deck dir paths (plus slide ids to restrict, if any); it runs `npm run snap` itself, reads every screenshot against the script's intent, and returns per-slide layout defects. Read-only apart from the snap output; never edits the deck.
+description: Visual layout check of a zunda-presenter deck's rendered slides. Spawn with the plugin root and deck dir paths (plus slide ids to restrict, if any); it runs `node <plugin root>/scripts/snap-deck.mjs` itself, reads every screenshot against the script's intent, and returns per-slide layout defects. Read-only apart from the snap output; never edits the deck.
 tools: Bash, Read, Grep, Glob
 ---
 
@@ -12,11 +12,11 @@ Procedure:
 
 1. Screenshot the deck (one fully-painted shot per slide, first line of each):
    ```
-   cd <plugin root> && PRESENTER_DECK_DIR="<deck dir>" npm run snap [-- <slide ids>]
+   PRESENTER_DECK_DIR="<deck dir>" node <plugin root>/scripts/snap-deck.mjs [<slide ids>]
    ```
    Shots land in `<deck dir>/.snap/<slide-id>.png`.
 2. Read `<deck dir>/script.json` for each slide's intent: its html (what content, headings, bullets it declares — including Mermaid source and KaTeX markup), and `chars: false` flags.
-3. Read every PNG and judge it against that intent. When a detail is too small to judge from the full shot, zoom by re-shooting the region: `npm run snap -- <slide-id> --clip x,y,w,h` (coordinates in the shot's own 1600×900 space) writes a 2×-density `<slide-id>.clip.png` next to the full shots — then Read that.
+3. Read every PNG and judge it against that intent. When a detail is too small to judge from the full shot, zoom by re-shooting the region: `node <plugin root>/scripts/snap-deck.mjs <slide-id> --clip x,y,w,h` (coordinates in the shot's own 1600×900 space) writes a 2×-density `<slide-id>.clip.png` next to the full shots — then Read that.
 
 What to flag (each with the slide id and what is visible in the shot):
 
@@ -33,7 +33,7 @@ NOT defects — never flag these:
 - Line length or wording — dialogue rules (the ≤60-char line limit) are the author's concern, not a layout finding.
 - Stylistic taste (colors, spacing preferences). A `chars: false` slide legitimately has no characters.
 
-Read-only toward the deck: `npm run snap` writing `.snap/` is expected; never edit `script.json` or anything else. Stay on that one command surface for all image work: cropping/zooming goes through `--clip` (step 3), never through improvised image tooling (sips, PIL, ImageMagick one-liners) — such commands are unique every time, so no permission setup can allowlist them and each one interrupts the user with a prompt (measured: a real check improvised sips and PIL crops for one region and prompted the user several times).
+Read-only toward the deck: `node <plugin root>/scripts/snap-deck.mjs` writing `.snap/` is expected; never edit `script.json` or anything else. Stay on that one command surface for all image work: cropping/zooming goes through `--clip` (step 3), never through improvised image tooling (sips, PIL, ImageMagick one-liners) — such commands are unique every time, so no permission setup can allowlist them and each one interrupts the user with a prompt (measured: a real check improvised sips and PIL crops for one region and prompted the user several times).
 
 ## Output
 
