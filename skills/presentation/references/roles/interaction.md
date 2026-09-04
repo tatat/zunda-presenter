@@ -54,7 +54,7 @@ Use the following cycle as the default structure:
 5. Zundamon confirms the corrected understanding.
 6. Metan transitions to the next explanatory unit.
 
-Not every cycle must contain all six steps, but the dialogue should repeatedly return to this pattern.
+Not every cycle must contain all six steps, but the dialogue should repeatedly return to this pattern. Step 5 is the exception: it is occasional, not the default way a cycle ends — see "Say it once" under Turn Necessity. Most cycles should close on step 4 or 6.
 
 ## Explanatory Unit Size
 
@@ -196,10 +196,34 @@ next anyway, is padding; a run of them turns the dialogue into
   the two turns that carried content: the stance before it and the lesson
   after it.
 - **Confirmation is not an echo.** An understanding check earns its turn
-  by restating in the listener's own terms; the explainer then seals it
-  concisely (その通りよ) and moves on. Repeating the check's wording back
+  by restating in the listener's own terms; where the explainer does seal
+  it (see Metan's Response Discipline for when that is worth a turn), the
+  seal is concise (その通りよ) and moves on. Repeating the check's wording back
   (まさにそれ。〜 — then the same sentence again) adds a turn with no
   content.
+- **Say it once.** Three of this document's templates — the Default
+  Exchange Cycle, the Correction Pattern, Section Closure — end in
+  restate-then-confirm. Run them all as written and every point is spoken
+  twice, three times at a section's end, which viewers report as くどい even
+  though no line is padding by the deletion test. At most one
+  restate-and-confirm per section, and only where the restatement **changes
+  the formulation** — makes it concrete, compresses it, or exposes an
+  implication. A paraphrase in the same shape as the line before it is
+  padding that happens to carry content. The shape to watch for: explainer
+  states it, listener says it back unchanged, explainer confirms and says it
+  a third time — three turns, one fact. Budget **both halves**: the
+  listener's restatement and the explainer's confirmation. Cutting only the
+  restatement leaves a two-turn version of the same redundancy, since a
+  correct inference does not need blessing to stand (see Metan's Response
+  Discipline).
+- **Leave air.** The deletion test asks whether a turn carries the
+  explanation; some turns are there to carry the *listening* instead — a
+  two-word reaction, a joke that lands and stops, a `postPause`. These are
+  structural, not padding, and the deletion test does not apply to them.
+  A dialogue in which every single line advances the argument is as tiring
+  as one that pads: the fatigue comes from having nowhere to rest, not from
+  wasted words. Budget them the way you budget any repeated device — a few
+  across a deck, placed after the parts that ask the most of the viewer.
 
 This section governs how often the Default Exchange Cycle's listener
 steps fire; it does not change the cycle itself. "Repeatedly return to
@@ -258,7 +282,7 @@ When Zundamon's interpretation is partly correct:
 3. provide the corrected formulation;
 4. give a brief reason or example when needed.
 
-When Zundamon is fully correct, Metan should confirm it concisely and advance the explanation.
+When Zundamon is fully correct, advancing the explanation **is** the confirmation — moving to the next unit ratifies the inference, and in conversation going on without objection already reads as agreement. Spend an explicit そうよ only where it does work: the inference carries enough weight that a viewer would want it stamped, it needs a qualification attached, or the section ends there (see Section Closure). A confirming turn after every correct inference is the explainer's half of the redundancy "Say it once" governs.
 
 Do not restate the entire preceding explanation after every question.
 
@@ -273,6 +297,8 @@ Use this structure for misconception repair:
 3. Metan contrasts the incorrect and correct models.
 4. Zundamon restates the corrected model.
 5. Metan confirms and continues.
+
+Steps 4 and 5 are the same restate-and-confirm the other templates end on, so they are subject to the same budget ("Say it once"): if this section has already spent its restatement, the correction ends at step 3.
 
 The correction must preserve Zundamon's competence.
 
@@ -289,7 +315,7 @@ Therefore:
 - transitions between major sections come from Metan;
 - the final synthesis comes from Metan.
 
-Zundamon may infer correctly, but Metan should validate or qualify important inferences before they are treated as settled.
+Zundamon may infer correctly. Metan validates or qualifies an inference when it is wrong, incomplete, or load-bearing — not as a matter of course. A correct, minor inference mid-section is settled by the explanation continuing past it; stopping to bless it costs a turn and says the same thing twice.
 
 Zundamon must not introduce a major unexplained fact that Metan simply accepts without integration.
 
@@ -462,9 +488,12 @@ Say it with content instead:
 At the end of a conceptual section:
 
 1. Zundamon may provide a concise understanding check.
-2. Metan confirms or corrects it.
+2. If he did, Metan corrects it — or confirms it, when the check was worth
+   sealing rather than simply proceeding past.
 3. Metan gives the final concise takeaway.
 4. Metan transitions onward or closes the topic.
+
+Step 1 is genuinely optional, and it is the same restatement the cycle and the correction pattern also offer — spend it in one place per section, not all three ("Say it once").
 
 The final takeaway belongs to Metan.
 
@@ -522,14 +551,16 @@ Before emitting a dialogue segment, verify:
 6. Are questions focused and non-redundant?
 7. Are misconceptions plausible rather than artificially foolish?
 8. Does Metan own final definitions, corrections, transitions, and synthesis?
-9. Is Zundamon's understanding confirmed before being treated as settled?
+9. Where Zundamon's understanding is confirmed, did the confirmation earn its turn — the inference was wrong, incomplete, load-bearing, or ended a section — rather than firing reflexively?
 10. Is the dialogue more than a monologue divided between two speaker labels?
 11. Can each Zundamon line be motivated from Zundamon's own state (heard, wants,
     misunderstands), never solely by what the exposition needs next?
 12. Are line-initial interjections rare, marked exceptions — each carrying
     emotion its clause cannot — rather than default reactions?
-13. Does every listener turn survive the deletion test — would removing it
-    and joining the neighboring explainer turns actually lose something?
+13. Does every listener turn that carries the explanation survive the
+    deletion test — would removing it and joining the neighboring explainer
+    turns actually lose something? (Turns placed to carry the listening
+    rather than the argument are exempt — see "Leave air".)
 
 If any check fails, revise before emitting.
 

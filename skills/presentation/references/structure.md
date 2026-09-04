@@ -21,6 +21,16 @@ The failure modes this document exists to prevent, in order of damage:
 Before outlining anything, write one sentence: the claim the viewer must
 leave with.
 
+- It **argues the agreed Subject; it does not choose one.** The Subject is
+  fixed by the request before the outline exists (SKILL.md, "Before the
+  workflow"); the spine says something contestable *about* it. The rules
+  below — claim not topic, do not transcribe the source, a summary is not an
+  outline — all operate inside that boundary. They forbid reproducing the
+  source's shape; none of them licenses changing what the deck is about, and
+  read as such they are how a requested subject quietly becomes the author's
+  own. Test: strike the spine's verb and see what is left. If the remaining
+  subject is not the requested one, the deck is already off, however good the
+  claim is.
 - It is a **claim, not a topic**. 「本体はキャッシュ鍵の設計判断」 is a spine;
   「キャッシュを導入する」 is a label. If it has no verb-argument structure —
   nothing a viewer could agree or disagree with — it is not yet a spine.
@@ -61,6 +71,18 @@ Rules that fall out of the form:
   costs one line, not twenty.
 - A slide whose `holds` cannot be stated is reference material, not a beat:
   cut it or merge it into the beat it supports.
+- **Beats come from the chain, never from the slot list.** A beat exists
+  because the previous beat planted a question this Subject must answer for
+  this Reader, and its `claim` is the answer; a slot in SKILL.md's standard
+  structure with no such question behind it produces no beat. That is also
+  what fixes granularity — which of the endlessly many claims a subject
+  could support are this deck's is decided by what the chain actually
+  planted, not by the author's sense of what is interesting. The deck ends
+  where nothing further is planted that the Subject owes, and its length is
+  whatever that yields. Filling a slot to complete the
+  shape is how a subject supporting three claims becomes a seven-beat deck,
+  and every invented beat then needs material, which is where padding and
+  work-history narration get in.
 - Title and closing slides take a one-line entry (hook / recap+オチ); the
   four-field form is for content beats only.
 
@@ -145,10 +167,16 @@ answer moves out.
   get it answered on demand. The deck carries the spine; the long tail is
   served by Q&A.
 - **Length is an order, shape is unconditional.** Long, dense decks are a
-  legitimate request (SKILL.md already allows >40 lines when the user asks
-  for depth). This document forbids shapelessness — no statable spine,
+  legitimate request, and a long deck owes no justification for being long
+  (SKILL.md, Sizing). This document forbids shapelessness — no statable spine,
   unchained beats, unattached detail — never length. There are no size
   thresholds here.
+- **Length is derived, in both directions.** It falls out of how many claims
+  the Subject supports (Beats, Not Topics), so it is never a target and never
+  a defect on its own. A deck is not too long because it is long; it is too
+  long when beats were invented to complete a shape, and too short when real
+  claims were compressed out to hit a size. Diagnose by asking which beat
+  names a claim the Subject does not support — not by counting lines.
 - **Depth orders get chapters.** For long decks, group beats into chapters,
   each with a one-line chapter question. Spine → chapter question → beat is
   a two-level backbone; details then live inside chapters as evidence for
@@ -164,7 +192,9 @@ Japanese).
 ```markdown
 # Outline — <deck-name>
 
-**Spine**: <one-sentence takeaway (a claim)>
+**Subject**: <what the deck is about, in the requester's own words, quoted>
+**Reader**: <what they know / what they do not — as agreed>
+**Spine**: <one-sentence takeaway (a claim about the Subject)>
 **Entry question**: <what the viewer asks before slide 1>
 
 ## Beats
@@ -294,14 +324,23 @@ outline is showing through and every exchange becomes predictable.
 
 Runs together with the naive-reader term review (SKILL.md workflow): both
 question sets are baked into the plugin's `naive-reader` agent definition
-(`agents/naive-reader.md`), which receives the bare
+(`agents/naive-reader.md`), which receives the agreed `Reader` line and the
 `npm run view-deck -- --dialogue` output as its whole prompt (slide
-boundaries appear as blank lines). This section is the interpretation
-guide for its report:
+boundaries appear as blank lines) — never the `Subject`. This section is the
+interpretation guide for its report:
 
 - **Main claim unrecoverable, or recovered as a topic** («it's about
   caching») rather than a claim — the spine didn't survive into the
   dialogue. Fix the outline, not individual lines.
+- **Main claim recovered cleanly, but it is not the Subject's** — the deck
+  is coherently about the wrong thing, and this report is where that shows,
+  because the blinded reviewer is the one gate the author never briefs. Fix
+  the spine. A report naming two competing claims is the same finding
+  arriving early: keep the one matching the Subject and rebuild the other's
+  sections — never the reverse. The reverse is the natural move and the
+  trap: the drifted spine is the one already written down, so an author
+  shown two claims tends to delete the requested one to make the deck
+  internally consistent.
 - **Boundary expectations repeatedly violated** — the chain is broken where
   the reviewer's expected question and the next section's actual content
   diverge. Each violation points at a seam; fix `plants`/`holds` there.
