@@ -1,6 +1,6 @@
 ---
 name: pr-video
-description: Create a short Zundamon × Metan explainer MP4 for a pull request and guide attaching it. Use when the user asks for a PR video, a PR 用の解説動画, or a video walking reviewers through a branch's changes.
+description: Create a short Zundamon × Metan explainer MP4 for a pull request and attach it. Use when the user asks for a PR video, a PR 用の解説動画, or a video walking reviewers through a branch's changes.
 ---
 
 # pr-video
@@ -27,4 +27,5 @@ The **viewer is a reviewer**: they know the codebase, they will read the diff th
 Synthesize and export per the `export` skill (output: `<deck>/export.mp4`). Then:
 
 1. Check the size (`ls -lh`). GitHub's attachment limits for video are 10MB on free plans and 100MB on paid plans (docs.github.com, "Attaching files"); if the file exceeds the repo's limit, re-export smaller: `PRESENTER_VIDEO_HEIGHT=720 npm run export`.
-2. Attaching cannot be automated: GitHub accepts inline-playable video only via the web UI's drag-and-drop — there is no public API for it, and `gh` cannot upload comment attachments. Give the user the absolute path to `export.mp4` and tell them to drag it into the PR description or a comment. Do not commit the mp4 to the repo, and do not upload it anywhere else as a workaround.
+2. Posting is public and on the user's account: show them the comment body and ask before running it. Then attach with `gh pr comment <number> --body "<one line saying what the video is and how long it runs>" --attach <path to export.mp4>`; the upload renders as an inline player (video takes no alt text, so the `#alt` suffix is images-only). Default to a comment — `gh pr edit <number> --attach ...` puts the player at the end of the description instead, but only use it if the user asks for the description.
+3. If the attach is unavailable or fails — a `gh` too old for `--attach` (check `gh pr comment --help`), GitHub Enterprise Server, or no push access to the repo — fall back to the manual path: give the user the absolute path to `export.mp4` and tell them to drag it into the PR description or a comment. Do not commit the mp4 to the repo, and do not upload it anywhere else as a workaround.
