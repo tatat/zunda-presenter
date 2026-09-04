@@ -229,15 +229,19 @@ n. `sN` まとめ — recap + オチ: <one line>
 - <detail that serves no question in the chain>
 ```
 
-Chaptered decks group the beats, one question per chapter, and keep the
-four-field form inside a chapter. Two fields change at the edges: a
-chapter's last beat has no `plants` (nothing downstream for it to plant),
-and its first beat's `holds` is the chapter question. The count and the
-ordered items go at the top and are voiced by the opening beat — that is
-what makes each next chapter wanted, and the only thing a gate can check a
-chapter transition against:
+Chaptered decks keep every field above — `Subject`, `Reader`, `Spine`,
+`Entry question`, the cut list — add `Chapters`, and group the beats under
+it, one question per chapter. The spine still states the whole: the claim
+the deck leaves the viewer with about the set, which the chapters then
+carry item by item. Two fields change at the edges: a chapter's last beat
+has no `plants` (nothing downstream for it to plant), and its first beat's
+`holds` is the chapter question. The count and the ordered items go at the
+top and are voiced by the opening beat — that is what makes each next
+chapter wanted, and the only thing a gate can check a chapter transition
+against:
 
 ```markdown
+**Spine**: <one-sentence claim about the set>
 **Chapters**: <N, and what they are, in the deck's order>
 
 1. `s1` タイトル — hook: <one line>
