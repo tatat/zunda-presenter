@@ -95,9 +95,11 @@ retains nothing. Declare the profile in the outline, per beat:
   there are no chapters): the beat its chapter's question exists for. Test
   by removal, holding prerequisites constant — assume the other beats still
   supply their setup, and ask which beat's absence costs the chapter's
-  takeaway most, not which one later beats depend on. That beat is the peak;
-  where no beat stands out, the chapter has none. Requires a `dig:` naming
-  the concrete material
+  takeaway most, not which one later beats depend on. That beat is the peak.
+  A chapter may have none, where its beats are coequal. An unchaptered deck
+  may not: its spine is by definition what some beat exists for, so if no
+  beat stands out either the spine is wrong or the material is parallel and
+  wants chapters. Requires a `dig:` naming the concrete material
   the dialogue goes deeper into than a summary would: a worked example, the
   rejected alternative and its reason, the failure case, the number that
   contradicts intuition. 「詳しく話す」 is not a dig; `dig` names a thing.
@@ -413,10 +415,11 @@ interpretation guide for its report:
   `depth` markings means the dialogue didn't realize the declared profile
   (rewrite the peak's dig / compress the transits) — or the peak was chosen
   wrong (outline fix). "I cannot rank them, they all feel the same" is the
-  flatness finding wherever the chapter declared any depth at all — a peak,
-  a ridge, a transit. Only a chapter whose beats are all unmarked is
-  realized by an equal ranking. Across parallel chapters equal weight is
-  likewise expected — read the ranking inside each group.
+  flatness finding wherever any depth was declared — a peak, a ridge, a
+  transit — and in an unchaptered deck regardless, since that deck always
+  has a peak. Only a chapter whose beats are all unmarked is realized by an
+  equal ranking. Across parallel chapters equal weight is likewise expected
+  — read the ranking inside each group.
 - **Time-to-purpose late** — if the reviewer couldn't say what the deck
   wanted until deep into the middle, the promise wasn't voiced (Question
   Chain, Stakes): fix the opening beats, not the middle.
