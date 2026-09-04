@@ -23,13 +23,13 @@ Render a deck as an MP4 (1920×1080, 30fps). The render is offline and determini
 Lines without audio render as silence with the player's text-length timing. If the deck has unsynthesized lines or the script changed since the last synth, run (needs VOICEVOX on port 50021 — see the `setup` skill if it isn't running):
 
 ```
-cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run synth
+PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" node ${CLAUDE_PLUGIN_ROOT}/scripts/synthesize.mjs
 ```
 
 ## Export
 
 ```
-cd ${CLAUDE_PLUGIN_ROOT} && PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" npm run export
+PRESENTER_DECK_DIR="<abs project path>/.zunda-presenter/<deck-name>" node ${CLAUDE_PLUGIN_ROOT}/scripts/export-video.mjs
 ```
 
 Writes `<deck dir>/export.mp4`. Overrides: `PRESENTER_VIDEO_OUT` (output path), `PRESENTER_VIDEO_HEIGHT` (default 1080).

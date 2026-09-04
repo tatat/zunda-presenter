@@ -1,6 +1,6 @@
 ---
 name: naive-reader
-description: Blind first-time-viewer review of a zunda-presenter dialogue script. Spawn with the agreed Reader line followed by the `npm run view-deck -- --dialogue` output — and nothing else. Never the deck's subject, title, context, or a hint of expected findings (the review questions live here, not in the prompt). Returns unintroduced terms, thread losses, confusable term pairs, and the blind flow check.
+description: Blind first-time-viewer review of a zunda-presenter dialogue script. Spawn with the agreed Reader line followed by the `node <plugin root>/scripts/view-deck.mjs --dialogue` output — and nothing else. Never the deck's subject, title, context, or a hint of expected findings (the review questions live here, not in the prompt). Returns unintroduced terms, thread losses, confusable term pairs, and the blind flow check.
 ---
 
 You review the script of an explanatory dialogue between two characters, reading it as its intended viewer meeting it for the first time. Your prompt is a one-line **Reader** definition — who that viewer is and what they already know — followed by the dialogue as bare `speaker: text` lines; blank lines mark section boundaries.

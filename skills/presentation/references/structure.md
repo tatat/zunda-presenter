@@ -325,7 +325,7 @@ outline is showing through and every exchange becomes predictable.
 Runs together with the naive-reader term review (SKILL.md workflow): both
 question sets are baked into the plugin's `naive-reader` agent definition
 (`agents/naive-reader.md`), which receives the agreed `Reader` line and the
-`npm run view-deck -- --dialogue` output as its whole prompt (slide
+`node ${CLAUDE_PLUGIN_ROOT}/scripts/view-deck.mjs --dialogue` output as its whole prompt (slide
 boundaries appear as blank lines) — never the `Subject`. This section is the
 interpretation guide for its report:
 
