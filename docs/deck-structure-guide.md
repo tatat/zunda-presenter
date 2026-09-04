@@ -96,8 +96,9 @@ n. `sN` まとめ + オチ — <one line>
 
 - `holds`/`plants` chaining is the pre-writing flow check: if slide k's
   `plants` doesn't match slide k+1's `holds`, the seam is broken before any
-  dialogue exists. The chain runs inside a chapter: a chapter's last beat
-  carries no `plants`, and its first beat's `holds` is the chapter question. A slide whose `holds` cannot be stated is reference
+  dialogue exists. The chain stops at a parallel-chapter boundary: such a
+  chapter's last beat carries no `plants`, and its first beat's `holds` is
+  the chapter question. Sequential boundaries chain normally. A slide whose `holds` cannot be stated is reference
   material, not a beat — cut or merge it.
 - `shows` plans the slide/dialogue division of labor up front: the dialogue
   points at what the slide shows and adds the why — it never re-derives it
@@ -106,12 +107,12 @@ n. `sN` まとめ + オチ — <one line>
   the moment to decide `chars: false`.
 - Title and closing slides take a one-line entry; the four-field form is for
   content beats only.
-- **Parallel material adds a chapter layer**: beats grouped into chapters,
-  each with a one-line chapter question. Spine → chapter question → beat is a
-  two-level backbone. The trigger is shape, not length — a subject whose
-  items can be reordered without breaking any of them is parallel and takes
-  chapters at any length; long decks are where this most often applies, and
-  where structure fails hardest without it.
+- **A chapter layer** groups beats under one-line chapter questions; spine →
+  chapter question → beat is a two-level backbone. Length calls for it, and
+  so does parallel shape at any length. Which kind matters more than whether
+  to use it: chapters that can be reordered without breaking any of them are
+  parallel, and the chain stops at their boundaries; chapters that cannot are
+  grouping over a single chain.
 - Lifecycle: on rewrites, update the outline first, then the script — the
   outline is the record of the spine, and editing it first keeps the
   structure decision explicit (same ordering discipline as "the deck presents

@@ -38,7 +38,7 @@ leave with.
   across slides is a structure smell — it means nothing was prioritized.
   Between parallel chapters it is not a smell: weight inside a chapter, and
   weight chapters against each other only where the material itself makes
-  one heavier.
+  one heavier. Sequential chapters weight as one deck.
 
 ## Beats, Not Topics
 
@@ -77,11 +77,12 @@ Rules that fall out of the form:
   structure with no such question behind it produces no beat. The chain also
   fixes granularity: which of the many claims a subject could support are
   this deck's is decided by what was planted, not by what the author finds
-  interesting. The chapter is what the chain runs inside: chapters come from
-  the Subject's parallel items, beats from the chain within each, and a
+  interesting. Parallel chapters bound the chain: they come from the
+  Subject's independent items, beats come from the chain within each, and a
   chapter's first beat is planted by its chapter question rather than by the
-  chapter before. The deck ends where nothing further is planted, and its
-  length is whatever that yields.
+  chapter before. Sequential chapters do not bound it — the chain crosses
+  them and they are grouping only. The deck ends where nothing further is
+  planted, and its length is whatever that yields.
 - Title and closing slides take a one-line entry (hook / recap+オチ); the
   four-field form is for content beats only.
 
@@ -91,21 +92,22 @@ A summary flattens: every point at the source's middle depth, nothing dug
 into, nothing skipped — and a viewer who is never told where to lean in
 retains nothing. Declare the profile in the outline, per beat:
 
-- **`depth: peak`** — at most one per chapter (so at most one per deck when
-  there are no chapters): the beat its chapter's question exists for. Test
-  by removal, holding prerequisites constant — assume the other beats still
-  supply their setup, and ask which beat's absence costs the chapter's
-  takeaway most, not which one later beats depend on. That beat is the peak.
-  A chapter may have none, where its beats are coequal. An unchaptered deck
-  may not: its spine is by definition what some beat exists for, so if no
-  beat stands out either the spine is wrong or the material is parallel and
-  wants chapters. Requires a `dig:` naming the concrete material
+- **`depth: peak`** — at most one per parallel chapter; otherwise at most
+  one per deck, sequential chapters included. It is the beat its spine (or
+  its chapter's question) exists for. Test by removal, holding prerequisites
+  constant — assume the other beats still supply their setup, and ask which
+  beat's absence costs the takeaway most, not which one later beats depend
+  on. That beat is the peak. A parallel chapter may have none, where its
+  beats are coequal. A deck argued as one chain may not: its spine is by
+  definition what some beat exists for, so if no beat stands out either the
+  spine is wrong or the material is parallel and wants parallel chapters.
+  Requires a `dig:` naming the concrete material
   the dialogue goes deeper into than a summary would: a worked example, the
   rejected alternative and its reason, the failure case, the number that
   contradicts intuition. 「詳しく話す」 is not a dig; `dig` names a thing.
   The recap/オチ lands back on this beat — on the deck's spine where there
-  is no peak. A chaptered deck closes on its spine — any peaks belong to
-  their chapters, and the close belongs to the whole.
+  is no peak. A deck of parallel chapters closes on its spine — the peaks
+  belong to their chapters, the close to the whole.
 - **`depth: ridge`** — zero to two. Explained properly: a why plus one
   concrete grounding, at standard budget.
 - **unmarked** — standard: explain, don't dig.
@@ -151,10 +153,12 @@ order — a postmortem may open on the incident, a comparison on the decision
 to be made. The invariant is the chain (each beat answers a live question
 and plants the next), not this particular slot order.
 
-The chain runs inside a chapter, not between chapters. Parallel chapters do
-not plant each other; what makes the next one wanted is the count stated at
-the top. A seam written as though a chapter planted the next produces the
+Between parallel chapters the chain stops: they do not plant each other, and
+what makes the next one wanted is the count stated at the top. A seam
+written as though one parallel chapter planted the next produces the
 「他には？」 connector — a question about how much of the list is left.
+Sequential chapters are the other case: the chain crosses the boundary
+normally, chapter k's last beat planting chapter k+1's question.
 
 ## Do Not Transcribe the Source
 
@@ -189,15 +193,17 @@ answer moves out.
   too long when beats were invented to complete a shape, too short when real
   claims were compressed out to hit a size. Diagnose by asking which beat
   names a claim the Subject does not support — not by counting lines.
-- **Chapters come from parallel shape, not from length.** Test by
-  reordering: if the items can be presented in any order and each still
-  answers its own question, they are parallel and take chapters — at any
-  length. If reordering breaks an explanation, they are one chain and take
-  beats, however long the deck runs. Group parallel beats into chapters,
-  each with a one-line chapter question; spine → chapter question → beat is
-  a two-level backbone, and everything in Weighting the Beats is then read
-  per chapter. Long decks are where this most often applies, and where
-  structure fails hardest without it.
+- **Chapters group beats under a one-line chapter question.** Spine →
+  chapter question → beat is a two-level backbone. Two things call for it:
+  length, because long decks are where structure fails hardest, and parallel
+  shape, at any length. Test which kind you have by reordering: if the
+  chapters can be presented in any order and each still answers its own
+  question, they are **parallel**; if reordering breaks an explanation, they
+  are **sequential** — the chain runs through them and the chapters are
+  grouping. The distinction decides the boundary rules below, the weighting
+  read (per chapter for parallel, per deck for sequential), and what the
+  gates check. Material that is several independent things always takes
+  parallel chapters, however short.
 
 ## outline.md
 
@@ -233,14 +239,16 @@ n. `sN` まとめ — recap + オチ: <one line>
 
 Chaptered decks keep every field above — `Subject`, `Reader`, `Spine`,
 `Entry question`, the cut list — add `Chapters`, and group the beats under
-it, one question per chapter. The spine still states the whole: the claim
-the deck leaves the viewer with about the set, which the chapters then
-carry item by item. Two fields change at the edges: a chapter's last beat
-has no `plants` (nothing downstream for it to plant), and its first beat's
-`holds` is the chapter question. The count and the ordered items go at the
-top and are voiced by the opening beat — that is what makes each next
-chapter wanted, and the only thing a gate can check a chapter transition
-against:
+it, one question per chapter. Sequential chapters need nothing else: the
+chain crosses the boundaries and the fields are unchanged.
+
+Parallel chapters change two fields at the edges: a chapter's last beat has
+no `plants` (nothing downstream for it to plant), and its first beat's
+`holds` is the chapter question. Their spine states the whole — the claim
+the deck leaves the viewer with about the set, which the chapters then carry
+item by item — and the count and ordered items go at the top, voiced by the
+opening beat, which is what makes each next chapter wanted and the only
+thing a gate can check a parallel transition against:
 
 ```markdown
 **Spine**: <one-sentence claim about the set>
@@ -389,24 +397,25 @@ interpretation guide for its report:
   arriving early: keep the one matching the Subject, rebuild the other's
   sections. Never the reverse, however consistent it would make the deck.
 - **A deck-level claim plus one per chapter** — the expected report for a
-  chaptered deck. Compare the first against the Subject, the rest against
-  the chapters. Competition inside one chapter is the finding; a claim per
-  chapter is not. A report giving only per-chapter claims means the deck
-  never voiced what it is as a whole.
+  deck of parallel chapters. Compare the first against the Subject, the rest
+  against the chapters. Competition inside one chapter is the finding; a
+  claim per chapter is not. A report giving only per-chapter claims means
+  the deck never voiced what it is as a whole. Sequential chapters argue one
+  thing and expect one claim, like any unchaptered deck.
 - **Boundary expectations repeatedly violated** — the chain is broken where
   the reviewer's expected question and the next section's actual content
   diverge. Each violation points at a seam; fix `plants`/`holds` there.
-  At a chapter boundary the expectation to look for is "the next item": if
-  the opening map landed, the reviewer expected one and reports no
+  At a parallel-chapter boundary the expectation to look for is "the next
+  item": if the opening map landed, the reviewer expected one and reports no
   divergence. A divergence reported there means the map did not land — fix
-  the opening, not the seam.
+  the opening, not the seam. Sequential boundaries are ordinary seams.
 - Claim recovery alone is not a pass: it is necessary, not sufficient — the
   boundary expectations exist to catch monotone-but-summarizable decks.
 - **Sections flagged as "not serving the claim"** are either cut candidates
   or evidence the spine sentence is too narrow for what the deck actually
   is (e.g. a deliberate feature tour). Decide against the outline's spine,
-  not the reviewer's reconstruction. In a chaptered deck, judge each section
-  against its own chapter's question.
+  not the reviewer's reconstruction. In a deck of parallel chapters, judge
+  each section against its own chapter's question.
 - **Template rhythm flagged** — the outline is showing through. Don't patch
   individual lines: re-vary how each beat's `holds` surfaces (see From
   Outline to Dialogue) and re-run.
@@ -416,10 +425,10 @@ interpretation guide for its report:
   (rewrite the peak's dig / compress the transits) — or the peak was chosen
   wrong (outline fix). "I cannot rank them, they all feel the same" is the
   flatness finding wherever any depth was declared — a peak, a ridge, a
-  transit — and in an unchaptered deck regardless, since that deck always
-  has a peak. Only a chapter whose beats are all unmarked is realized by an
-  equal ranking. Across parallel chapters equal weight is likewise expected
-  — read the ranking inside each group.
+  transit — and in a deck argued as one chain regardless, since that deck
+  always has a peak. Only a parallel chapter whose beats are all unmarked is
+  realized by an equal ranking. Across parallel chapters equal weight is
+  likewise expected — read the ranking inside each group.
 - **Time-to-purpose late** — if the reviewer couldn't say what the deck
   wanted until deep into the middle, the promise wasn't voiced (Question
   Chain, Stakes): fix the opening beats, not the middle.
