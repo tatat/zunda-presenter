@@ -219,6 +219,11 @@ Lifecycle: on any rewrite, update the outline first, then the script — the
 outline is the record of the spine, and editing it first keeps structural
 decisions explicit instead of emergent (same ordering discipline as
 SKILL.md's rewrite section: the deck presents the artifact's current state).
+An outline whose structure moved is then re-gated through outline-checker
+before the script follows it (SKILL.md workflow step 1). Skipping that is
+how the deck ends up shaped by an outline no gate ever read — and skipping
+the update itself is worse, because the outline then records a deck that no
+longer exists and the next rewrite is planned against fiction.
 
 ## Worked Contrast
 
