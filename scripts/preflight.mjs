@@ -6,8 +6,8 @@
    scripts unchanged, so the output format is exactly what the skill already
    documents per command.
 
-   npm run preflight   (honors PRESENTER_DECK_DIR, default <repo>/deck;
-   the readings section needs the VOICEVOX engine, like `npm run readings`)
+   node scripts/preflight.mjs   (honors PRESENTER_DECK_DIR, default <repo>/deck;
+   the readings section needs the VOICEVOX engine, like the readings audit)
 
    An unparseable script.json short-circuits after the check-deck report —
    view-deck and readings would only repeat the parse error. Exits 1 if any
