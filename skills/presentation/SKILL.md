@@ -34,6 +34,8 @@ Do this before creating the deck dir: state both back to the user in one message
 
 Record both verbatim at the top of `outline.md` (`Subject:` / `Reader:` — template in structure.md) before writing the spine.
 
+A calling skill may fix them for its format instead — `pr-video` does, because a PR video always has the same subject and the same viewer. Then those are the agreement: copy them and go on, and return to the user only if the request contradicts them. What is never allowed is the third case, where they are neither agreed nor fixed and you supply them yourself.
+
 Nothing downstream can recover this. `outline-checker` is briefed by you, so a subject you have already drifted on is invisible to it; `naive-reader` only meets the deck after the whole dialogue exists, and it can measure whether *a* claim survives, never whether it is the claim that was asked for.
 
 ## Workflow
@@ -63,14 +65,13 @@ Nothing downstream can recover this. `outline-checker` is briefed by you, so a s
 
 ## Profiles
 
-The workflow above is the **full** profile — the default whenever a person will watch the deck as a presentation. Two reduced profiles exist, named by the caller (another skill, or the user); their gate sets are **fixed** — never pick gates per deck. If a request hints at a reduced profile without naming one (urgency, throwaway purpose, an audience that may know the material), **ask the user before writing the outline** — what goes unreviewed is the user's trade-off to make. If neither profile's premise holds, it's a full deck. Profiles change which gates run, never deck length — the sizing guidance below applies as-is.
+The workflow above is the **full** profile — the default whenever a person will watch the deck as a presentation. Two reduced profiles exist, named by the caller (another skill, or the user); their gate sets are **fixed** — never pick gates per deck. If a request hints at a reduced profile without naming one (urgency, a throwaway purpose, an export with no live player behind it), **ask the user before writing the outline** — what goes unreviewed is the user's trade-off to make. If neither profile's premise holds, it's a full deck. Profiles change which gates run, never deck length — the sizing guidance below applies as-is.
 
-**light** — for decks whose audience already shares context with the material (e.g. a PR explainer video for reviewers of the same repo). Full minus exactly two things:
+**light** — for decks built to be exported rather than served in the live player. Full minus exactly one thing:
 
-- **No naive-reader review** (step 3). The gate simulates a viewer without the source knowledge; this audience has it by definition. Step 3's freeze/batching discipline still applies to the reviews that do run.
-- **No `context.md` / Web Q&A prep** (step 4). Light decks are built to be exported, not served. If the deck is later opened in the live player, write `context.md` then.
+- **No `context.md` / Web Q&A prep** (step 4). Nothing would read it: the Q&A agent only answers questions typed into the player. If the deck is later opened there, write `context.md` then.
 
-Every other gate runs as written (the readings audit's delegation rule already scales with deck length — see Readings).
+Every gate runs as written, naive-reader included (the readings audit's delegation rule already scales with deck length — see Readings). An exported deck needs the blinded reader as much as any other, and an audience close to the material does not excuse it: being fluent in the repository a change lands in is not knowing the change, and unintroduced terms are only part of what that gate measures — claim recovery, time-to-purpose and template rhythm do not depend on what the viewer already knows.
 
 **draft** — quick, throwaway alignment decks: speed matters more than an occasional misreading or layout flaw. Skip everything with a review cost — outline-checker, naive-reader, readings audit, slide-checker, preflight, `context.md` (the Q&A agent still sees the deck and repo) — and fix misreadings or broken slides only when the viewer reports them. Keep everything that costs no review time: `outline.md` before dialogue (unreviewed), the role references and Dialogue rules, defensive writing from Readings, and check-deck / view-deck.
 
